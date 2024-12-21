@@ -23,7 +23,7 @@
     }
   }" 
   x-init="
-    playground.start({ editorValue });
+    playground.start();
     playground.worker.onmessage = (e) => {
       console.log('got message from worker', e.data);
       if (!e?.data) return;
