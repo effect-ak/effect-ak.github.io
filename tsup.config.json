@@ -1,0 +1,17 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/tsup/schema.json",
+  "entry": [
+    "src/tg-bot-playground/web-worker.ts",
+    "src/tg-bot-playground/main.ts",
+    "src/tg-bot-playground/init.ts"
+  ],
+  "splitting": false,
+  "outDir": "docs/telegram-bot-playground/scripts",
+  "format": [ "esm" ],
+  "platform": "browser",
+  "external": ["fs/promises", "alpinejs"],
+  "noExternal": [
+    "@effect-ak",
+    "effect"
+  ]
+}

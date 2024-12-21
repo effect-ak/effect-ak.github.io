@@ -1,0 +1,32 @@
+.flex-container {
+  display: flex;
+  background-color: rgb(62, 95, 113);
+  margin-top: 10px;
+}
+
+#container {
+  display: flex;
+  width: 700px;
+  height: 600px;
+  border: 1px solid grey;
+}
+
+#worker-updates {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 600px;
+  overflow-y: auto;
+}
+
+#worker-updates::-webkit-scrollbar {
+  display: none;
+}
+
+#worker-updates > div {
+  background-color: #f1f1f1;
+  margin: 10px;
+  text-align: center;
+  border-radius: 5px; 
+}

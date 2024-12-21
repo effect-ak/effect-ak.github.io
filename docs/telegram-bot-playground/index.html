@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>telegram bot playground</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <script defer src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/umd/monaco-loader.min.js"></script>
+  <script defer src="./scripts/init.js?v=en1g5n" type="module"></script>
+  <script defer src="./scripts/main.js?v=yp2q4h" type="module"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css?v=xa8dtw">
+</head>
+
+<body 
+  x-data="{
+    selected_example: 'empty.ts',
+    botUpdates: [],
+    botState: {
+      name: 'nameless',
+      status: 'idle',
+      token: 'your token'
+    }
+  }" 
+  x-init="
+    playground.start({ editorValue });
+    playground.worker.onmessage = (e) => {
+      console.log('got message from worker', e.data);
+      if (!e?.data) return;
+      if (e.data.botState) {
+        Object.assign(botState, e.data.botState)
+      }
+      botUpdates.push(e.data);
+      console.log('Scrolling', $refs.updates.scrollHeight);
+      $nextTick(() => { $refs.updates.scrollTop = $refs.updates.scrollHeight })
+    };
+  "
+>
+
+  <h1>Telegram Bot Playground 🤖 </h1>
+
+  <div style="display: flex; gap: 20px; justify-content: center;">
+    <div x-text="botState.status"></div>
+
+    <button @click="playground.runBot(botState)">Run bot</button>
+    
+    <label>
+      Bot token
+      <input 
+        type="text"
+        x-model="botState.token"
+        @input.debounce.500ms="playground.checkToken(botState)"
+      > 
+    </label>
+
+    <div x-text="botState.name"></div>
+    
+  </div>
+
+  <div style="display: flex; align-items: start;">
+    <label>
+      Select example
+      <select 
+      
+      x-model="selected_example" 
+      @change="playground.loadExample(selected_example)"
+    >
+      <option value="empty.ts">Empty</option>
+      <option value="command.ts">Command Bot</option>
+      <option value="file.ts">File Bot</option>
+    </select>
+    </label>
+
+  </div>
+
+  <div class="flex-container">
+    <div id="container" x-cloak></div>
+    <div 
+      id="worker-updates"
+      x-ref="updates"
+    >
+      <template 
+        x-for="update in botUpdates" :key="update.id"
+      >
+        <div x-text="JSON.stringify(update, undefined, 2)"></div>
+      </template>
+    </div>
+  </div>
+
+</body>
+
+</html>
