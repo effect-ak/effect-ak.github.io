@@ -25,7 +25,7 @@ var getJsCode = async () => {
 };
 var fetchText = (path) => fetch(path).then((_) => _.text());
 var setupDts = async (monaco) => {
-  const dts = await fetchText("declarations.d.ts");
+  const dts = await fetchText("https://cdn.jsdelivr.net/npm/@effect-ak/tg-bot-client@0.2.2/dist/index.d.ts");
   monaco.languages.typescript.typescriptDefaults.setExtraLibs([
     {
       content: dts,
