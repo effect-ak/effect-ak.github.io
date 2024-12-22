@@ -1,12 +1,11 @@
 // src/tg-bot-playground/init.ts
 window.playground = {};
+console.log("initiating...");
 var version = await fetch("./metadata.json", { cache: "no-cache" }).then((_) => _.json()).then((_) => _["web-worker.js"]);
 if (version) {
   const worker = new Worker(`./scripts/web-worker.js?v=${version}`, { type: "module" });
-  worker.addEventListener("message", (msg) => {
-    console.log("From worker", msg.data);
-  });
   window.playground.worker = worker;
+  console.log("web worker has been loaded");
 } else {
   console.warn("web worker not initiated");
 }
