@@ -8,7 +8,8 @@ const version: string = await (
 if (version) {
   const worker = new Worker(`./scripts/web-worker.js?v=${version}`, { type: "module" });
   window.playground.worker = worker;
-  console.log("web worker has been loaded")
+  console.log("web worker has been loaded");
+  document.dispatchEvent(new Event('playgroundInitialized'));
 } else {
   console.warn("web worker not initiated")
 }
