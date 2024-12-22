@@ -9,7 +9,7 @@
   "outDir": "docs/telegram-bot-playground/scripts",
   "format": [ "esm" ],
   "platform": "browser",
-  "external": ["fs/promises", "alpinejs"],
+  "external": ["fs", "alpinejs"],
   "noExternal": [
     "@effect-ak",
     "effect"

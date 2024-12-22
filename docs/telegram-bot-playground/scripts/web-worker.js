@@ -1088,6 +1088,11 @@ var MicroFiberImpl = class {
 var fiberMiddleware = /* @__PURE__ */ globalValue("effect/Micro/fiberMiddleware", () => ({
   interruptChildren: void 0
 }));
+var fiberAwait = (self2) => async((resume) => sync(self2.addObserver((exit2) => resume(succeed(exit2)))));
+var fiberInterrupt = (self2) => suspend(() => {
+  self2.unsafeInterrupt();
+  return asVoid(fiberAwait(self2));
+});
 var fiberInterruptAll = (fibers) => suspend(() => {
   for (const fiber of fibers) fiber.unsafeInterrupt();
   const iter = fibers[Symbol.iterator]();
@@ -1323,6 +1328,11 @@ var andThen = /* @__PURE__ */ dual(2, (self2, f) => flatMap(self2, (a) => {
   const value = isMicro(f) ? f : typeof f === "function" ? f(a) : f;
   return isMicro(value) ? value : succeed(value);
 }));
+var tap = /* @__PURE__ */ dual(2, (self2, f) => flatMap(self2, (a) => {
+  const value = isMicro(f) ? f : typeof f === "function" ? f(a) : f;
+  return isMicro(value) ? as(value, a) : succeed(a);
+}));
+var asVoid = (self2) => flatMap(self2, (_) => exitVoid);
 var exit = (self2) => matchCause(self2, {
   onFailure: exitFailCause,
   onSuccess: exitSucceed
@@ -1700,6 +1710,12 @@ var runFork = (effect, options) => {
 var runPromiseExit = (effect, options) => new Promise((resolve, _reject) => {
   const handle = runFork(effect, options);
   handle.addObserver(resolve);
+});
+var runPromise = (effect, options) => runPromiseExit(effect, options).then((exit2) => {
+  if (exit2._tag === "Failure") {
+    throw exit2.cause;
+  }
+  return exit2.value;
 });
 
 // node_modules/.pnpm/effect@3.11.9/node_modules/effect/dist/esm/String.js
@@ -3505,25 +3521,6 @@ var ClientFileServiceDefault = gen(function* () {
 }).pipe(
   provideServiceEffect(ClientExecuteRequestService, ClientExecuteRequestServiceDefault)
 );
-var makeClientConfigFrom = (input) => gen(function* () {
-  if (input.type == "config") {
-    return makeTgBotClientConfig(input);
-  }
-  const config = yield* tryPromise({
-    try: async () => {
-      const { readFile } = await import("fs/promises");
-      return JSON.parse(await readFile("config.json", "utf-8"));
-    },
-    catch: (error) => {
-      console.warn(error);
-      return "ReadingConfigError";
-    }
-  });
-  if (!isTgBotClientSettingsInput(config)) {
-    return yield* fail("InvalidConfig");
-  }
-  return makeTgBotClientConfig(config);
-});
 var makeSettingsFrom = (input) => {
   let limit = input.batch_size ?? 10;
   let timeout = input.timeout ?? 10;
@@ -3650,24 +3647,34 @@ var pollAndHandle = (input) => {
 var BotUpdatePollerService = class extends Tag2("BotUpdatePollerService")() {
 };
 var BotUpdatesPollerServiceDefault = gen(function* () {
+  console.log("Initiating BotUpdatesPollerServiceDefault");
   const state = {
-    isActive: false
+    fiber: void 0
   };
   const client = yield* service(ClientExecuteRequestService);
   const runBot = (messageHandler) => gen(function* () {
-    if (state.isActive) {
-      return yield* fail("AlreadyRunning");
-    }
-    const fiber = yield* pollAndHandle({
+    console.log(state);
+    const startFiber = pollAndHandle({
       settings: messageHandler,
       execute: client.execute
-    }).pipe(forkDaemon);
-    fiber.addObserver((exit2) => {
-      console.log("bot's fiber has been closed", exit2);
-      state.isActive = false;
-    });
-    console.log("Reading bot's updates...");
-    return fiber;
+    }).pipe(
+      forkDaemon,
+      tap(
+        (fiber) => fiber.addObserver((exit2) => {
+          console.log("bot's fiber has been closed", exit2);
+          if (messageHandler.onExit) {
+            messageHandler.onExit(exit2);
+          }
+        })
+      )
+    );
+    if (state.fiber) {
+      console.log("killing previous bot's fiber");
+      yield* fiberInterrupt(state.fiber);
+    }
+    state.fiber = yield* startFiber;
+    console.log("Reading bot's updates.....", state.fiber == null);
+    return state.fiber;
   });
   return {
     runBot
@@ -3675,11 +3682,32 @@ var BotUpdatesPollerServiceDefault = gen(function* () {
 }).pipe(
   provideServiceEffect(ClientExecuteRequestService, ClientExecuteRequestServiceDefault)
 );
+var makeClientConfigFrom = (input) => gen(function* () {
+  if (input.type == "config") {
+    return makeTgBotClientConfig(input);
+  }
+  const config = yield* tryPromise({
+    try: async () => {
+      const { readFileSync } = await import("fs");
+      return JSON.parse(await readFileSync("config.json", "utf-8"));
+    },
+    catch: (error) => {
+      console.warn(error);
+      return "ReadingConfigError";
+    }
+  });
+  if (!isTgBotClientSettingsInput(config)) {
+    return yield* fail("InvalidConfig");
+  }
+  return makeTgBotClientConfig(config);
+});
 var makeBot = (messageHandler) => gen(function* () {
   const { runBot } = yield* service(BotUpdatePollerService);
-  return yield* runBot(messageHandler);
+  return {
+    fiber: yield* runBot(messageHandler),
+    runBot
+  };
 }).pipe(
-  provideServiceEffect(BotUpdatePollerService, BotUpdatesPollerServiceDefault),
   tapError((error) => {
     console.error(error);
     return void_;
@@ -3689,11 +3717,22 @@ var BotFactoryService = class extends Tag2("BotFactoryService")() {
 };
 var BotFactoryServiceDefault = {
   makeBot,
-  runBot: (input) => makeBot(input).pipe(
-    provideServiceEffect(TgBotClientConfig, makeClientConfigFrom(input))
-  )
+  runBot: (input) => gen(function* () {
+    console.log("client");
+    const client = yield* makeClientConfigFrom(input);
+    const poller = yield* BotUpdatesPollerServiceDefault.pipe(
+      provideService(TgBotClientConfig, client)
+    );
+    const bot = yield* makeBot(input).pipe(
+      provideService(BotUpdatePollerService, poller)
+    );
+    const reload = (input2) => bot.runBot(input2).pipe(runPromise);
+    return {
+      reload
+    };
+  })
 };
-var runTgChatBot = (input) => BotFactoryServiceDefault.runBot(input).pipe(runPromiseExit);
+var runTgChatBot = (input) => BotFactoryServiceDefault.runBot(input).pipe(runPromise);
 
 // src/tg-bot-playground/utils.ts
 var parseJson = (input) => {
@@ -3727,6 +3766,7 @@ var notifyParent = (input) => {
     ...input
   });
 };
+var botInstance = void 0;
 self.onmessage = async (msg) => {
   const command = msg.data;
   if (typeof command != "object" || !command.command) {
@@ -3737,32 +3777,35 @@ self.onmessage = async (msg) => {
   }
   if (command.command == "run-bot") {
     const handlers = deserialize(command.code);
-    const fiber = await runTgChatBot({
-      type: "config",
-      "bot-token": command.token,
-      ...handlers
-    });
-    if (fiber._tag == "Failure") {
+    if (botInstance) {
+      console.log("reloading...");
+      await botInstance.reload({
+        ...handlers
+      });
       notifyParent({
-        error: "Cannot create bot's fiber",
-        cause: fiber.cause
+        botState: {
+          status: "reloaded"
+        }
       });
       return;
     }
-    notifyParent({
-      success: "Bot's fiber has been created",
-      botState: {
-        status: "active"
-      }
-    });
-    fiber.value.addObserver((exit2) => {
-      notifyParent({
+    botInstance = await runTgChatBot({
+      type: "config",
+      "bot-token": command.token,
+      ...handlers,
+      onExit: (exit2) => notifyParent({
         success: "Bot's fiber has been shutdown",
         exit: exit2,
         botState: {
           status: "stopped"
         }
-      });
+      })
+    });
+    notifyParent({
+      success: "Bot's fiber has been created",
+      botState: {
+        status: "active"
+      }
     });
     return;
   }

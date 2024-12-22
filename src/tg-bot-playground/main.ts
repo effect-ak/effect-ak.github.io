@@ -89,6 +89,10 @@ window.playground.checkToken =
       .then(info => {
         if (info.ok) {
           state.name = info.result.first_name;
+          if (window.playground.runBot) {
+            console.log("Running bot")
+            window.playground.runBot(state);
+          }
         } else {
           state.name = "nameless";
         }

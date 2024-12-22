@@ -1,4 +1,4 @@
-import { runTgChatBot } from "@effect-ak/tg-bot-client"
+import { runTgChatBot, BotInstance } from "@effect-ak/tg-bot-client"
 
 import { deserialize } from "./utils.js"
 import type { BotState } from "./types.js"
@@ -20,6 +20,8 @@ const notifyParent = (input: object) => {
   });
 }
 
+let botInstance = undefined as BotInstance | undefined
+
 self.onmessage = async (msg: MessageEvent<unknown>) => {
 
   const command = msg.data as RunBot;
@@ -34,36 +36,40 @@ self.onmessage = async (msg: MessageEvent<unknown>) => {
   if (command.command == "run-bot") {
 
     const handlers = deserialize(command.code);
-    const fiber = 
+
+    if (botInstance) {
+      console.log("reloading...")
+      await botInstance.reload({
+        ...handlers,
+      });
+      notifyParent({
+        botState: {
+          status: "reloaded"
+        } as BotState
+      })
+      return;
+    }
+
+    botInstance = 
       await runTgChatBot({
         type: "config",
         "bot-token": command.token,
-        ...handlers
+        ...handlers,
+        onExit: (exit) =>
+          notifyParent({
+            success: "Bot's fiber has been shutdown",
+            exit,
+            botState: {
+              status: "stopped"
+            } as BotState
+          })
       });
-
-    if (fiber._tag == "Failure") {
-      notifyParent({
-        error: "Cannot create bot's fiber",
-        cause: fiber.cause
-      });
-      return;
-    }
 
     notifyParent({
       success: "Bot's fiber has been created",
       botState: {
         status: "active"
       } as BotState
-    });
-
-    fiber.value.addObserver(exit => {
-      notifyParent({
-        success: "Bot's fiber has been shutdown",
-        exit,
-        botState: {
-          status: "stopped"
-        } as BotState
-      })
     });
 
     return;

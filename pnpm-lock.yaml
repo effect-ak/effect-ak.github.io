@@ -64,7 +64,7 @@ packages:
     engines: {node: '>=18'}
 
   '@effect-ak/tg-bot-client@file:../tg-bot-client/effect-ak-tg-bot-client-0.2.2.tgz':
-    resolution: {integrity: sha512-RnzjXJMM6pyL60SxVMRB/BfSNyqkFRVTZS9d5QuTulZHuLT/StUzmOPtHP56REanVk8/dpqquShUNg3tIxweHw==, tarball: file:../tg-bot-client/effect-ak-tg-bot-client-0.2.2.tgz}
+    resolution: {integrity: sha512-kfASWdDyMxBWSsaLkC9tKhfSvVMWiT/pAyaY1qybduThAWDm1vN4n3r6qbcSL1u2nQAlPSIh926UCROMA/Bhbw==, tarball: file:../tg-bot-client/effect-ak-tg-bot-client-0.2.2.tgz}
     version: 0.2.2
 
   '@emotion/is-prop-valid@1.2.2':

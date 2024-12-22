@@ -2,17 +2,19 @@
   display: flex;
   background-color: rgb(62, 95, 113);
   margin-top: 10px;
+  width: 100%;
 }
 
-#container {
+.flex-container > #container {
   display: flex;
-  width: 700px;
+  flex: 0 1 70%; 
   height: 600px;
   border: 1px solid grey;
 }
 
-#worker-updates {
+.flex-container > #worker-updates {
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;

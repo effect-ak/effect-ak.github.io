@@ -6,10 +6,10 @@
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   <script defer src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/umd/monaco-loader.min.js"></script>
   <script defer src="./scripts/init.js?v=79sgsn" type="module"></script>
-  <script defer src="./scripts/main.js?v=s4vhmf" type="module"></script>
+  <script defer src="./scripts/main.js?v=bgip" type="module"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-  <link rel="stylesheet" href="styles.css?v=xa8dtw">
+  <link rel="stylesheet" href="styles.css?v=oq5lin">
 </head>
 
 <body 
@@ -19,16 +19,16 @@
     botState: {
       name: 'nameless',
       status: 'idle',
-      token: 'your token'
+      token: ''
     }
   }" 
   x-init="
     await playground.start();
     playground.onCodeChange(() => {
-      console.log('Code was changed')
+      playground.runBot(botState);
     });
     playground.worker.onmessage = (e) => {
-      console.log('got message from worker', e.data);
+      console.log('got message from worker', e?.data);
       if (!e?.data) return;
       if (e.data.botState) {
         Object.assign(botState, e.data.botState)
@@ -43,21 +43,20 @@
   <h1>Telegram Bot Playground 🤖 </h1>
 
   <div style="display: flex; gap: 20px; justify-content: center;">
-    <div x-text="botState.status"></div>
-
-    <button @click="playground.runBot(botState)">Run bot</button>
     
     <label>
       Bot token
       <input 
         type="text"
         x-model="botState.token"
+        placeholder="your token"
         @input.debounce.500ms="playground.checkToken(botState)"
-      > 
+      >
     </label>
 
-    <div x-text="botState.name"></div>
-    
+    <label>Bot name: <span x-text="botState.name"></span></label>
+    <label>Status: <span x-text="botState.status"></span></label>
+
   </div>
 
   <div style="display: flex; align-items: start;">
