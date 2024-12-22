@@ -10,6 +10,25 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
   <link rel="stylesheet" href="styles.css?v=oq5lin">
+
+  <script>
+    document.addEventListener('alpine:initialized', async () => {
+      await playground.start();
+      playground.onCodeChange(() => {
+        playground.runBot(botState);
+      });
+      playground.worker.onmessage = (e) => {
+        console.log('got message from worker', e?.data);
+        if (!e?.data) return;
+        if (e.data.botState) {
+          Object.assign(botState, e.data.botState)
+        }
+        botUpdates.push(e.data);
+        console.log('Scrolling', $refs.updates.scrollHeight);
+        $nextTick(() => { $refs.updates.scrollTop = $refs.updates.scrollHeight })
+      };
+    })
+  </script>
 </head>
 
 <body x-data="{
@@ -57,25 +76,6 @@
       </template>
     </div>
   </div>
-
-  <script>
-    document.addEventListener('alpine:initialized', async () => {
-      await playground.start();
-      playground.onCodeChange(() => {
-        playground.runBot(botState);
-      });
-      playground.worker.onmessage = (e) => {
-        console.log('got message from worker', e?.data);
-        if (!e?.data) return;
-        if (e.data.botState) {
-          Object.assign(botState, e.data.botState)
-        }
-        botUpdates.push(e.data);
-        console.log('Scrolling', $refs.updates.scrollHeight);
-        $nextTick(() => { $refs.updates.scrollTop = $refs.updates.scrollHeight })
-      };
-    })
-  </script>
 
 </body>
 
