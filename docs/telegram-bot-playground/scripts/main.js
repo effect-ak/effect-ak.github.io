@@ -56,6 +56,7 @@ var serialize = (input) => {
 };
 
 // src/tg-bot-playground/main.ts
+console.log("loading main");
 window.playground.start = () => {
   const container = document.getElementById("container");
   if (!container) {
@@ -66,7 +67,7 @@ window.playground.start = () => {
       vs: "https://cdn.jsdelivr.net/npm/monaco-editor@latest/min/vs"
     }
   });
-  Promise.all([
+  return Promise.all([
     window.monaco_loader.init(),
     fetchText("./example/empty.ts")
   ]).then(([monaco, emptyExample]) => {
@@ -116,5 +117,28 @@ window.playground.checkToken = (state) => {
     }
   }).catch((error) => {
     console.warn("check token error", error);
+  });
+};
+window.playground.onCodeChange = (f) => {
+  let timeoutId;
+  const debounceDelay = 1e3;
+  const editor = window.playground.editor;
+  if (!editor) {
+    console.warn("Cannot attach onDidChangeModel");
+    return;
+  }
+  editor.onDidChangeModelContent(() => {
+    if (timeoutId !== void 0) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = window.setTimeout(() => {
+      const model = window.playground.tsModel;
+      if (model) {
+        const markers = window.monaco.editor.getModelMarkers({ resource: model.uri });
+        if (!markers.find((_) => _.severity.valueOf() == 8)) {
+          f();
+        }
+      }
+    }, debounceDelay);
   });
 };

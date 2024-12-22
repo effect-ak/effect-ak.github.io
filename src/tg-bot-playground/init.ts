@@ -1,11 +1,20 @@
-const worker = new Worker('./scripts/web-worker.js', { type: "module" });
-
-worker.addEventListener("message", msg => {
-  console.log("From worker", msg.data);
-});
-
 window.playground = {};
-window.playground.worker = worker;
+
+const version: string = await (
+  fetch("./metadata.json", { cache: "no-cache" }).then(_ => _.json()).then(_ => _["web-worker.js"])
+);
+
+if (version) {
+  const worker = new Worker(`./scripts/web-worker.js?v=${version}`, { type: "module" });
+
+  worker.addEventListener("message", msg => {
+    console.log("From worker", msg.data);
+  });
+  
+  window.playground.worker = worker;
+} else {
+  console.warn("web worker not initiated")
+}
 
 setFavicon("🤖");
 

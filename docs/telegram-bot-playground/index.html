@@ -5,8 +5,8 @@
   <title>Telegram Bot Playground</title>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   <script defer src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/umd/monaco-loader.min.js"></script>
-  <script defer src="./scripts/init.js?v=1ce1qg" type="module"></script>
-  <script defer src="./scripts/main.js?v=w50ikz" type="module"></script>
+  <script defer src="./scripts/init.js?v=79sgsn" type="module"></script>
+  <script defer src="./scripts/main.js?v=s4vhmf" type="module"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
   <link rel="stylesheet" href="styles.css?v=xa8dtw">
@@ -23,7 +23,10 @@
     }
   }" 
   x-init="
-    playground.start();
+    await playground.start();
+    playground.onCodeChange(() => {
+      console.log('Code was changed')
+    });
     playground.worker.onmessage = (e) => {
       console.log('got message from worker', e.data);
       if (!e?.data) return;

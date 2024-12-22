@@ -10,8 +10,11 @@ const files = [
 ];
 
 const indexPagePath = "./docs/telegram-bot-playground/index.html";
+const metaPath = "./docs/telegram-bot-playground/metadata.json";
 
 let html = await readFile(indexPagePath, "utf-8");
+
+const metadata = {}
 
 for (const relativePath of files) {
 
@@ -25,14 +28,17 @@ for (const relativePath of files) {
   const content = await readFile(absolutePath, "utf-8");
   const hash = getShortHash(content);
 
-  const filename = Path.basename(relativePath).replace(".", "\\.");
+  const filename = Path.basename(relativePath);
   
-  const regex = new RegExp(`(${filename}\\?v=)\\w*`, "g");
+  const regex = new RegExp(`(${filename.replace(".", "\\.")}\\?v=)\\w*`, "g");
   html = html.replace(regex, `$1${hash}`);
+
+  metadata[filename] = hash;
 
 }
 
 await writeFile(indexPagePath, html, "utf-8");
+await writeFile(metaPath, JSON.stringify(metadata, undefined, 2), "utf-8");
 
 function getShortHash(str) {
   let hash = 0;

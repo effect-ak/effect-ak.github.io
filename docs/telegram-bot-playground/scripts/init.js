@@ -1,10 +1,15 @@
 // src/tg-bot-playground/init.ts
-var worker = new Worker("./scripts/web-worker.js", { type: "module" });
-worker.addEventListener("message", (msg) => {
-  console.log("From worker", msg.data);
-});
 window.playground = {};
-window.playground.worker = worker;
+var version = await fetch("./metadata.json", { cache: "no-cache" }).then((_) => _.json()).then((_) => _["web-worker.js"]);
+if (version) {
+  const worker = new Worker(`./scripts/web-worker.js?v=${version}`, { type: "module" });
+  worker.addEventListener("message", (msg) => {
+    console.log("From worker", msg.data);
+  });
+  window.playground.worker = worker;
+} else {
+  console.warn("web worker not initiated");
+}
 setFavicon("\u{1F916}");
 function setFavicon(emoji) {
   const canvas = document.createElement("canvas");

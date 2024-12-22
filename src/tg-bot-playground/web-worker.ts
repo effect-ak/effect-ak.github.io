@@ -3,7 +3,7 @@ import { runTgChatBot } from "@effect-ak/tg-bot-client"
 import { deserialize } from "./utils.js"
 import type { BotState } from "./types.js"
 
-console.log("loading worker")
+console.log("loading worker...");
 
 type RunBot = {
   command: "run-bot"

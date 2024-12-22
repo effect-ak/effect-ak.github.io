@@ -3719,7 +3719,7 @@ var deserialize = (input) => {
 };
 
 // src/tg-bot-playground/web-worker.ts
-console.log("loading worker");
+console.log("loading worker...");
 var logId = 1;
 var notifyParent = (input) => {
   self.postMessage({

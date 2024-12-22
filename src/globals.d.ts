@@ -4,10 +4,11 @@ interface Window {
   playground: {
     worker?: Worker
     tsModel?: import("monaco-editor").editor.ITextModel
-    start?: typeof import("./tg-bot-playground/main.js").startPlayground
+    start?: () => Promise<unknown> | void
     editor?: import("monaco-editor").editor.IStandaloneCodeEditor
     loadExample?: (name: string) => void
     runBot?: (_: BotState) => void
     checkToken?: (_: BotState) => void
+    onCodeChange?: (_: () => void) => void
   }
 }

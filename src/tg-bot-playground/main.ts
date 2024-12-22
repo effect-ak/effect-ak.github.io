@@ -1,6 +1,8 @@
 import type { BotState } from "./types.js";
 import { fetchText, getJsCode, setupDts } from "./utils.js";
 
+console.log("loading main");
+
 window.playground.start = () => {
 
   const container = document.getElementById('container');
@@ -15,7 +17,7 @@ window.playground.start = () => {
     }
   });
 
-  Promise.all([
+  return Promise.all([
     window.monaco_loader.init(),
     fetchText("./example/empty.ts")
   ]).then(([monaco, emptyExample]) => {
@@ -31,7 +33,7 @@ window.playground.start = () => {
         contextmenu: false,
         minimap: {
           enabled: false
-        }
+        },
       });
 
   }).catch(error => console.warn("init error", error));
@@ -94,4 +96,31 @@ window.playground.checkToken =
         console.warn("check token error", error)
       });
 
+  }
+
+window.playground.onCodeChange =
+  (f) => {
+    let timeoutId: number | undefined;
+    const debounceDelay = 1000;
+
+    const editor = window.playground.editor;
+
+    if (!editor) {
+      console.warn("Cannot attach onDidChangeModel");
+      return;
+    }
+
+    editor.onDidChangeModelContent(() => {
+      if (timeoutId !== undefined) {
+        clearTimeout(timeoutId);
+      }
+
+      timeoutId = window.setTimeout(() => {
+        const model = window.playground.tsModel;
+        if (model) {
+          const markers = window.monaco.editor.getModelMarkers({ resource: model.uri });
+          if (!markers.find(_ => _.severity.valueOf() == 8)) { f() }
+        }
+      }, debounceDelay);
+    });
   }

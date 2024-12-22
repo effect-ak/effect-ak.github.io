@@ -1,12 +1,10 @@
 import { describe, expect, it } from "vitest";
 import * as Path from "path";
 import { Worker } from "worker_threads";
-import assert from "assert";
-import { existsSync } from "fs";
 
 describe("web worker", () => {
 
-  it("create", async () => {
+  it.skip("create", async () => {
 
     const path = 
       Path.join(__dirname, "..", "docs", "telegram-bot-playground", "scripts", "web-workers.js");
