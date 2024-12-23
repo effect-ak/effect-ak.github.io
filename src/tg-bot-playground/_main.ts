@@ -29,12 +29,6 @@ document.addEventListener('alpine:init', async () => {
 
   if (!Alpine) return;
 
-  Alpine.data("state", () => ({
-    bot: {
-      a: 1
-    }
-  }))
-
   const state = makeGlobalState(Alpine);
 
   Alpine.store("state", state);
