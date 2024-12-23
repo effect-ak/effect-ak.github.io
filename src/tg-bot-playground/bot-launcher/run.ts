@@ -1,4 +1,4 @@
-import type { GlobalState } from "#tg-bot-playground/_main.js";
+import type { GlobalState } from "#tg-bot-playground/main.js";
 import type { TsTextModel } from "#tg-bot-playground/editor/ts-text-model.js";
 
 export type RunnableBot = (ReturnType<typeof makeRunnableBot>)

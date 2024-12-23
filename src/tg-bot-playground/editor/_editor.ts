@@ -1,7 +1,7 @@
 import { fetchText, getMonacoLoader } from "#tg-bot-playground/utils.js";
 import { setupDts } from "./setup.js";
 import { initEditor } from "./init.js";
-import type { GlobalState } from "#tg-bot-playground/_main.js";
+import type { GlobalState } from "#tg-bot-playground/main.js";
 
 export const makeEditor = async (
   state: GlobalState

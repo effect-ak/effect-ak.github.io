@@ -4,7 +4,7 @@ import * as Path from "path"
 
 const files = [
   "styles.css",
-  "scripts/_main.js",
+  "scripts/main.js",
   "scripts/worker/web-worker.js",
 ];
 
