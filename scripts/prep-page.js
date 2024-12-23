@@ -4,9 +4,8 @@ import * as Path from "path"
 
 const files = [
   "styles.css",
-  "scripts/init.js",
-  "scripts/main.js",
-  "scripts/web-worker.js",
+  "scripts/_main.js",
+  "scripts/worker/web-worker.js",
 ];
 
 const indexPagePath = "./docs/telegram-bot-playground/index.html";

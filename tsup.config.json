@@ -1,9 +1,8 @@
 {
   "$schema": "https://cdn.jsdelivr.net/npm/tsup/schema.json",
   "entry": [
-    "src/tg-bot-playground/web-worker.ts",
-    "src/tg-bot-playground/main.ts",
-    "src/tg-bot-playground/init.ts"
+    "src/tg-bot-playground/worker/web-worker.ts",
+    "src/tg-bot-playground/_main.ts"
   ],
   "splitting": false,
   "outDir": "docs/telegram-bot-playground/scripts",

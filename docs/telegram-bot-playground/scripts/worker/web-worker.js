@@ -3573,13 +3573,13 @@ var fetchUpdates = ({ state, settings, execute: execute2, handlers }) => gen(fun
       hasError = true;
       break;
     }
-    const handler = handlers[`on_${update.type}`];
-    if (!handler) {
+    const handler2 = handlers[`on_${update.type}`];
+    if (!handler2) {
       console.warn("Handler for update not defined", update);
       hasError = true;
       break;
     }
-    const handleResult = handler(update);
+    const handleResult = handler2(update);
     if ("chat" in update) {
       const response = yield* execute2(`send_${handleResult.type}`, {
         ...handleResult,
@@ -3734,7 +3734,10 @@ var BotFactoryServiceDefault = {
 };
 var runTgChatBot = (input) => BotFactoryServiceDefault.runBot(input).pipe(runPromise);
 
-// src/tg-bot-playground/utils.ts
+// src/tg-bot-playground/types.ts
+var isRunBot = (input) => typeof input == "object" && input != null && "command" in input && "token" in input && "code" in input;
+
+// src/tg-bot-playground/worker/utils.ts
 var parseJson = (input) => {
   try {
     return { parsed: JSON.parse(input) };
@@ -3745,7 +3748,7 @@ var parseJson = (input) => {
 var deserialize = (input) => {
   const result = [];
   const fields = parseJson(input);
-  if (typeof fields?.parsed != "object") return void 0;
+  if (typeof fields?.parsed != "object") return;
   for (const [k, v] of Object.entries(fields.parsed)) {
     try {
       const f = new Function(`return ${v}`)();
@@ -3757,59 +3760,64 @@ var deserialize = (input) => {
   return Object.fromEntries(result);
 };
 
-// src/tg-bot-playground/web-worker.ts
-console.log("loading worker...");
-var logId = 1;
-var notifyParent = (input) => {
-  self.postMessage({
-    id: logId++,
-    ...input
+// src/tg-bot-playground/worker/handler.ts
+var makeWorkerHandler = (notifyParent) => {
+  let messageId = 0;
+  let botInstance = void 0;
+  const sendEvent = (input) => notifyParent({
+    ...input,
+    messageId: messageId++
   });
-};
-var botInstance = void 0;
-self.onmessage = async (msg) => {
-  const command = msg.data;
-  if (typeof command != "object" || !command.command) {
-    notifyParent({
-      error: "object command expected"
-    });
-    return;
-  }
-  if (command.command == "run-bot") {
-    const handlers = deserialize(command.code);
-    if (botInstance) {
-      console.log("reloading...");
-      await botInstance.reload({
-        ...handlers
+  return async (command) => {
+    if (!isRunBot(command)) {
+      sendEvent({
+        error: "not a run bot command",
+        command
       });
-      notifyParent({
+      return;
+    }
+    if (command.command == "run-bot") {
+      const handlers = deserialize(command.code);
+      if (botInstance) {
+        console.log("reloading...");
+        await botInstance.reload({
+          ...handlers
+        });
+        sendEvent({
+          botState: {
+            status: "reloaded"
+          }
+        });
+        return;
+      }
+      botInstance = await runTgChatBot({
+        type: "config",
+        "bot-token": command.token,
+        ...handlers,
+        onExit: (exit2) => sendEvent({
+          success: "Bot's fiber has been shutdown",
+          exit: exit2,
+          botState: {
+            status: "stopped"
+          }
+        })
+      });
+      sendEvent({
+        success: "Bot's fiber has been created",
         botState: {
-          status: "reloaded"
+          status: "active"
         }
       });
       return;
     }
-    botInstance = await runTgChatBot({
-      type: "config",
-      "bot-token": command.token,
-      ...handlers,
-      onExit: (exit2) => notifyParent({
-        success: "Bot's fiber has been shutdown",
-        exit: exit2,
-        botState: {
-          status: "stopped"
-        }
-      })
+    sendEvent({
+      error: "Unknown command"
     });
-    notifyParent({
-      success: "Bot's fiber has been created",
-      botState: {
-        status: "active"
-      }
-    });
-    return;
-  }
-  notifyParent({
-    error: "Unknown command"
-  });
+  };
 };
+
+// src/tg-bot-playground/worker/web-worker.ts
+var handler = makeWorkerHandler(
+  (_) => self.postMessage(_)
+);
+self.onmessage = (msg) => handler(msg.data);

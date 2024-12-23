@@ -5,43 +5,17 @@
   <title>Telegram Bot Playground</title>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   <script defer src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/umd/monaco-loader.min.js"></script>
-  <script defer src="./scripts/init.js?v=60sdgc" type="module"></script>
-  <script defer src="./scripts/main.js?v=bgip" type="module"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
   <link rel="stylesheet" href="styles.css?v=oq5lin">
 
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon.ico">
 
-  <script>
-    document.addEventListener('playgroundInitialized', async () => {
-      await playground.start();
-      playground.onCodeChange(() => {
-        playground.runBot(botState);
-      });
-      playground.worker.onmessage = (e) => {
-        console.log('got message from worker', e?.data);
-        if (!e?.data) return;
-        if (e.data.botState) {
-          Object.assign(botState, e.data.botState)
-        }
-        botUpdates.push(e.data);
-        console.log('Scrolling', $refs.updates.scrollHeight);
-        $nextTick(() => { $refs.updates.scrollTop = $refs.updates.scrollHeight })
-      };
-    })
-  </script>
+  <script defer src="./scripts/_main.js?v=e7gy8f" type="module"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
 </head>
 
-<body x-data="{
-    selected_example: 'empty.ts',
-    botUpdates: [],
-    botState: {
-      name: 'nameless',
-      status: 'idle',
-      token: ''
-    }
-  }">
+<body x-data="state">
 
   <h1>Telegram Bot Playground 🤖 </h1>
 
@@ -49,19 +23,22 @@
 
     <label>
       Bot token
-      <input type="text" x-model="botState.token" placeholder="your token"
-        @input.debounce.500ms="playground.checkToken(botState)">
+      <input type="text" x-model="$store.state.bot.token" placeholder="your token"
+        @input.debounce.500ms="$dispatch('check-token')">
     </label>
 
-    <label>Bot name: <span x-text="botState.name"></span></label>
-    <label>Status: <span x-text="botState.status"></span></label>
+    <label>Bot name: <span x-text="$store.state.bot.name"></span></label>
+    <label>Status: <span x-text="$store.state.bot.status"></span></label>
 
   </div>
 
   <div style="display: flex; align-items: start;">
     <label>
       Select example
-      <select x-model="selected_example" @change="playground.loadExample(selected_example)">
+      <select 
+        x-model="$store.state.selectedExample"
+        @change="$dispatch('change-example')"
+      >
         <option value="empty.ts">Empty</option>
         <option value="command.ts">Command Bot</option>
         <option value="file.ts">File Bot</option>
@@ -73,7 +50,7 @@
   <div class="flex-container">
     <div id="container" x-cloak></div>
     <div id="worker-updates" x-ref="updates">
-      <template x-for="update in botUpdates" :key="update.id">
+      <template x-for="update in $store.state.botUpdates" :key="update.messageId">
         <div x-text="JSON.stringify(update, undefined, 2)"></div>
       </template>
     </div>
