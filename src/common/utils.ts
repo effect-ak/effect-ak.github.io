@@ -1,4 +1,4 @@
-import type { MonacoLoader, Alpine } from "./types.js";
+import type { MonacoLoader, Alpine } from "./types";
 
 export const fetchText = (path: string) =>
   fetch(path).then(_ => _.text())

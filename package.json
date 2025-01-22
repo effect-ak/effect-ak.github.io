@@ -1,22 +1,17 @@
 {
   "private": "true",
   "type": "module",
-  "scripts": {
-    "gen-html": "redocly build-docs --output ../effect-ak.github.io/telegram-bot-api/index.html",
-    "dev": "cd docs && http-server",
-    "build": "tsup && node scripts/prep-page.js"
-  },
   "dependencies": {
     "@edge-runtime/vm": "^5.0.0",
-    "@effect-ak/tg-bot-client": "file:../tg-bot-client/effect-ak-tg-bot-client-0.2.2.tgz",
+    "@effect-ak/tg-bot-client": "^0.3.0",
     "@monaco-editor/loader": "^1.4.0",
-    "@redocly/cli": "^1.26.0",
     "@types/alpinejs": "^3.13.11",
-    "@types/node": "22.10.2",
-    "effect": "^3.11.9",
+    "@types/node": "^22.10.5",
+    "alpinejs": "^3.14.8",
+    "effect": "^3.12.6",
     "monaco-editor": "^0.52.2",
-    "typescript": "^5.7.2",
+    "vite": "^6.0.11",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^2.1.8"
+    "vitest": "^3.0.3"
   }
 }

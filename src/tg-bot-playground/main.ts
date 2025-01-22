@@ -1,12 +1,14 @@
-import { makeBotLauncher } from "#tg-bot-playground/bot-launcher/_main.js";
-import { makeEditor } from "#tg-bot-playground/editor/_editor.js";
-import { getAlpine } from "#tg-bot-playground/utils.js";
-import type { Alpine, BotState } from "./types.js";
+import { makeBotLauncher } from "#/tg-bot-playground/bot-launcher/_main";
+import { makeEditor } from "#/common/editor/_editor";
+import { fetchText } from "#/common/utils";
+import type { BotState } from "./types";
+import Alpine from "alpinejs";
+import { stat } from "fs";
 
 export type GlobalState = ReturnType<typeof makeGlobalState>;
 
 export const makeGlobalState = (
-  alpine: Alpine
+  alpine: Alpine.Alpine
 ) => {
 
   const state =
@@ -14,7 +16,9 @@ export const makeGlobalState = (
       bot: {
         name: 'nameless',
         status: 'idle',
-        token: ''
+        token: '',
+        isAutoReload: false,
+        isReachable: false
       } as BotState,
       selectedExample: "empty.ts",
       botUpdates: [] as unknown[],
@@ -24,16 +28,24 @@ export const makeGlobalState = (
 
 }
 
-document.addEventListener('alpine:init', async () => {
-  const Alpine = getAlpine();
+declare global {
+  interface Window {
+    Alpine: typeof Alpine;
+  }
+}
 
-  if (!Alpine) return;
+window.Alpine = Alpine;
 
+setup();
+
+Alpine.start();
+
+async function setup() {
   const state = makeGlobalState(Alpine);
 
   Alpine.store("state", state);
 
-  const editor = await makeEditor(state);
+  const editor = await makeEditor();
 
   if (!editor) return;
 
@@ -42,6 +54,7 @@ document.addEventListener('alpine:init', async () => {
   if (!botLauncher) return;
 
   editor.onCodeChange(() => {
+    if (!state.bot.isReachable || !state.bot.isAutoReload) return;
     botLauncher.runBot(state);
   });
 
@@ -50,7 +63,9 @@ document.addEventListener('alpine:init', async () => {
   });
 
   document.addEventListener("change-example", () => {
-    editor.loadExample()
+    if (!state.selectedExample) return;
+    fetchText(`./example/${state.selectedExample}`)
+      .then(_ => editor.tsTextModel.tsModel.setValue(_))
   });
   
   botLauncher.worker.onmessage = (event: MessageEvent) => {
@@ -64,6 +79,4 @@ document.addEventListener('alpine:init', async () => {
     // console.log('Scrolling', $refs.updates.scrollHeight);
     // $nextTick(() => { $refs.updates.scrollTop = $refs.updates.scrollHeight })
   }
-
-})
-
+}

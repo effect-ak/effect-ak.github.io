@@ -1,5 +1,5 @@
-import type { MonacoLoader } from "#tg-bot-playground/types.js";
-import { makeTsTextModel } from "./ts-text-model.js";
+import type { MonacoLoader } from "#/common/types";
+import { makeTsTextModel } from "./ts-text-model";
 
 export const initEditor = async (
   loader: MonacoLoader

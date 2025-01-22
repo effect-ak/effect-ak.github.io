@@ -1,4 +1,4 @@
-import { makeWorkerHandler } from "./handler.js";
+import { makeWorkerHandler } from "./handler";
 
 const handler =
   makeWorkerHandler(

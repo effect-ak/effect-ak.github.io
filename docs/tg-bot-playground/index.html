@@ -1,0 +1,58 @@
+<html>
+
+<head>
+  <title>Telegram Bot Playground</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <script defer src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/umd/monaco-loader.min.js"></script>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon.ico">
+
+
+  <script type="module" crossorigin src="./assets/index-ChPUFYFo.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-Grbd-L5t.css">
+</head>
+
+<body x-data>
+
+  <h2>Telegram Bot Playground 🤖 </h2>
+
+  <div style="display: flex; gap: 20px; justify-content: center;">
+
+    <label>
+      Bot token
+      <input type="text" x-model="$store.state.bot.token" placeholder="your token"
+        @input.debounce.500ms="$dispatch('check-token')">
+    </label>
+
+    <label>Bot name: <span x-text="$store.state.bot.name"></span></label>
+    <label>Status: <span x-text="$store.state.bot.status"></span></label>
+
+  </div>
+
+  <div style="display: flex; align-items: start;">
+    <label>
+      Select example
+      <select 
+        x-model="$store.state.selectedExample"
+        @change="$dispatch('change-example')"
+      >
+        <option value="empty.ts">Empty</option>
+        <option value="command.ts">Command Bot</option>
+        <option value="file.ts">File Bot</option>
+      </select>
+    </label>
+
+  </div>
+
+  <div class="flex-container">
+    <div id="container" x-cloak></div>
+    <div id="worker-updates" x-ref="updates">
+      <template x-for="update in $store.state.botUpdates" :key="update.messageId">
+        <div x-text="JSON.stringify(update, undefined, 2)"></div>
+      </template>
+    </div>
+  </div>
+
+</body>
+
+</html>

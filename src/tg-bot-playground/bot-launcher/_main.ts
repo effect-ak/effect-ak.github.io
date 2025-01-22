@@ -1,12 +1,12 @@
-import type { GlobalState } from "#tg-bot-playground/main.js";
-import type { TsTextModel } from "#tg-bot-playground/editor/ts-text-model.js";
-import { loadWorker } from "./load.js";
-import { checkTokenAndRun, makeRunnableBot } from "./run.js";
+import type { GlobalState } from "#/tg-bot-playground/main";
+import type { TsTextModel } from "#/common/editor/ts-text-model";
+import { checkTokenAndRun, makeRunnableBot } from "./run";
 
 export const makeBotLauncher = async (
   tsTextModel: TsTextModel
 ) => {
-  const worker = await loadWorker();
+
+  const worker = new Worker(new URL('../worker/web-worker.ts', import.meta.url), { type: "module" })
 
   if (!worker) return;
 

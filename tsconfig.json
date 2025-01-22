@@ -4,9 +4,9 @@
     "strict": true,
     "exactOptionalPropertyTypes": true,
     "target": "ES2022",
-    "module": "NodeNext",
+    "module": "ESNext",
     "lib": ["ESNext", "DOM", "WebWorker"],
-    "moduleResolution": "NodeNext", 
+    "moduleResolution": "bundler", 
     "moduleDetection": "force",
     "skipLibCheck": true,
     "noFallthroughCasesInSwitch": true,
@@ -14,7 +14,7 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "#tg-bot-playground/*": ["./src/tg-bot-playground/*"],
+      "#/*": ["./src/*"]
     }
   }
 }

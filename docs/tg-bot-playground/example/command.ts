@@ -30,5 +30,5 @@ export default {
       text: "hey :)"
     }
   },
-} as BotMessageHandlers
+} satisfies BotMessageHandlers
 

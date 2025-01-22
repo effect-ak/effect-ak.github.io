@@ -1,5 +1,5 @@
-import { Monaco } from "#tg-bot-playground/types.js";
-import { fetchText } from "#tg-bot-playground/utils.js";
+import { Monaco } from "#/common/types";
+import { fetchText } from "#/common/utils";
 import type { languages } from "monaco-editor";
 
 export type TsTextModel = Awaited<ReturnType<typeof makeTsTextModel>>
@@ -42,7 +42,7 @@ export const makeTsTextModel =
 async function getDefaultExport<D>(code: string) {
   try {
     const encodedCode = encodeURIComponent(code);
-    const module = await import(`data:text/javascript,${encodedCode}`);
+    const module = await import(/* @vite-ignore */`data:text/javascript,${encodedCode}`);
     const result = module.default;
     return { default: result as D };
   } catch (e) {

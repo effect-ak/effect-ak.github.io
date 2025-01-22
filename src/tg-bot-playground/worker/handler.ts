@@ -1,6 +1,6 @@
 import { runTgChatBot, BotInstance } from "@effect-ak/tg-bot-client";
-import { isRunBot, type BotState } from "#tg-bot-playground/types.js";
-import { deserialize } from "./utils.js";
+import { isRunBot, type BotState } from "../types";
+import { deserialize } from "./utils";
 
 export const makeWorkerHandler = (
   notifyParent: (_: Record<string, unknown> & { messageId: number }) => void
@@ -47,7 +47,7 @@ export const makeWorkerHandler = (
       botInstance = 
         await runTgChatBot({
           type: "config",
-          "bot-token": command.token,
+          bot_token: command.token,
           ...handlers,
           onExit: (exit) =>
             sendEvent({

@@ -1,11 +1,8 @@
-import { fetchText, getMonacoLoader } from "#tg-bot-playground/utils.js";
-import { setupDts } from "./setup.js";
-import { initEditor } from "./init.js";
-import type { GlobalState } from "#tg-bot-playground/main.js";
+import { getMonacoLoader } from "#/common/utils";
+import { setupDts } from "./setup";
+import { initEditor } from "./init";
 
-export const makeEditor = async (
-  state: GlobalState
-) => {
+export const makeEditor = async () => {
 
   const loader = getMonacoLoader();
 
@@ -19,11 +16,6 @@ export const makeEditor = async (
 
   return {
     tsTextModel: editor.tsTextModel,
-    loadExample: () => {
-      if (!state.selectedExample) return;
-      fetchText(`./example/${state.selectedExample}`)
-        .then(_ => editor.tsTextModel.tsModel.setValue(_))
-    },
     onCodeChange: (
       f: () => void
     ) => {

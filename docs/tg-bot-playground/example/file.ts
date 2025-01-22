@@ -23,5 +23,4 @@ export default {
       text: "hey, send me a message in the format '3+3+3' and I will return you the sum of it in a text file"
     }
   },
-} as BotMessageHandlers
-
+} satisfies BotMessageHandlers

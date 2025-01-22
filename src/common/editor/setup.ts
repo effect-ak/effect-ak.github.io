@@ -1,5 +1,5 @@
 import type { Monaco } from "@monaco-editor/loader";
-import { fetchText } from "#tg-bot-playground/utils.js";
+import { fetchText } from "#/common/utils";
 
 export const setupDts = async (
   monaco: Monaco

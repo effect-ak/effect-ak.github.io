@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 
 <head>
@@ -6,20 +5,26 @@
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   <script defer src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/umd/monaco-loader.min.js"></script>
 
-  <link rel="stylesheet" href="styles.css?v=oq5lin">
-
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon.ico">
+  <link rel="stylesheet" href="./styles.css">
 
-  <script defer src="./scripts/main.js?v=yozt7w" type="module"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script defer src="./main.ts" type="module"></script>
 
 </head>
 
 <body x-data>
 
-  <h1>Telegram Bot Playground 🤖 </h1>
+  <h2>Telegram Bot Playground 🤖 </h2>
 
   <div style="display: flex; gap: 20px; justify-content: center;">
+
+    <label x-show="$store.state.bot.isReachable">
+      Auto-Reload
+      <input 
+        type="checkbox" 
+        x-model="$store.state.bot.isAutoReload"
+      >
+    </label>
 
     <label>
       Bot token
