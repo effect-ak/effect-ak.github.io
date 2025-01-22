@@ -41,6 +41,7 @@ const makeRunnableBot = (tsTextModel, worker) => (state) => tsTextModel.getJsCod
     console.warn("Serizalized js code not defined");
     return;
   }
+  console.log("code", code.serialized);
   worker.postMessage({
     command: "run-bot",
     token: state.bot.token,
@@ -52,23 +53,29 @@ const makeRunnableBot = (tsTextModel, worker) => (state) => tsTextModel.getJsCod
 });
 const checkTokenAndRun = (state, runnableBot) => {
   const token = state.bot.token;
-  if (!token) return;
+  if (!token) {
+    state.bot.isReachable = false;
+    return;
+  }
   fetch(`https://api.telegram.org/bot${token}/getMe`).then((_) => _.json()).then((info) => {
     if (info.ok) {
       state.bot.name = info.result.first_name;
+      state.bot.isReachable = true;
       console.log("Running bot");
       runnableBot(state);
     } else {
       state.bot.name = "nameless";
+      state.bot.isReachable = false;
     }
   }).catch((error2) => {
     console.warn("check token error", error2);
+    state.bot.isReachable = false;
   });
 };
 const makeBotLauncher = async (tsTextModel) => {
   const worker = new Worker(new URL(
     /* @vite-ignore */
-    "" + new URL("web-worker-CgNZSpPE.js", import.meta.url).href,
+    "" + new URL("web-worker-Cdzbvpxg.js", import.meta.url).href,
     import.meta.url
   ), { type: "module" });
   if (!worker) return;
@@ -179,15 +186,12 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
 const makeTsTextModel = async (monaco) => {
   const emptyExample = await fetchText("./example/empty.ts");
   const tsModel = monaco.editor.createModel(emptyExample, "typescript");
-  let cachedWorkerPromise = null;
+  let tsWorker = null;
   const getTsCode = async () => {
-    if (!cachedWorkerPromise) {
-      cachedWorkerPromise = (async () => {
-        const tsWorker = await monaco.languages.typescript.getTypeScriptWorker();
-        return tsWorker(tsModel.uri);
-      })();
+    if (!tsWorker) {
+      tsWorker = await monaco.languages.typescript.getTypeScriptWorker().then((_) => _(tsModel.uri));
     }
-    return cachedWorkerPromise.then((_) => _.getEmitOutput(tsModel.uri.toString()));
+    return tsWorker.getEmitOutput(tsModel.uri.toString());
   };
   return {
     tsModel,
@@ -3557,7 +3561,9 @@ const makeGlobalState = (alpine) => {
     bot: {
       name: "nameless",
       status: "idle",
-      token: ""
+      token: "",
+      isAutoReload: false,
+      isReachable: false
     },
     selectedExample: "empty.ts",
     botUpdates: []
@@ -3574,7 +3580,11 @@ async function setup() {
   if (!editor) return;
   const botLauncher = await makeBotLauncher(editor.tsTextModel);
   if (!botLauncher) return;
-  editor.onCodeChange(() => {
+  editor.onCodeChange(async () => {
+    if (!state.bot.isReachable || !state.bot.isAutoReload) return;
+    botLauncher.runBot(state);
+  });
+  document.addEventListener("reload-bot", () => {
     botLauncher.runBot(state);
   });
   document.addEventListener("check-token", () => {

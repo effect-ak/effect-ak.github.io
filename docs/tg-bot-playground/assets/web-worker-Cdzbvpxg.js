@@ -872,7 +872,6 @@ var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "
     }
   }
   const causeInterrupt = (traces = []) => new Interrupt(traces);
-  const causeIsFail = (self2) => self2._tag === "Fail";
   const causeIsInterrupt = (self2) => self2._tag === "Interrupt";
   const MicroFiberTypeId = /* @__PURE__ */ Symbol.for("effect/Micro/MicroFiber");
   const fiberVariance = {
@@ -1340,22 +1339,6 @@ var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "
     ...options,
     while: (exit2) => exit2._tag === "Success" && ((options == null ? void 0 : options.while) === void 0 || options.while(exit2.value))
   }));
-  const catchAllCause = /* @__PURE__ */ dual(2, (self2, f) => {
-    const onFailure = Object.create(OnFailureProto);
-    onFailure[args] = self2;
-    onFailure[failureCont] = f;
-    return onFailure;
-  });
-  const OnFailureProto = /* @__PURE__ */ makePrimitiveProto({
-    op: "OnFailure",
-    eval(fiber) {
-      fiber._stack.push(this);
-      return this[args];
-    }
-  });
-  const catchCauseIf = /* @__PURE__ */ dual(3, (self2, predicate, f) => catchAllCause(self2, (cause) => predicate(cause) ? f(cause) : failCause$1(cause)));
-  const tapErrorCauseIf = /* @__PURE__ */ dual(3, (self2, refinement, f) => catchCauseIf(self2, refinement, (cause) => andThen(f(cause), failCause$1(cause))));
-  const tapError = /* @__PURE__ */ dual(2, (self2, f) => tapErrorCauseIf(self2, causeIsFail, (fail2) => f(fail2.error)));
   const matchCauseEffect = /* @__PURE__ */ dual(2, (self2, options) => {
     const primitive = Object.create(OnSuccessAndFailureProto);
     primitive[args] = self2;
@@ -2971,6 +2954,8 @@ ${this.stack.split("\n").slice(1).join("\n")}` : this.toString();
     Base.prototype.name = tag;
     return Base;
   };
+  var BotMessageHandler = class extends Tag("BotMessageHandler")() {
+  };
   var makeSettingsFrom = (input) => {
     let limit = input.batch_size ?? 10;
     let timeout = input.timeout ?? 10;
@@ -3192,14 +3177,16 @@ ${this.stack.split("\n").slice(1).join("\n")}` : this.toString();
       })
     );
   };
-  var BotUpdatePollerService = class extends Tag("BotUpdatePollerService")() {
-  };
+  (class extends Tag("BotUpdatePollerService")() {
+  });
   var BotUpdatesPollerServiceDefault = gen(function* () {
     console.log("Initiating BotUpdatesPollerServiceDefault");
     const state = {
       fiber: void 0
     };
-    const runBot = (messageHandler) => gen(function* () {
+    const runBot = gen(function* () {
+      console.log("run bot");
+      const messageHandler = yield* service(BotMessageHandler);
       const startFiber = pollAndHandle({
         settings: messageHandler
       }).pipe(
@@ -3207,9 +3194,6 @@ ${this.stack.split("\n").slice(1).join("\n")}` : this.toString();
         tap(
           (fiber) => fiber.addObserver((exit2) => {
             console.log("bot's fiber has been closed", exit2);
-            if (messageHandler.onExit) {
-              messageHandler.onExit(exit2);
-            }
           })
         )
       );
@@ -3219,10 +3203,10 @@ ${this.stack.split("\n").slice(1).join("\n")}` : this.toString();
       }
       state.fiber = yield* startFiber;
       console.log("Fetching bot updates via long polling...");
-      return state.fiber;
     });
     return {
-      runBot
+      runBot,
+      getFiber: () => state.fiber
     };
   });
   var makeClientConfigFrom = (input) => gen(function* () {
@@ -3246,43 +3230,33 @@ ${this.stack.split("\n").slice(1).join("\n")}` : this.toString();
     }
     return makeTgBotClientConfig(config);
   });
-  var makeBot = (messageHandler) => gen(function* () {
-    const { runBot } = yield* service(BotUpdatePollerService);
-    const fiber = yield* runBot(messageHandler);
-    const interrupt = fiberInterrupt(fiber);
-    return {
-      runBot,
-      interrupt
-    };
-  }).pipe(
-    tapError((error) => {
-      console.error(error);
-      return void_;
-    })
-  );
   (class extends Tag("BotFactoryService")() {
   });
   var BotFactoryServiceDefault = {
-    makeBot,
     runBot: (input) => gen(function* () {
       const client = make$2(TgBotClientConfig, yield* makeClientConfigFrom(input));
       const poller = yield* BotUpdatesPollerServiceDefault.pipe(
         provideContext(client)
       );
-      const bot = yield* makeBot(input).pipe(
-        provideContext(client),
-        provideService(BotUpdatePollerService, poller)
-      );
-      const reload = (input2) => bot.runBot(input2).pipe(
+      yield* poller.runBot.pipe(
+        provideService(BotMessageHandler, input),
         provideContext(client)
+      );
+      const reload = (input2) => poller.runBot.pipe(
+        provideService(BotMessageHandler, input2),
+        provideContext(client),
+        runPromise
       );
       return {
         reload,
-        bot
+        fiber: poller.getFiber
       };
     })
   };
-  var runTgChatBot = (input) => BotFactoryServiceDefault.runBot(input).pipe(runPromise);
+  var runTgChatBot = (input) => BotFactoryServiceDefault.runBot(input).pipe(
+    provideService(BotMessageHandler, input),
+    runPromise
+  );
   var getFile = (fileId) => gen(function* () {
     const response = yield* execute("get_file", { file_id: fileId });
     const config = yield* service(TgBotClientConfig);
@@ -3345,6 +3319,7 @@ ${this.stack.split("\n").slice(1).join("\n")}` : this.toString();
       messageId: messageId++
     });
     return async (command) => {
+      var _a2;
       if (!isRunBot(command)) {
         sendEvent({
           error: "not a run bot command",
@@ -3354,6 +3329,7 @@ ${this.stack.split("\n").slice(1).join("\n")}` : this.toString();
       }
       if (command.command == "run-bot") {
         const handlers = deserialize(command.code);
+        console.log("worker got run-bot command", handlers);
         if (botInstance) {
           console.log("reloading...");
           await botInstance.reload({
@@ -3369,14 +3345,16 @@ ${this.stack.split("\n").slice(1).join("\n")}` : this.toString();
         botInstance = await runTgChatBot({
           type: "config",
           bot_token: command.token,
-          ...handlers,
-          onExit: (exit2) => sendEvent({
+          ...handlers
+        });
+        (_a2 = botInstance.fiber()) == null ? void 0 : _a2.addObserver((exit2) => {
+          sendEvent({
             success: "Bot's fiber has been shutdown",
             exit: exit2,
             botState: {
               status: "stopped"
             }
-          })
+          });
         });
         sendEvent({
           success: "Bot's fiber has been created",
