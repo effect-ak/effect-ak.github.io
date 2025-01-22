@@ -5,6 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
   <script defer src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/umd/monaco-loader.min.js"></script>
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon.ico">
   <link rel="stylesheet" href="./styles.css">
 
@@ -25,6 +26,10 @@
         x-model="$store.state.bot.isAutoReload"
       >
     </label>
+
+    <button type="button" @click="$dispatch('reload-bot')">
+      <i class="fas fa-refresh"></i>
+  </button>
 
     <label>
       Bot token

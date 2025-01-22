@@ -12,8 +12,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       '@effect-ak/tg-bot-client':
-        specifier: ^0.3.0
-        version: 0.3.2
+        specifier: file://Users/alex/projects/effect-ak-org/tg-bot-client/effect-ak-tg-bot-client-0.3.3.tgz
+        version: file:../tg-bot-client/effect-ak-tg-bot-client-0.3.3.tgz
       '@monaco-editor/loader':
         specifier: ^1.4.0
         version: 1.4.0(monaco-editor@0.52.2)
@@ -52,8 +52,9 @@ packages:
     resolution: {integrity: sha512-NKBGBSIKUG584qrS1tyxVpX/AKJKQw5HgjYEnPLC0QsTw79JrGn+qUr8CXFb955Iy7GUdiiUv1rJ6JBGvaKb6w==, tarball: https://registry.npmjs.org/@edge-runtime/vm/-/vm-5.0.0.tgz}
     engines: {node: '>=18'}
 
-  '@effect-ak/tg-bot-client@0.3.2':
-    resolution: {integrity: sha512-ecfLb2QHycbUT/0QBiFpHab8ncRh+l3jLExkRUQWlvzqBVt7tRSKQXYvhAkxmV+wKJmxuqHz8YNn6GQ+ui9Www==, tarball: https://registry.npmjs.org/@effect-ak/tg-bot-client/-/tg-bot-client-0.3.2.tgz}
+  '@effect-ak/tg-bot-client@file:../tg-bot-client/effect-ak-tg-bot-client-0.3.3.tgz':
+    resolution: {integrity: sha512-AImFTvzSo6jDaq9dPzDICPsshhabVkpG8vqEL0mxvaX3R06lkF/NhukxZZwZ22fu1LUSSnqQgXBu2rGMQpk/7g==, tarball: file:../tg-bot-client/effect-ak-tg-bot-client-0.3.3.tgz}
+    version: 0.3.3
 
   '@esbuild/aix-ppc64@0.24.2':
     resolution: {integrity: sha512-thpVCb/rhxE/BnMLQ7GReQLLN8q9qbHmI55F4489/ByVg2aQaQ6kbcLb6FHkocZzQhxc4gx0sCk0tJkKBFzDhA==, tarball: https://registry.npmjs.org/@esbuild/aix-ppc64/-/aix-ppc64-0.24.2.tgz}
@@ -591,7 +592,7 @@ snapshots:
     dependencies:
       '@edge-runtime/primitives': 6.0.0
 
-  '@effect-ak/tg-bot-client@0.3.2':
+  '@effect-ak/tg-bot-client@file:../tg-bot-client/effect-ak-tg-bot-client-0.3.3.tgz':
     dependencies:
       effect: 3.12.6
 

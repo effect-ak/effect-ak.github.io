@@ -14,6 +14,8 @@ export const makeRunnableBot =
           return;
         }
 
+        console.log("code", code.serialized)
+
         worker.postMessage({
           command: 'run-bot',
           token: state.bot.token,

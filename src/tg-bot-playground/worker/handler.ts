@@ -30,6 +30,8 @@ export const makeWorkerHandler = (
     if (command.command == "run-bot") {
   
       const handlers = deserialize(command.code);
+
+      console.log("worker got run-bot command", handlers);
   
       if (botInstance) {
         console.log("reloading...")
@@ -48,16 +50,18 @@ export const makeWorkerHandler = (
         await runTgChatBot({
           type: "config",
           bot_token: command.token,
-          ...handlers,
-          onExit: (exit) =>
-            sendEvent({
-              success: "Bot's fiber has been shutdown",
-              exit,
-              botState: {
-                status: "stopped"
-              } as BotState
-            })
+          ...handlers
         });
+
+      botInstance.fiber()?.addObserver((exit) => {
+        sendEvent({
+          success: "Bot's fiber has been shutdown",
+          exit,
+          botState: {
+            status: "stopped"
+          } as BotState
+        })
+      })
   
       sendEvent({
         success: "Bot's fiber has been created",

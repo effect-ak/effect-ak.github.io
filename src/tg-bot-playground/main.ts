@@ -3,7 +3,6 @@ import { makeEditor } from "#/common/editor/_editor";
 import { fetchText } from "#/common/utils";
 import type { BotState } from "./types";
 import Alpine from "alpinejs";
-import { stat } from "fs";
 
 export type GlobalState = ReturnType<typeof makeGlobalState>;
 
@@ -53,8 +52,12 @@ async function setup() {
 
   if (!botLauncher) return;
 
-  editor.onCodeChange(() => {
+  editor.onCodeChange(async () => {
     if (!state.bot.isReachable || !state.bot.isAutoReload) return;
+    botLauncher.runBot(state);
+  });
+
+  document.addEventListener("reload-bot", () => {
     botLauncher.runBot(state);
   });
 

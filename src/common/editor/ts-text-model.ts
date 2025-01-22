@@ -12,16 +12,13 @@ export const makeTsTextModel =
     const tsModel =
       monaco.editor.createModel(emptyExample, 'typescript');
 
-    let cachedWorkerPromise: Promise<languages.typescript.TypeScriptWorker> | null = null;
+    let tsWorker: languages.typescript.TypeScriptWorker | null = null;
 
     const getTsCode = async () => {
-      if (!cachedWorkerPromise) {
-        cachedWorkerPromise = (async () => {
-          const tsWorker = await monaco.languages.typescript.getTypeScriptWorker();
-          return tsWorker(tsModel.uri);
-        })();
+      if (!tsWorker) {
+        tsWorker = await monaco.languages.typescript.getTypeScriptWorker().then(_ => _(tsModel.uri));
       }
-      return cachedWorkerPromise.then(_ => _.getEmitOutput(tsModel.uri.toString()));
+      return tsWorker!.getEmitOutput(tsModel.uri.toString());
     }
 
     return {
