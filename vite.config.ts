@@ -12,7 +12,7 @@ const configs: Record<string, UserConfig> = {
     build: {
       emptyOutDir: true,
       outDir: "../../docs/telegram-bot-playground",
-      minify: false
+      minify: true
     }
   }
 }

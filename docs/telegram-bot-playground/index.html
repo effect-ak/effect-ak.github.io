@@ -9,8 +9,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon.ico">
 
 
-  <script type="module" crossorigin src="./assets/index-BFvUFyQr.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-Grbd-L5t.css">
+  <script type="module" crossorigin src="./assets/index-jDxP3pDx.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BzQa5oof.css">
 </head>
 
 <body x-data>
@@ -27,7 +27,11 @@
       >
     </label>
 
-    <button type="button" @click="$dispatch('reload-bot')">
+    <button
+      type="button"
+      x-show="$store.state.bot.isReachable"
+      @click="$dispatch('reload-bot')"
+    >
       <i class="fas fa-refresh"></i>
   </button>
 

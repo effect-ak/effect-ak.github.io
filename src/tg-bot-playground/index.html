@@ -27,7 +27,11 @@
       >
     </label>
 
-    <button type="button" @click="$dispatch('reload-bot')">
+    <button
+      type="button"
+      x-show="$store.state.bot.isReachable"
+      @click="$dispatch('reload-bot')"
+    >
       <i class="fas fa-refresh"></i>
   </button>
 
