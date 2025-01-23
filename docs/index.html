@@ -1,4 +1,61 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 40px;
+            color: #333;
+            font-size: 2.5em;
+        }
+        .links a {
+            display: inline-block;
+            margin: 10px 20px;
+            padding: 15px 25px;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #007BFF;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .links a:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+            .links a {
+                display: block;
+                margin: 10px auto;
+                width: 80%;
+            }
+        }
+    </style>
+</head>
 <body>
-  <H3>Hello world!</H3>
+    <div class="container">
+        <div class="links">
+            <a href="/telegram-bot-api/">Telegram Bot API Documentation</a>
+            <a href="/telegram-bot-playground/">Bot Editor</a>
+        </div>
+    </div>
 </body>
+</html>
