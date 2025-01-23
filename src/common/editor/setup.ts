@@ -5,7 +5,7 @@ export const setupDts = async (
   monaco: Monaco
 ) => {
 
-  const dts = await fetchText("https://cdn.jsdelivr.net/npm/@effect-ak/tg-bot-client@0.2.2/dist/index.d.ts");
+  const dts = await fetchText("https://cdn.jsdelivr.net/npm/@effect-ak/tg-bot-client@0.3.3/dist/index.d.ts");
 
   monaco.languages.typescript.typescriptDefaults.setExtraLibs([
     {

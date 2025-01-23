@@ -73,7 +73,7 @@ async function setup() {
   
   botLauncher.worker.onmessage = (event: MessageEvent) => {
     const data = event.data
-    console.log('got message from worker', data);
+    // console.log('got message from worker', data);
     if (!data) return;
     if (data.botState) {
       Object.assign(state.bot, data.botState)

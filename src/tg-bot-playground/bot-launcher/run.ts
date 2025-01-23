@@ -1,3 +1,4 @@
+import { makeTgBotClient } from "@effect-ak/tg-bot-client";
 import type { GlobalState } from "#/tg-bot-playground/main";
 import type { TsTextModel } from "#/common/editor/ts-text-model";
 
@@ -14,8 +15,6 @@ export const makeRunnableBot =
           return;
         }
 
-        console.log("code", code.serialized)
-
         worker.postMessage({
           command: 'run-bot',
           token: state.bot.token,
@@ -28,7 +27,7 @@ export const makeRunnableBot =
       })
 
 export const checkTokenAndRun =
-  (state: GlobalState, runnableBot: RunnableBot) => {
+  async (state: GlobalState, runnableBot: RunnableBot) => {
 
     const token = state.bot.token;
 
@@ -37,21 +36,29 @@ export const checkTokenAndRun =
       return
     };
 
-    fetch(`https://api.telegram.org/bot${token}/getMe`)
-      .then(_ => _.json())
+    const client =
+      makeTgBotClient({
+        bot_token: token
+      });
+
+    await client.execute("get_me", {})
       .then(info => {
-        if (info.ok) {
-          state.bot.name = info.result.first_name;
-          state.bot.isReachable = true;
-          console.log("Running bot")
-          runnableBot(state);
-        } else {
-          state.bot.name = "nameless";
-          state.bot.isReachable = false;
-        }
+        state.bot.name = info.first_name;
+        state.bot.isReachable = true;
+        console.log("Running bot")
+        return runnableBot(state);
       }).catch(error => {
-        console.warn("check token error", error);
+        state.botUpdates.push(error);
+        state.bot.name = "nameless";
         state.bot.isReachable = false;
       });
+
+    const webhook =
+      await client.execute("get_webhook_info", {});
+
+    if (webhook.url) {
+      state.botUpdates.push("Cannot work with webhooks, delete it first");
+      state.bot.isReachable = false;
+    }
 
   }

@@ -18,9 +18,12 @@ export default {
       }
     }
 
-    return {
-      type: "message",
-      text: "hey, send me a message in the format '3+3+3' and I will return you the sum of it in a text file"
+    if (msg.text) { //reply on any text message
+      return {
+        type: "message",
+        text: "hey 🙃, send me a message in the format '3+3+3' and I will return you the sum of it in a text file"
+      }
     }
+
   },
 } satisfies BotMessageHandlers

@@ -23,12 +23,13 @@ export default {
       }
     }
 
-    console.log("got a message", msg.text)
-
-    return {
-      type: "message",
-      text: "hey :)"
+    if (msg.text) { // reply with "hey" on any text message
+      return {
+        type: "message",
+        text: "hey 😇"
+      }
     }
+
   },
 } satisfies BotMessageHandlers
 
