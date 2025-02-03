@@ -26,41 +26,24 @@ export const makeTsTextModel =
       getJsCode: async () => {
         const output = await getTsCode();
         const code = output.outputFiles[0].text;
-        const defaultExport = await getDefaultExport(code);
-        return {
-          defaultExport,
-          serialized: serialize(defaultExport?.default)
-        } as const;
+        return code;
       }
     } as const
 
   }
 
-async function getDefaultExport<D>(code: string) {
-  try {
-    const encodedCode = encodeURIComponent(code);
-    const module = await import(/* @vite-ignore */`data:text/javascript,${encodedCode}`);
-    const result = module.default;
-    return { default: result as D };
-  } catch (e) {
-    console.warn("get default error", e);
-    return undefined;
-  }
+// const serialize = (input: unknown) => {
+//   if (typeof input != "object" || !input) {
+//     return undefined;
+//   }
+//   const result = [] as [string, string][];
 
-}
+//   for (const [key, value] of Object.entries(input)) {
+//     if (typeof value != "function") {
+//       continue;
+//     }
+//     result.push([key, value.toString()])
+//   }
 
-const serialize = (input: unknown) => {
-  if (typeof input != "object" || !input) {
-    return undefined;
-  }
-  const result = [] as [string, string][];
-
-  for (const [key, value] of Object.entries(input)) {
-    if (typeof value != "function") {
-      continue;
-    }
-    result.push([key, value.toString()])
-  }
-
-  return JSON.stringify(Object.fromEntries(result));
-}
+//   return JSON.stringify(Object.fromEntries(result));
+// }

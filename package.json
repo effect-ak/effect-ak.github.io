@@ -3,7 +3,7 @@
   "type": "module",
   "dependencies": {
     "@edge-runtime/vm": "^5.0.0",
-    "@effect-ak/tg-bot-client": "file://Users/alex/projects/effect-ak-org/tg-bot-client/effect-ak-tg-bot-client-0.3.3.tgz",
+    "@effect-ak/tg-bot-client": "^0.5.1",
     "@monaco-editor/loader": "^1.4.0",
     "@types/alpinejs": "^3.13.11",
     "@types/node": "^22.10.5",

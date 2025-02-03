@@ -1,8 +1,8 @@
+import Alpine from "alpinejs";
 import { makeBotLauncher } from "#/tg-bot-playground/bot-launcher/_main";
 import { makeEditor } from "#/common/editor/_editor";
 import { fetchText } from "#/common/utils";
 import type { BotState } from "./types";
-import Alpine from "alpinejs";
 
 export type GlobalState = ReturnType<typeof makeGlobalState>;
 

@@ -1,14 +1,16 @@
-import type { BotMessageHandlers } from "@effect-ak/tg-bot-client"
+import { BotResponse, defineBot } from "@effect-ak/tg-bot-client"
 
-export default {
+export default defineBot({
   on_message: (msg) => {
 
     if (msg.text) {
-      return {
+      return BotResponse.make({
         type: "message",
         text: "hey 😀"
-      }
+      })
     }
 
+    return BotResponse.ignore;
+
   },
-} satisfies BotMessageHandlers
+})

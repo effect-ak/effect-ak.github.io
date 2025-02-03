@@ -1,6 +1,6 @@
 import { runTgChatBot, BotInstance } from "@effect-ak/tg-bot-client";
 import { isRunBot, type BotState } from "../types";
-import { deserialize } from "./utils";
+import { loadJsModule } from "./utils";
 
 export const makeWorkerHandler = (
   notifyParent: (_: Record<string, unknown> & { messageId: number }) => void
@@ -12,10 +12,11 @@ export const makeWorkerHandler = (
 
   const sendEvent = (
     input: Record<string, unknown>
-  ) => notifyParent({
-    ...input,
-    messageId: messageId++
-  });
+  ) =>
+    notifyParent({
+      ...input,
+      messageId: messageId++
+    });
 
   return async (command: unknown) => {
 
@@ -26,17 +27,18 @@ export const makeWorkerHandler = (
       });
       return;
     }
-  
+
     if (command.command == "run-bot") {
-  
-      const handlers = deserialize(command.code);
+
+      const handlers = await loadJsModule(command.code);
 
       console.log("worker got run-bot command", handlers);
-  
+
       if (botInstance) {
         console.log("reloading...")
         await botInstance.reload({
-          ...handlers,
+          type: "single",
+          ...handlers.default
         });
         sendEvent({
           botState: {
@@ -45,12 +47,15 @@ export const makeWorkerHandler = (
         })
         return;
       }
-  
-      botInstance = 
+
+      botInstance =
         await runTgChatBot({
           type: "config",
           bot_token: command.token,
-          ...handlers
+          mode: {
+            type: "single",
+            ...handlers.default
+          }
         });
 
       botInstance.fiber()?.addObserver((exit) => {
@@ -62,17 +67,17 @@ export const makeWorkerHandler = (
           } as BotState
         })
       })
-  
+
       sendEvent({
         success: "Bot's fiber has been created",
         botState: {
           status: "active"
         } as BotState
       });
-  
+
       return;
     }
-  
+
     sendEvent({
       error: "Unknown command"
     })

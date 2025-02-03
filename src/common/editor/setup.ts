@@ -1,11 +1,12 @@
 import type { Monaco } from "@monaco-editor/loader";
 import { fetchText } from "#/common/utils";
+import { CDN_PACKAGE_DTS } from "#/tg-bot-playground/const";
 
 export const setupDts = async (
   monaco: Monaco
 ) => {
 
-  const dts = await fetchText("https://cdn.jsdelivr.net/npm/@effect-ak/tg-bot-client@0.3.3/dist/index.d.ts");
+  const dts = await fetchText(`https://cdn.jsdelivr.net/npm/${CDN_PACKAGE_DTS}`);
 
   monaco.languages.typescript.typescriptDefaults.setExtraLibs([
     {

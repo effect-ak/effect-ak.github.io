@@ -1,26 +1,28 @@
-const parseJson = (input: string) => {
-  try {
-    return { parsed: JSON.parse(input) }
-  } catch { return undefined }
+import { CDN_PACKAGE_MAIN } from "../const";
+
+const imports = {
+  "@effect-ak/tg-bot-client": CDN_PACKAGE_MAIN
 }
 
-export const deserialize = (input: string) => {
+export const replaceImports =
+  (code: string) => {
+    let prepared = code;
 
-  const result = [] as [string, unknown][];
-
-  const fields = parseJson(input);
-
-  if (typeof fields?.parsed != "object") return;
-
-  for (const [k, v] of Object.entries(fields.parsed)) {
-    try {
-      const f = new Function(`return ${v}`)();
-      result.push([k, f]);
-    } catch (e) {
-      console.warn("deserialize field error", { k, v, e });
+    for (const [name, cdn] of Object.entries(imports)) {
+      const fullCdn = `https://cdn.jsdelivr.net/npm/${cdn}`;
+      prepared = prepared.replaceAll(name, fullCdn);
     }
 
+    return prepared;
   }
 
-  return Object.fromEntries(result);
+export function loadJsModule(code: string): Promise<any> {
+  const prepared = replaceImports(code);
+  console.log("loading js code", {
+    code, prepared
+  })
+  const blob = new Blob([ prepared ], { type: 'application/javascript' });
+  const url = URL.createObjectURL(blob);
+
+  return import(/* @vite-ignore */url).finally(() => URL.revokeObjectURL(url))
 }

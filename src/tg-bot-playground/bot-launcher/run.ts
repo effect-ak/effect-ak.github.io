@@ -10,15 +10,10 @@ export const makeRunnableBot =
 
         if (!state.bot.token || state.bot.token.length < 10) return;
 
-        if (!code.serialized) {
-          console.warn("Serizalized js code not defined");
-          return;
-        }
-
         worker.postMessage({
           command: 'run-bot',
           token: state.bot.token,
-          code: code.serialized
+          code
         });
 
         state.bot.status = "active"
