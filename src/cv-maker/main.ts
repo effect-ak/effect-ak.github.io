@@ -53,7 +53,9 @@ async function setup() {
 
   const editor = await makeJsonEditor();
 
-  const resumeSchemaObject = await fetch("/resume-schema.json").then(_ => _.json());
+  const resumeSchemaObject = await fetch("./resume-schema.json").then(_ => _.json());
+
+  delete resumeSchemaObject["$schema"]
 
   if (!editor) {
     console.warn("can not load editor");
