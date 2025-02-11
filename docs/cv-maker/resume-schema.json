@@ -51,6 +51,26 @@
         "name": {
           "$ref": "#/$defs/NonEmptyString"
         },
+        "coverLetter": {
+          "type": "object",
+          "required": [
+            "position",
+            "content"
+          ],
+          "properties": {
+            "position": {
+              "$ref": "#/$defs/NonEmptyString"
+            },
+            "content": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/NonEmptyString"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
         "expertise": {
           "type": "array",
           "minItems": 1,

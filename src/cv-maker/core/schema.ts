@@ -63,6 +63,11 @@ export class EmploymentRecord
 export class Me
   extends S.Class<Me>("Me")({
     name: S.NonEmptyString,
+    coverLetter: 
+      S.Struct({
+        position: S.NonEmptyString,
+        content: S.NonEmptyString.pipe(S.NonEmptyArray)
+      }).pipe(S.optional),
     expertise: S.NonEmptyString.pipe(S.NonEmptyArray),
     location: S.NonEmptyString.pipe(S.optional),
     phone: S.NonEmptyString.pipe(S.optional),
@@ -86,5 +91,5 @@ export class ResumeObject
     $schema: S.NonEmptyString.pipe(S.optional),
     me: Me,
     technologies: ProjectTechnology.pipe(S.NonEmptyArray),
-    employmentHistory: EmploymentRecord.pipe(S.NonEmptyArray)
+    employmentHistory: EmploymentRecord.pipe(S.NonEmptyArray),
   }) { };

@@ -2,50 +2,63 @@ import { EmploymentRecord, ProjectDetails, ProjectTechnology, ResumeObject } fro
 import { DateTime, pipe, Array } from "effect";
 
 export function Resume(resume: ResumeObject) {
+  const coverLetter = resume.me.coverLetter;
   return (
     <div id="resume">
 
-    {ResumeHead(resume)}
+      {ResumeHead(resume)}
 
-    <div className="section-header">
-      <span id="label">Summary</span>
-    </div>
-    
-    <div id="summary">
-      {resume.me.expertSummary.map(s =>
-        <p dangerouslySetInnerHTML={{ __html: s }}></p>
-      )}
-    </div>
-    
-    <div className="section-header">
-      <span id="label">Skills</span>
-    </div>
-    
-    <div id="skills">
-
-      {Object.entries(getSkills(resume)).map(([ category, group ]) => 
-        <div className="skill-group">
-        <span>{category}</span>
-        <div className="group-list">
-          {group.map(t =>
-            <span className="stack-item">{t.technology.name}</span>
-          )}
+      {coverLetter ? (
+        <div>
+          <div className="section-header">
+            <span id="label">Why I'm the Right Choice for "{coverLetter.position}"</span>
+          </div>
+          <div id="summary">
+            {coverLetter.content.map(line => <p dangerouslySetInnerHTML={{ __html: line }}></p>)}
+          </div>
+          
         </div>
+      ): null}
+
+      <div className="section-header">
+        <span id="label">Summary</span>
       </div>
-      )}
-    
+
+      <div id="summary">
+        {resume.me.expertSummary.map(s =>
+          <p dangerouslySetInnerHTML={{ __html: s }}></p>
+        )}
+      </div>
+
+      <div className="section-header">
+        <span id="label">Skills</span>
+      </div>
+
+      <div id="skills">
+
+        {Object.entries(getSkills(resume)).map(([category, group]) =>
+          <div className="skill-group">
+            <span>{category}</span>
+            <div className="group-list">
+              {group.map(t =>
+                <span className="stack-item">{t.technology.name}</span>
+              )}
+            </div>
+          </div>
+        )}
+
+      </div>
+
+      <div className="section-header">
+        <span id="label">Employment</span>
+      </div>
+
+      <div id="employment">
+        {EmploymentHistory(resume)}
+      </div>
+
     </div>
 
-    <div className="section-header">
-      <span id="label">Employment</span>
-    </div>
-    
-    <div id="employment">
-      {EmploymentHistory(resume)}
-    </div>
-    
-    </div>
-    
   )
 }
 
@@ -120,27 +133,27 @@ function ResumeHead(resume: ResumeObject) {
 function CompanyProject(project: ProjectDetails) {
   return (
     <div className="project">
-    <div style={{ display: "flex" }}>
-      <div style={{ marginBottom: "3px" }}>
-        <b>Project: </b>
-        <span>{project.title}</span>
-      </div>
-      <div style={{ marginLeft: "auto" }}>
-        <b>Roles: </b>
-        <span>{project.roles.join('/')}</span>
-      </div>
-    </div>
-    <span
-      style={{display: "block"}}
-    ><b>Stack: </b>{ProjectStack(project)}</span>
-    <ul>
-      {project.achivements.map(achivement =>
-        <div>
-          <li>{achivement.human ?? achivement.technical}</li>
+      <div style={{ display: "flex" }}>
+        <div style={{ marginBottom: "3px" }}>
+          <b>Project: </b>
+          <span>{project.title}</span>
         </div>
-      )}
-    </ul>
-  </div>
+        <div style={{ marginLeft: "auto" }}>
+          <b>Roles: </b>
+          <span>{project.roles.join('/')}</span>
+        </div>
+      </div>
+      <span
+        style={{ display: "block" }}
+      ><b>Stack: </b>{ProjectStack(project)}</span>
+      <ul>
+        {project.achivements.map(achivement =>
+          <div>
+            <li>{achivement.human ?? achivement.technical}</li>
+          </div>
+        )}
+      </ul>
+    </div>
   )
 }
 
