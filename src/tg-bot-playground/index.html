@@ -62,7 +62,7 @@
   </div>
 
   <div class="flex-container">
-    <div id="container" x-cloak></div>
+    <div id="code-editor" x-cloak></div>
     <div id="worker-updates" x-ref="updates">
       <template x-for="update in $store.state.botUpdates" :key="update.messageId">
         <div x-text="JSON.stringify(update, undefined, 2)"></div>

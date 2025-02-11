@@ -12,6 +12,11 @@
     "monaco-editor": "^0.52.2",
     "vite": "^6.0.11",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.3"
+    "vitest": "^3.0.3",
+    "preact": "^10.25.4",
+    "preact-render-to-string": "^6.5.13",
+    "prettier": "^3.4.2",
+    "puppeteer": "^24.0.0",
+    "@preact/preset-vite": "^2.10.1"
   }
 }

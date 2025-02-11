@@ -1,0 +1,277 @@
+{
+  "$schema": "./resume-schema.json",
+  "me": {
+    "name": "John Doe",
+    "email": "john@gmail.com",
+    "phone": "+000 000 00 00",
+    "location": "Europe, UTC+2",
+    "expertise": [
+      "Frontend", "UI/UX"
+    ],
+    "expertSummary": [
+      "Skillful frontend developer with UX/UI practical experience"
+    ],
+    "profiles": [
+      {
+        "url": "https://github.com/microsoft/TypeScript",
+        "icon": "github black"
+      },
+      {
+        "url": "https://stackoverflow.com/",
+        "icon": "stack-overflow darkorange"
+      },
+      {
+        "url": "https://www.linkedin.com/",
+        "icon": "linkedin dodgerblue"
+      },
+      {
+        "url": "https://t.me/johndoe____",
+        "icon": "telegram steelblue"
+      },
+      {
+        "url": "https://wa.me/0000000",
+        "icon": "whatsapp green"
+      }
+    ]
+  },
+  "technologies": [
+    {
+      "id": "typescript",
+      "name": "TypeScript",
+      "category": "programming language",
+      "url": "https://www.typescriptlang.org/"
+    },
+    {
+      "id": "javascript",
+      "name": "JavaScript",
+      "category": "programming language",
+      "url": "https://en.wikipedia.org/wiki/JavaScript"
+    },
+    {
+      "id": "scala",
+      "name": "Scala",
+      "category": "programming language",
+      "url": "https://www.scala-lang.org/"
+    },
+    {
+      "id": "play-framework",
+      "name": "Play Framework",
+      "category": "framework",
+      "url": "https://en.wikipedia.org/wiki/Play_Framework"
+    },
+    {
+      "id": "java",
+      "name": "Java",
+      "category": "programming language",
+      "url": "https://en.wikipedia.org/wiki/Java_(programming_language)"
+    },
+    {
+      "id": "aws",
+      "name": "AWS",
+      "category": "cloud computing",
+      "url": "https://aws.amazon.com/"
+    },
+    {
+      "id": "gcp",
+      "name": "Google Cloud Platform",
+      "category": "cloud computing",
+      "url": "https://en.wikipedia.org/wiki/Google_Cloud_Platform"
+    },
+    {
+      "id": "mysql",
+      "name": "MySQL",
+      "category": "database",
+      "url": "https://en.wikipedia.org/wiki/MySQL"
+    },
+    {
+      "id": "h2",
+      "name": "H2",
+      "category": "database",
+      "url": "https://en.wikipedia.org/wiki/H2_(database)"
+    },
+    {
+      "id": "postgres",
+      "name": "PostgreSQL",
+      "category": "database",
+      "url": "https://en.wikipedia.org/wiki/PostgreSQL"
+    },
+    {
+      "id": "bootstrap",
+      "name": "Bootstrap",
+      "category": "frontend",
+      "url": "https://en.wikipedia.org/wiki/Bootstrap_(front-end_framework)"
+    },
+    {
+      "id": "vuejs",
+      "name": "VueJS",
+      "category": "frontend",
+      "url": "https://en.wikipedia.org/wiki/Vue.js"
+    },
+    {
+      "id": "angularjs",
+      "name": "AngularJS",
+      "category": "frontend",
+      "url": "https://en.wikipedia.org/wiki/AngularJS"
+    },
+    
+    {
+      "id": "azure",
+      "name": "Azure",
+      "category": "cloud computing",
+      "url": "https://azure.microsoft.com/"
+    },
+    {
+      "id": "jenkins",
+      "name": "Jenkins",
+      "category": "devops tool",
+      "url": "https://en.wikipedia.org/wiki/Jenkins_(software)"
+    },
+    {
+      "id": "bitbucket",
+      "name": "Bitbucket",
+      "category": "collaboration tool",
+      "url": "https://en.wikipedia.org/wiki/Bitbucket"
+    },
+    {
+      "id": "browserstack",
+      "name": "BrowserStack",
+      "category": "testing",
+      "url": "https://en.wikipedia.org/wiki/BrowserStack"
+    },
+    {
+      "id": "jira",
+      "name": "Jira",
+      "category": "collaboration tool",
+      "url": "https://en.wikipedia.org/wiki/Jira_(software)"
+    },
+    {
+      "id": "confluence",
+      "name": "Confluence",
+      "category": "collaboration tool",
+      "url": "https://en.wikipedia.org/wiki/Confluence_(software)"
+    },
+    {
+      "id": "contentful",
+      "name": "Contentful",
+      "category": "frontend",
+      "url": "https://en.wikipedia.org/wiki/Contentful"
+    },
+    {
+      "id": "vitest",
+      "name": "Vitest",
+      "category": "testing",
+      "url": "https://vitest.dev/"
+    },
+    {
+      "id": "scalatest",
+      "name": "ScalaTest",
+      "category": "testing",
+      "url": "https://www.scalatest.org/"
+    },
+    
+    {
+      "id": "jest",
+      "name": "Jest",
+      "category": "testing",
+      "url": "https://jestjs.io/"
+    },
+    {
+      "id": "serverless-framework",
+      "name": "Serverless Framework",
+      "category": "framework",
+      "url": "https://en.wikipedia.org/wiki/Serverless_Framework"
+    },
+    {
+      "id": "scrum",
+      "name": "Scrum",
+      "category": "collaboration tool",
+      "url": "https://en.wikipedia.org/wiki/Scrum_(software_development)"
+    },
+    {
+      "id": "jquery",
+      "name": "jQuery",
+      "category": "frontend",
+      "url": "https://en.wikipedia.org/wiki/Scrum_(software_development)"
+    },
+    {
+      "id": "docker",
+      "name": "Docker",
+      "category": "devops tool",
+      "url": "https://en.wikipedia.org/wiki/Docker_(software)"
+    },
+    {
+      "id": "react",
+      "name": "React",
+      "category": "frontend",
+      "url": "https://en.wikipedia.org/wiki/React_(software)"
+    },
+    {
+      "id": "electron",
+      "name": "Electron",
+      "category": "frontend",
+      "url": "https://en.wikipedia.org/wiki/Electron_(software_framework)"
+    },
+    {
+      "id": "akka",
+      "name": "Akka",
+      "category": "framework",
+      "url": "https://en.wikipedia.org/wiki/Akka_(toolkit)"
+    }
+  ],
+  "employmentHistory": [
+    {
+      "companyName": "Green been",
+      "workType": "hybrid",
+      "location": { "country": "Finland", "city": "Helsinki" },
+      "companyDescription": "Software development outsourcing company",
+      "website": "https://google.com/",
+      "position": "Senior Software Engineer",
+      "start": "2024-04",
+      "end": "2024-12",
+      "projects": [
+        {
+          "order": 1,
+          "client": {
+            "name": "Unknown client",
+            "description": "Food Company"
+          },
+          "title": "Market place",
+          "roles": ["Typescript frontend developer"],
+          "stack": ["typescript", "vitest", "aws"],
+          "tools": ["jenkins", "bitbucket", "browserstack", "contentful", "jira", "scrum", "confluence"],
+          "achivements": [
+            {
+              "technical": "Developed a frontend application using AlpineJS and HTMX",
+              "human": "Developed a frontend application using AlpineJS and HTMX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "companyName": "Nice coffee",
+      "workType": "on-site",
+      "companyDescription": "Software development outsourcing company",
+      "location": { "country": "United Kingdom", "city": "London" },
+      "website": "https://google.com/",
+      "position": "Senior Software Engineer",
+      "start": "2020-01",
+      "end": "2023-12",
+      "projects": [
+        {
+          "order": 1,
+          "title": "Market place",
+          "roles": ["UX Designer", "Frontend Developer"],
+          "stack": ["typescript"],
+          "tools": ["figma"],
+          "achivements": [
+            {
+              "technical": "Designed",
+              "human": "Designed a nice web page"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

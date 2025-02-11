@@ -1,0 +1,70 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script defer src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/umd/monaco-loader.min.js"></script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✍️</text></svg>">
+  <title>CV Maker</title>
+  <script type="module" crossorigin src="./assets/index-BqA5Dcdy.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-yRNwTtQE.css">
+</head>
+
+<body x-data style="display: flex; flex-direction: column;">
+
+  <div style="padding-bottom: 20px;" class="no-print">
+    <label class="menu-item" :class="{ 'active': $store.state.mode === 'editor' }">
+      <input type="radio" value="editor" x-model="$store.state.mode" /> Editor
+    </label>
+    
+    <label 
+      class="menu-item" 
+      :class="{ 'active': $store.state.mode === 'view' }"
+      x-show="!$store.state.editorHasError" x-transition
+    >
+      <input 
+        type="radio" 
+        value="view" 
+        x-model="$store.state.mode"
+      /> View
+    </label>
+
+  </div>
+
+  <!-- code editor -->
+  <div x-show="$store.state.mode == 'editor'">
+    <div x-data="sections">
+      <template x-for="mode in sections">
+        <label 
+          class="menu-item"
+          :class="{ 'active': $store.state.editorSection === mode.id }"
+        >
+        <input 
+          type="radio"
+          :value="mode.id"
+          x-model="$store.state.editorSection"
+          @change="$dispatch('section-changed')"
+        />
+          <span x-text="mode.label"></span>
+      </label>
+      </template>
+    </div>
+
+    <div 
+      id="code-editor"
+    ></div>
+  </div>
+
+  <div x-show="$store.state.mode == 'view'">
+    <div x-html="$store.state.resumeHtml"></div>
+  </div>
+
+</body>
+
+</html>

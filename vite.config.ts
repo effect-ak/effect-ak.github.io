@@ -14,6 +14,19 @@ const configs: Record<string, UserConfig> = {
       outDir: "../../docs/telegram-bot-playground",
       minify: true
     }
+  },
+  "cv-maker": {
+    root: "src/cv-maker",
+    publicDir: "static",
+    base: "./",
+    plugins: [
+      tsconfigPaths()
+    ],
+    build: {
+      emptyOutDir: true,
+      outDir: "../../docs/cv-maker",
+      minify: true
+    }
   }
 }
 

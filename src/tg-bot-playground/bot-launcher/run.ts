@@ -1,6 +1,6 @@
 import { makeTgBotClient } from "@effect-ak/tg-bot-client";
 import type { GlobalState } from "#/tg-bot-playground/main";
-import type { TsTextModel } from "#/common/editor/ts-text-model";
+import type { TsTextModel } from "#/common/editor/text-model";
 
 export type RunnableBot = (ReturnType<typeof makeRunnableBot>)
 export const makeRunnableBot =

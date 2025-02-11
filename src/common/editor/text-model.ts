@@ -1,6 +1,6 @@
 import { Monaco } from "#/common/types";
 import { fetchText } from "#/common/utils";
-import type { languages } from "monaco-editor";
+import { editor, languages } from "monaco-editor";
 
 export type TsTextModel = Awaited<ReturnType<typeof makeTsTextModel>>
 
@@ -32,18 +32,34 @@ export const makeTsTextModel =
 
   }
 
-// const serialize = (input: unknown) => {
-//   if (typeof input != "object" || !input) {
-//     return undefined;
-//   }
-//   const result = [] as [string, string][];
+export const makeJsonTextModel = async (
+  monaco: Monaco,
+) => {
 
-//   for (const [key, value] of Object.entries(input)) {
-//     if (typeof value != "function") {
-//       continue;
-//     }
-//     result.push([key, value.toString()])
-//   }
+    const emptyExample = await fetchText("./john-doe.json");
 
-//   return JSON.stringify(Object.fromEntries(result));
-// }
+    const model =
+      monaco.editor.createModel(emptyExample, 'json');
+
+    return {
+      model
+    } as const
+
+  }
+
+export const hasMajorError = (
+  monaco: Monaco,
+  textModel: editor.ITextModel,
+  majorCodes: Set<number>
+) => {
+  const markers = 
+    monaco.editor.getModelMarkers({ 
+      resource: textModel.uri 
+    });
+  const error = markers.find(_ => majorCodes.has(_.severity.valueOf()));
+  if (error) {
+    console.log("editor code error", error);
+    return true;
+  }
+  return false;
+}

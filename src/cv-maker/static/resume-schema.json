@@ -1,0 +1,285 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$defs": {
+    "ResumeObject": {
+      "type": "object",
+      "required": [
+        "me",
+        "technologies",
+        "employmentHistory"
+      ],
+      "properties": {
+        "$schema": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "me": {
+          "$ref": "#/$defs/Me"
+        },
+        "technologies": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/ProjectTechnology"
+          }
+        },
+        "employmentHistory": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/EmploymentRecord"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "NonEmptyString": {
+      "type": "string",
+      "description": "a non empty string",
+      "title": "nonEmptyString",
+      "minLength": 1
+    },
+    "Me": {
+      "type": "object",
+      "required": [
+        "name",
+        "expertise",
+        "email",
+        "profiles",
+        "expertSummary"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "expertise": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/NonEmptyString"
+          }
+        },
+        "location": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "phone": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "email": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "profiles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "url",
+              "icon"
+            ],
+            "properties": {
+              "url": {
+                "$ref": "#/$defs/NonEmptyString",
+                "description": "a string matching the pattern https:\\/\\/",
+                "pattern": "https:\\/\\/"
+              },
+              "icon": {
+                "$ref": "#/$defs/NonEmptyString"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "expertSummary": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/NonEmptyString"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectTechnology": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "category"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "name": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "programming language",
+            "framework",
+            "cloud computing",
+            "database",
+            "devops tool",
+            "testing",
+            "collaboration tool",
+            "frontend",
+            "other"
+          ]
+        },
+        "version": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "url": {
+          "$ref": "#/$defs/NonEmptyString"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EmploymentRecord": {
+      "type": "object",
+      "required": [
+        "position",
+        "workType",
+        "companyName",
+        "companyDescription",
+        "website",
+        "start",
+        "end",
+        "location",
+        "projects"
+      ],
+      "properties": {
+        "position": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "workType": {
+          "type": "string",
+          "enum": [
+            "hybrid",
+            "on-site",
+            "remote"
+          ]
+        },
+        "companyName": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "companyDescription": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "website": {
+          "$ref": "#/$defs/NonEmptyString",
+          "description": "a string matching the pattern https:\\/\\/",
+          "pattern": "https:\\/\\/"
+        },
+        "start": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "end": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "location": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "city": {
+              "$ref": "#/$defs/NonEmptyString"
+            },
+            "country": {
+              "$ref": "#/$defs/NonEmptyString"
+            },
+            "timezone": {
+              "$ref": "#/$defs/NonEmptyString"
+            }
+          },
+          "additionalProperties": false
+        },
+        "projects": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/ProjectDetails"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectDetails": {
+      "type": "object",
+      "required": [
+        "order",
+        "title",
+        "stack",
+        "tools",
+        "roles",
+        "achivements"
+      ],
+      "properties": {
+        "order": {
+          "type": "number"
+        },
+        "client": {
+          "type": "object",
+          "required": [
+            "name",
+            "description"
+          ],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/NonEmptyString"
+            },
+            "description": {
+              "$ref": "#/$defs/NonEmptyString"
+            }
+          },
+          "additionalProperties": false
+        },
+        "title": {
+          "$ref": "#/$defs/NonEmptyString"
+        },
+        "stack": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/NonEmptyString"
+          }
+        },
+        "tools": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/NonEmptyString"
+          }
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/NonEmptyString"
+          }
+        },
+        "achivements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "technical"
+            ],
+            "properties": {
+              "technical": {
+                "$ref": "#/$defs/NonEmptyString"
+              },
+              "human": {
+                "$ref": "#/$defs/NonEmptyString"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/$defs/ResumeObject"
+}

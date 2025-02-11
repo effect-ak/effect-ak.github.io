@@ -1,16 +1,11 @@
-import type { MonacoLoader } from "#/common/types";
-import { makeTsTextModel } from "./ts-text-model";
+import type { editor } from "monaco-editor";
+import type { Monaco } from "#/common/types";
+import { getMonacoLoader } from "../utils";
 
-export const initEditor = async (
-  loader: MonacoLoader
-) => {
+export const initMonaco = () => {
+  const loader = getMonacoLoader();
 
-  const container = document.getElementById('container');
-
-  if (!container) {
-    console.warn("container not found");
-    return;
-  }
+  if (!loader) return;
 
   loader.config({
     paths: {
@@ -18,21 +13,31 @@ export const initEditor = async (
     }
   });
 
-  const monaco = await loader.init();
+  return loader.init();
 
-  const tsTextModel = await makeTsTextModel(monaco);
+}
+
+export const createAndBindEditor = async (
+  monaco: Monaco,
+  textModel: editor.ITextModel
+) => {
+
+  const container = document.getElementById('code-editor');
+
+  if (!container) {
+    console.warn("code-editor node not found");
+    return;
+  }
 
   const editor =
     monaco.editor.create(container, {
-      model: tsTextModel.tsModel,
+      model: textModel,
       contextmenu: false,
       minimap: {
         enabled: false
       },
     });
 
-  return {
-    tsTextModel, editor, monaco
-  } as const;
+  return editor;
 
 }

@@ -5,7 +5,7 @@
   width: 100%;
 }
 
-.flex-container > #container {
+.flex-container > #code-editor {
   display: flex;
   flex: 0 1 70%; 
   height: 600px;

@@ -1,4 +1,4 @@
-import type { MonacoLoader, Alpine } from "./types";
+import type { MonacoLoader } from "./types";
 
 export const fetchText = (path: string) =>
   fetch(path).then(_ => _.text());
@@ -10,16 +10,5 @@ export const getMonacoLoader = () => {
     }
 
     return window.monaco_loader as MonacoLoader;
-
-}
-
-export function getAlpine() {
-
-  if (!("Alpine" in window) || typeof window.Alpine != "object" || window.Alpine == null) {
-    console.warn("Alpine is not available");
-    return;
-  }
-
-  return window.Alpine as Alpine;
 
 }

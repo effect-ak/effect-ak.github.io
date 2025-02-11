@@ -1,6 +1,6 @@
 import Alpine from "alpinejs";
 import { makeBotLauncher } from "#/tg-bot-playground/bot-launcher/_main";
-import { makeEditor } from "#/common/editor/_editor";
+import { makeTsEditor } from "#/common/editor/make";
 import { fetchText } from "#/common/utils";
 import type { BotState } from "./types";
 
@@ -44,7 +44,7 @@ async function setup() {
 
   Alpine.store("state", state);
 
-  const editor = await makeEditor();
+  const editor = await makeTsEditor();
 
   if (!editor) return;
 
