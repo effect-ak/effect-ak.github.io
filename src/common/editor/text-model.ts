@@ -36,10 +36,8 @@ export const makeJsonTextModel = async (
   monaco: Monaco,
 ) => {
 
-    const emptyExample = await fetchText("./john-doe.json");
-
     const model =
-      monaco.editor.createModel(emptyExample, 'json');
+      monaco.editor.createModel('', 'json');
 
     return {
       model

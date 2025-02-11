@@ -15,8 +15,10 @@ export const resumeObjectToHTML =
     
 
 export const getResumeObject = async () => {
-  const resume = await fetch("/john-doe.json").then(_ => _.json());
-  console.log({ resume })
+  const resume = await fetch("./john-doe.json").then(_ => _.json());
+
+  delete resume["$schema"]
+
   const input = S.decodeUnknownSync(ResumeObject)(resume);
   return input;
 }
