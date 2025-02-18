@@ -11,7 +11,7 @@
     "coverLetter": {
       "position": "React developer",
       "content": [
-        "I'm really good at fronted and I will be <b>great asset</b> at your company",
+        "I'm really good at frontend and I will be <b>great asset</b> in your company",
         "Your company needs a developer who can work remotely. I've experience working experience in distibuted teams"
       ]
     },
@@ -41,6 +41,62 @@
       }
     ]
   },
+  "employmentHistory": [
+    {
+      "companyName": "Green been",
+      "workType": "hybrid",
+      "location": { "country": "Finland", "city": "Helsinki" },
+      "companyDescription": "Software development outsourcing company",
+      "website": "https://google.com/",
+      "position": "Senior Software Engineer",
+      "start": "2024-04",
+      "end": "2024-12",
+      "projects": [
+        {
+          "order": 1,
+          "client": {
+            "name": "Unknown client",
+            "description": "Food Company"
+          },
+          "title": "Market place",
+          "roles": ["Typescript frontend developer"],
+          "stack": ["typescript", "vitest", "aws"],
+          "tools": ["jenkins", "bitbucket", "browserstack", "contentful", "jira", "scrum", "confluence"],
+          "achivements": [
+            {
+              "technical": "Developed a frontend application using AlpineJS and HTMX",
+              "human": "Developed a frontend application using AlpineJS and HTMX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "companyName": "Nice coffee",
+      "workType": "on-site",
+      "companyDescription": "Software development outsourcing company",
+      "location": { "country": "United Kingdom", "city": "London" },
+      "website": "https://google.com/",
+      "position": "Senior Software Engineer",
+      "start": "2020-01",
+      "end": "2023-12",
+      "projects": [
+        {
+          "order": 1,
+          "title": "Market place",
+          "roles": ["UX Designer", "Frontend Developer"],
+          "stack": ["typescript"],
+          "tools": ["figma"],
+          "achivements": [
+            {
+              "technical": "Designed",
+              "human": "Designed a nice web page"
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "technologies": [
     {
       "id": "typescript",
@@ -223,62 +279,6 @@
       "name": "Akka",
       "category": "framework",
       "url": "https://en.wikipedia.org/wiki/Akka_(toolkit)"
-    }
-  ],
-  "employmentHistory": [
-    {
-      "companyName": "Green been",
-      "workType": "hybrid",
-      "location": { "country": "Finland", "city": "Helsinki" },
-      "companyDescription": "Software development outsourcing company",
-      "website": "https://google.com/",
-      "position": "Senior Software Engineer",
-      "start": "2024-04",
-      "end": "2024-12",
-      "projects": [
-        {
-          "order": 1,
-          "client": {
-            "name": "Unknown client",
-            "description": "Food Company"
-          },
-          "title": "Market place",
-          "roles": ["Typescript frontend developer"],
-          "stack": ["typescript", "vitest", "aws"],
-          "tools": ["jenkins", "bitbucket", "browserstack", "contentful", "jira", "scrum", "confluence"],
-          "achivements": [
-            {
-              "technical": "Developed a frontend application using AlpineJS and HTMX",
-              "human": "Developed a frontend application using AlpineJS and HTMX"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "companyName": "Nice coffee",
-      "workType": "on-site",
-      "companyDescription": "Software development outsourcing company",
-      "location": { "country": "United Kingdom", "city": "London" },
-      "website": "https://google.com/",
-      "position": "Senior Software Engineer",
-      "start": "2020-01",
-      "end": "2023-12",
-      "projects": [
-        {
-          "order": 1,
-          "title": "Market place",
-          "roles": ["UX Designer", "Frontend Developer"],
-          "stack": ["typescript"],
-          "tools": ["figma"],
-          "achivements": [
-            {
-              "technical": "Designed",
-              "human": "Designed a nice web page"
-            }
-          ]
-        }
-      ]
     }
   ]
 }
