@@ -2,10 +2,10 @@ build:
 	PROJECT=tg-bot-playground vite build
 	PROJECT=cv-maker vite build
 
-dev:
+dev-tg:
 	PROJECT=tg-bot-playground vite
 
-dev-cv-maker:
+dev-cv:
 	PROJECT=cv-maker vite
 
 gen-openapi-ui:

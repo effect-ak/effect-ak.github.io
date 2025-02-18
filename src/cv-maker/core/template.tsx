@@ -13,7 +13,7 @@ export function Resume(resume: ResumeObject) {
           <div className="section-header">
             <span id="label">Why I'm the Right Choice for "{coverLetter.position}"</span>
           </div>
-          <div id="summary">
+          <div className="p-3 bg-so">
             {coverLetter.content.map(line => <p dangerouslySetInnerHTML={{ __html: line }}></p>)}
           </div>
           
@@ -24,7 +24,7 @@ export function Resume(resume: ResumeObject) {
         <span id="label">Summary</span>
       </div>
 
-      <div id="summary">
+      <div className="bg-so p-3">
         {resume.me.expertSummary.map(s =>
           <p dangerouslySetInnerHTML={{ __html: s }}></p>
         )}
@@ -34,14 +34,16 @@ export function Resume(resume: ResumeObject) {
         <span id="label">Skills</span>
       </div>
 
-      <div id="skills">
+      <div className="flex flex-wrap gap-2">
 
         {Object.entries(getSkills(resume)).map(([category, group]) =>
           <div className="skill-group">
-            <span>{category}</span>
+            <span className="uppercase font-light">{category}</span>
             <div className="group-list">
               {group.map(t =>
-                <span className="stack-item">{t.technology.name}</span>
+                <span 
+                  className="bg-so p-1 text-sm ml-1 mt-1"
+                >{t.technology.name}</span>
               )}
             </div>
           </div>
@@ -49,8 +51,8 @@ export function Resume(resume: ResumeObject) {
 
       </div>
 
-      <div className="section-header">
-        <span id="label">Employment</span>
+      <div className="section-header pt-1">
+        <span id="label">Employment history</span>
       </div>
 
       <div id="employment">
@@ -64,9 +66,10 @@ export function Resume(resume: ResumeObject) {
 
 function Headline(resume: ResumeObject) {
   return (
-    <span>
-      Software Engineer. <span id='expertise'>Expertise: {resume.me?.expertise.join("/")}</span>
-    </span>
+    <div className="flex gap-2 items-baseline">
+      <span className="text-2xl font-thin">Software Engineer</span>
+      <span className="text-base">Expertise: {resume.me?.expertise.join("/")}</span>
+    </div>
   )
 }
 
@@ -95,18 +98,18 @@ function ProjectStack(project: ProjectDetails) {
 
 function ResumeHead(resume: ResumeObject) {
   return (
-    <div id="head">
-      <div id="name">{resume.me.name}</div>
-      <div id="role">{Headline(resume)}</div>
+    <div id="head" className="pb-6">
+      <div className="text-5xl font-thin">{resume.me.name}</div>
+      <div className="text-lg font-light">{Headline(resume)}</div>
       <div id="location">{resume.me?.location}</div>
-      <div id="contact">
-        <div id="email">
+      <div className="flex gap-1 text-sky-600 text-sm">
+        <div>
           <span className="fa-regular fa-envelope"></span>
           <a
             href={`mailto:${resume.me.email}`}
           > {resume.me.email}</a>
         </div>
-        <div id="phone">
+        <div>
           <span className="fa-solid fa-mobile-screen-button"></span>
           <a
             href={`tel:${resume.me.phone}`}
@@ -132,7 +135,7 @@ function ResumeHead(resume: ResumeObject) {
 
 function CompanyProject(project: ProjectDetails) {
   return (
-    <div className="project">
+    <div className="project no-break">
       <div style={{ display: "flex" }}>
         <div style={{ marginBottom: "3px" }}>
           <b>Project: </b>
@@ -146,11 +149,9 @@ function CompanyProject(project: ProjectDetails) {
       <span
         style={{ display: "block" }}
       ><b>Stack: </b>{ProjectStack(project)}</span>
-      <ul>
+      <ul className="list-disc pt-2 pl-10">
         {project.achivements.map(achivement =>
-          <div>
-            <li>{achivement.human ?? achivement.technical}</li>
-          </div>
+          <li>{achivement.human ?? achivement.technical}</li>
         )}
       </ul>
     </div>
@@ -162,8 +163,10 @@ function EmploymentHistory(resume: ResumeObject) {
     <div id="employment">
       {resume.employmentHistory.map(company => {
 
+        const projects = [...company.projects].sort((a,b) => a.order - b.order).map(CompanyProject)
+
         return (
-          <div className="company">
+          <div className="company border-b-1 border-gray-300 mb-2 pb-1">
             <div style={{ "display": "flex" }}>
               <span>{CompanyHeader(company)}</span>
               <span
@@ -173,8 +176,7 @@ function EmploymentHistory(resume: ResumeObject) {
             <span
               style={{ display: "block", marginBottom: "5px" }}
             >{CompanySubHeader(company)}</span>
-            {company.projects.map(CompanyProject)}
-            <hr />
+            {projects}
           </div>
         )
       })}

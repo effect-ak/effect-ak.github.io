@@ -1,35 +1,16 @@
-body {
-  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  flex-direction: column;
-  min-height: 100vh;
-  padding: 1.5rem;
+@import "tailwindcss";
+
+
+@theme {
+  --color-so: #f1f8ff;
 }
 
-@media print {
-  .no-print {
-    display: none;
-  }
+.btn {
+  @apply  text-sm rounded-full py-2 px-4 text-white font-bold hover:cursor-pointer;
 }
 
-div#code-editor {
-  width: 820px;
-  height: 600px;
-  padding-top: 15px;
-}
-
-ul {
-  list-style-type: square;
-}
-
-ul li::marker {
-  font-size: 0.7em;
-}
-
-@page {
-  margin: 0;
+.btn-orange {
+  @apply bg-amber-600 hover:bg-amber-900
 }
 
 @media print {
@@ -38,16 +19,12 @@ ul li::marker {
     margin: 0;
     padding: 0;
   }
-}
-
-/* div#employment > div:nth-child(4) {
-  page-break-after: always;
-} */
-
-hr {
-  height: 1px;
-  border: none;
-  background-color: #ccc;
+  .no-print {
+    display: none;
+  }
+  .no-break {
+    page-break-inside: avoid;
+  }
 }
 
 separator-dot {
@@ -55,17 +32,6 @@ separator-dot {
   margin: 20px 0;
   font-size: 24px;
   color: #ccc;
-}
-
-div#resume {
-  width: 820px;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-div#skills {
-  display: flex;
-  flex-wrap: wrap;
 }
 
 div.group-list {
@@ -77,16 +43,6 @@ div.group-list {
 div.company a:first-child {
   text-decoration: none;
   color: steelblue;
-}
-
-div.skill-group span:first-child {
-  text-transform: uppercase;
-  font-weight: 400;
-}
-
-div#contact {
-  display: flex;
-  gap: 10px;
 }
 
 div#profiles {
@@ -102,15 +58,6 @@ div#profiles a {
   text-decoration: none;
 }
 
-div#contact a {
-  text-decoration: none;
-  color: steelblue;
-}
-
-#expertise {
-  font-size: smaller;
-}
-
 div#summary {
   background: #f1f8ff;
   padding: 1em;
@@ -124,30 +71,6 @@ span.stack-item {
   padding: 5px;
   margin: 2px;
   font-size: 0.7rem;
-}
-
-div.skill-group {
-  margin-bottom: 10px;
-}
-
-div#summary p {
-  margin: 0;
-  padding: 0;
-  font-weight: 400;
-}
-
-div#head {
-  padding-bottom: 10px;
-}
-
-div#name {
-  font-weight: 100;
-  font-size: xx-large;
-}
-
-div#role {
-  font-weight: 300;
-  font-size: large;
 }
 
 div#location {

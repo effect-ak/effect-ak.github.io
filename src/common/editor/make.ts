@@ -54,6 +54,7 @@ export const makeJsonEditor = async () => {
   if (!editor) return;
 
   return {
+    editor,
     monaco,
     textModel: model
   } as const;

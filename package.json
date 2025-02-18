@@ -5,18 +5,20 @@
     "@edge-runtime/vm": "^5.0.0",
     "@effect-ak/tg-bot-client": "^0.5.1",
     "@monaco-editor/loader": "^1.4.0",
+    "@preact/preset-vite": "^2.10.1",
+    "@tailwindcss/vite": "^4.0.6",
     "@types/alpinejs": "^3.13.11",
     "@types/node": "^22.10.5",
     "alpinejs": "^3.14.8",
     "effect": "^3.12.6",
     "monaco-editor": "^0.52.2",
-    "vite": "^6.0.11",
-    "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.3",
     "preact": "^10.25.4",
     "preact-render-to-string": "^6.5.13",
     "prettier": "^3.4.2",
     "puppeteer": "^24.0.0",
-    "@preact/preset-vite": "^2.10.1"
+    "tailwindcss": "^4.0.6",
+    "vite": "^6.0.11",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.0.3"
   }
 }

@@ -2,67 +2,97 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
-    integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script defer src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/umd/monaco-loader.min.js"></script>
+  
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✍️</text></svg>">
   <link rel="stylesheet" href="./style.css">
   <script defer src="./main.ts" type="module"></script>
   <title>CV Maker</title>
 </head>
 
-<body x-data style="display: flex; flex-direction: column;">
+<body x-data="state" class="flex flex-col p-16 pt-8">
+  <!-- navigation -->
+  <div 
+    class="no-print pb-2 self-center"
+    x-init="$watch('mode', value => $dispatch('mode-was-changed', value))"
+  >
 
-  <div style="padding-bottom: 20px;" class="no-print">
-    <label class="menu-item" :class="{ 'active': $store.state.mode === 'editor' }">
-      <input type="radio" value="editor" x-model="$store.state.mode" /> Editor
+    <label class="menu-item" :class="{ 'active': mode === 'editor' }">
+      <input type="radio" value="editor" x-model="mode" /> Editor
     </label>
     
     <label 
       class="menu-item" 
-      :class="{ 'active': $store.state.mode === 'view' }"
-      x-show="!$store.state.editorHasError" x-transition
+      :class="{ 'active': mode === 'view' }"
+      x-show="!editorHasError" x-transition
     >
       <input 
         type="radio" 
         value="view" 
-        x-model="$store.state.mode"
+        x-model="mode"
       /> View
     </label>
 
+    <select x-model="currentResume" @change="selectResume">
+      <template x-for="resume in availableResumes" :key="resume.id">
+        <option :value="resume.id" x-text="resume.name"></option>
+      </template>
+    </select>
+
   </div>
 
-  <!-- code editor -->
-  <div x-show="$store.state.mode == 'editor'">
-    <div x-data="sections">
-      <template x-for="mode in sections">
-        <label 
-          class="menu-item"
-          :class="{ 'active': $store.state.editorSection === mode.id }"
-        >
-        <input 
-          type="radio"
-          :value="mode.id"
-          x-model="$store.state.editorSection"
-          @change="$dispatch('section-changed')"
-        />
-          <span x-text="mode.label"></span>
-      </label>
-      </template>
+  <!-- code editor and code section -->
+  <div
+    class="flex gap-2 pb-2"
+    x-show="mode == 'editor'"
+  >
+    <div class="self-start">
+      <button
+        class="btn bg-sky-500 hover:bg-sky-700"
+        x-on:click="$dispatch('resize')"
+      >Save as</button>
+      <button
+        class="btn bg-[#DC382D] hover:bg-[#B93224]"
+      >Delete</button>
+      </div>
+
+    <div
+      class="self-end ml-auto"
+    >
+      <select
+        class="block bg-white border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-0 focus:border-blue-300"
+        @change="$dispatch('section-changed')"
+        x-model="editorSection"
+      >
+        <template x-for="section in $store.sections" :key="section.id">
+          <option 
+            :value="section.id" 
+            :selected="editorSection === section.id"
+            x-text="section.label"
+          ></option>
+        </template>
+      </select>
     </div>
 
-    <div 
-      id="code-editor"
-    ></div>
   </div>
 
-  <div x-show="$store.state.mode == 'view'">
-    <div x-html="$store.state.resumeHtml"></div>
+  <div
+    class="w-full h-full"
+    x-show="mode == 'editor'"
+    id="code-editor"
+  ></div>
+
+  <div
+    class="self-center" 
+    x-show="mode == 'view'"
+  >
+    <div
+      x-html="resumeHtml"
+    ></div>
   </div>
 
 </body>

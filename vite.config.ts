@@ -1,5 +1,6 @@
 import type { UserConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import tailwindcss from '@tailwindcss/vite'
 
 const configs: Record<string, UserConfig> = {
   "tg-bot-playground": {
@@ -20,6 +21,7 @@ const configs: Record<string, UserConfig> = {
     publicDir: "static",
     base: "./",
     plugins: [
+      tailwindcss(),
       tsconfigPaths()
     ],
     build: {
