@@ -34,12 +34,6 @@ separator-dot {
   color: #ccc;
 }
 
-div.group-list {
-  display: flex;
-  width: 12rem;
-  flex-wrap: wrap;
-}
-
 div.company a:first-child {
   text-decoration: none;
   color: steelblue;

@@ -4,7 +4,7 @@ import { DateTime, pipe, Array } from "effect";
 export function Resume(resume: ResumeObject) {
   const coverLetter = resume.me.coverLetter;
   return (
-    <div id="resume">
+    <div>
 
       {ResumeHead(resume)}
 
@@ -34,21 +34,22 @@ export function Resume(resume: ResumeObject) {
         <span id="label">Skills</span>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-
-        {Object.entries(getSkills(resume)).map(([category, group]) =>
-          <div className="skill-group">
-            <span className="uppercase font-light">{category}</span>
-            <div className="group-list">
-              {group.map(t =>
+      <div className="flex gap-1 flex-wrap">
+        {Object.entries(getSkills(resume)).map(([category, group]) => (
+          <div className="w-32" key={category}>
+            <span className="uppercase font-light text-sm">{category}</span>
+            <div className="flex flex-wrap">
+              {group.map((t, idx) => (
                 <span 
+                  key={idx} 
                   className="bg-so p-1 text-sm ml-1 mt-1"
-                >{t.technology.name}</span>
-              )}
+                >
+                  {t.technology.name}
+                </span>
+              ))}
             </div>
           </div>
-        )}
-
+        ))}
       </div>
 
       <div className="section-header pt-1">

@@ -3,6 +3,7 @@ import { debounce, getResumeObject, parseJSON, resumeObjectToHTML } from "./core
 import type resumeSchema from "./static/resume-schema.json"
 import { makeJsonEditor } from "#/common/editor/make";
 import { hasMajorError } from "#/common/editor/text-model";
+import * as resumeSchemaObject from "./static/resume-schema.json";
 
 declare global {
   interface Window {
@@ -43,24 +44,61 @@ const state: {
     editorSection: "me",
     mode: "view",
     editorHasError: false,
-    availableResumes: [{ id: "example", name: "Example" }],
+    availableResumes: [],
     currentResume: "example"
   });
 
+Alpine.data("state", () => state);
+
 Alpine.start();
+
+async function loadStoredResume() {
+
+  state.availableResumes = [];
+
+  if (Object.keys(localStorage).length == 0) {
+    const resume = await getResumeObject();
+    localStorage.setItem("example", JSON.stringify(resume));
+  }
+
+  for (const key of Object.keys(localStorage)) {
+    const value = localStorage.getItem(key);
+    if (!value) continue;
+    state.availableResumes.push({
+      id: key,
+      name: key
+    });
+  };
+  
+}
+
+function selectResume() {
+  const resumeJson = localStorage.getItem(state.currentResume);
+  if (!resumeJson) {
+    console.warn("No resume to load");
+    return;
+  };
+  const resume = parseJSON(resumeJson);
+  if (!resume) {
+    console.warn("Invalid json of resume");
+    return;
+  };
+  state.resumeObject = resume;
+  state.resumeHtml = resumeObjectToHTML(resume);
+}
 
 async function setup() {
 
-  Alpine.data("state", () => state);
-
   const editor = await makeJsonEditor();
 
-  const resumeSchemaObject = await fetch("./resume-schema.json").then(_ => _.json());
+  await loadStoredResume();
 
   if (!editor) {
     console.warn("can not load editor");
     return;
   };
+
+  selectResume();
 
   const setupJsonSchema =
     (ref: string) =>
@@ -122,6 +160,17 @@ async function setup() {
     }
   });
 
+  window.addEventListener('init-resume', () => {
+    selectResume();
+    prepareEditor();
+  });
+
+  window.addEventListener('save', () => {
+    const name = window.prompt("Enter name of your resume", "simple");
+    if (!name) return;
+    localStorage.setItem(name, JSON.stringify(state.resumeObject));
+  });
+
   window.addEventListener('resize', () => {
     editor.editor.layout();
   });
@@ -140,11 +189,6 @@ async function setup() {
       state.resumeHtml = resumeObjectToHTML(state.resumeObject);
     }
   });
-
-  const resume = await getResumeObject();
-
-  state.resumeObject = resume;
-  state.resumeHtml = resumeObjectToHTML(resume);
 
   prepareEditor();
 

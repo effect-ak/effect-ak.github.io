@@ -35,8 +35,7 @@ export const createAndBindEditor = async (
       contextmenu: false,
       minimap: {
         enabled: false,
-      },
-      lineNumbers: "off"
+      }
     });
 
   return editor;

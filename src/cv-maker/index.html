@@ -12,17 +12,41 @@
   <link rel="stylesheet" href="./style.css">
   <script defer src="./main.ts" type="module"></script>
   <title>CV Maker</title>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKWW5S34LH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-FKWW5S34LH');
+  </script>
 </head>
 
 <body x-data="state" class="flex flex-col p-16 pt-8">
   <!-- navigation -->
   <div 
-    class="no-print pb-2 self-center flex gap-2"
+    class="no-print pb-2 flex gap-2 justify-center"
     x-init="$watch('mode', value => $dispatch('mode-was-changed', value))"
   >
 
-    <label 
-      class="hover:cursor-pointer"
+    <select
+      class="self-start"
+      x-model="currentResume"
+      @change="$dispatch('init-resume')"
+    >
+      <template x-for="resume in availableResumes" :key="resume.id">
+        <option 
+          :value="resume.id"
+          x-text="resume.name"
+          :selected="currentResume === resume.id"
+        V></option>
+      </template>
+    </select>
+
+    <div class="mx-auto">
+      <label 
+      class="hover:cursor-pointer text-lg"
       :class="{ 'text-orange-400 underline': mode === 'editor' }"
     >
       <input
@@ -34,7 +58,7 @@
     </label>
     
     <label 
-      class="hover:cursor-pointer" 
+      class="hover:cursor-pointer text-lg" 
       :class="{ 'text-orange-400 underline': mode === 'view' }"
       x-show="!editorHasError" x-transition
     >
@@ -45,12 +69,8 @@
         class="appearance-none"
       /> View
     </label>
+    </div>
 
-    <select x-model="currentResume" @change="selectResume">
-      <template x-for="resume in availableResumes" :key="resume.id">
-        <option :value="resume.id" x-text="resume.name"></option>
-      </template>
-    </select>
 
   </div>
 
@@ -62,10 +82,11 @@
     <div class="self-start">
       <button
         class="btn bg-sky-500 hover:bg-sky-700 text-sm"
-        x-on:click="$dispatch('resize')"
+        x-on:click="$dispatch('save')"
       >Save as</button>
       <button
         class="btn bg-[#DC382D] hover:bg-[#B93224]"
+        x-on:click="$dispatch('delete')"
       >Delete</button>
       </div>
 
@@ -73,7 +94,7 @@
       class="self-end ml-auto"
     >
       <select
-        class="block bg-white border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-0 focus:border-blue-300"
+        class=" bg-white border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-0"
         @change="$dispatch('section-changed')"
         x-model="editorSection"
       >
@@ -103,6 +124,34 @@
       x-html="resumeHtml"
     ></div>
   </div>
+
+  <button
+    @click="window.print()"
+    x-show="mode == 'view'"
+    class="no-print hover:cursor-pointer fixed top-10 right-20 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full shadow-lg"
+  >
+    Print
+  </button>
+
+  <footer class="bg-gray-100 text-gray-700 py-4 no-print mt-20">
+    <div class="container mx-auto text-center">
+      <p>© 2025 Created by Aleksandr Kondaurov</p>
+      <p>
+        <a 
+          target="_blank"
+          href="https://www.linkedin.com/in/alexander-kondaurov/"
+          rel="noopener noreferrer" 
+          class="fa-brands fa-lg fa-linkedin text-blue-300"
+        ></a>
+        <a 
+          target="_blank"
+          href="https://github.com/orgs/effect-ak/repositories"
+          rel="noopener noreferrer" 
+          class="fa-brands fa-lg fa-github"
+        ></a> 
+      </p>
+    </div>
+  </footer>
 
 </body>
 
