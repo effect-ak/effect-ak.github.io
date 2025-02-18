@@ -19,19 +19,22 @@
 
     gtag('config', 'G-FKWW5S34LH');
   </script>
-  <script type="module" crossorigin src="./assets/index-pP8_YhaN.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-BEKBKFMb.css">
+  <script type="module" crossorigin src="./assets/index-DfIrSN-W.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-Blgfszbd.css">
 </head>
 
-<body x-data="state" class="flex flex-col p-16 pt-8">
+<body x-data="state" class="flex flex-col p-16 pt-8 justify-center">
   <!-- navigation -->
   <div 
-    class="no-print pb-2 flex gap-2 justify-center"
+    class="no-print pb-2 flex gap-2 justify-center items-baseline md:w-3/4"
     x-init="$watch('mode', value => $dispatch('mode-was-changed', value))"
   >
-
+    <label 
+      class="font-light text-sm" id="resumeSelect"
+    >Current resume:</label>
     <select
-      class="self-start"
+      id="resumeSelect"
+      class="self-start select"
       x-model="currentResume"
       @change="$dispatch('init-resume')"
     >
@@ -40,84 +43,78 @@
           :value="resume.id"
           x-text="resume.name"
           :selected="currentResume === resume.id"
-        V></option>
+        ></option>
       </template>
     </select>
 
-    <div class="mx-auto">
+    <div
+      class="mx-auto flex gap-3"
+    >
+    <template x-for="m in $store.modes" :key="m.id">
       <label 
-      class="hover:cursor-pointer text-lg"
-      :class="{ 'text-orange-400 underline': mode === 'editor' }"
+      class="hover:cursor-pointer text-lg hover"
+      :class="{
+        'text-orange-400 border-1 px-3': mode == m.id,
+        'hover:text-orange-300': mode != m.id,
+      }"
     >
       <input
         type="radio"
         class="appearance-none"
-        value="editor" 
+        :value="m.id" 
         x-model="mode" 
-      /> Editor
+      /> <span x-text="m.label"></span>
     </label>
-    
-    <label 
-      class="hover:cursor-pointer text-lg" 
-      :class="{ 'text-orange-400 underline': mode === 'view' }"
-      x-show="!editorHasError" x-transition
-    >
-      <input 
-        type="radio" 
-        value="view" 
-        x-model="mode"
-        class="appearance-none"
-      /> View
-    </label>
-    </div>
+    </template>
 
+    </div>
 
   </div>
 
   <!-- code editor and code section -->
   <div
-    class="flex gap-2 pb-2"
+    class="flex gap-2 pb-2 items-end"
     x-show="mode == 'editor'"
   >
-    <div class="self-start">
+    <div>
       <button
         class="btn bg-sky-500 hover:bg-sky-700 text-sm"
         x-on:click="$dispatch('save')"
-      >Save as</button>
+      >Duplicate</button>
       <button
         class="btn bg-[#DC382D] hover:bg-[#B93224]"
         x-on:click="$dispatch('delete')"
       >Delete</button>
       </div>
 
-    <div
-      class="self-end ml-auto"
-    >
+      <label 
+        class="font-light text-sm ml-auto" id="resumeSection"
+      >Current section:</label>
       <select
-        class=" bg-white border border-gray-300 py-2 px-3 rounded focus:outline-none focus:ring-0"
+        id="resumeSection"
+        class="self-end select"
         @change="$dispatch('section-changed')"
         x-model="editorSection"
       >
-        <template x-for="section in $store.sections" :key="section.id">
-          <option 
-            :value="section.id" 
-            :selected="editorSection === section.id"
-            x-text="section.label"
-          ></option>
-        </template>
-      </select>
-    </div>
+      <template x-for="section in $store.sections" :key="section.id">
+        <option 
+          :value="section.id" 
+          :selected="editorSection === section.id"
+          x-text="section.label"
+        ></option>
+      </template>
+    </select>
 
   </div>
 
   <div
-    class="w-full h-full"
+    class="w-full h-screen"
     x-show="mode == 'editor'"
     id="code-editor"
   ></div>
 
   <div
-    class="self-center" 
+    class="self-center sm:w-3/4" 
     x-show="mode == 'view'"
   >
     <div
@@ -128,7 +125,7 @@
   <button
     @click="window.print()"
     x-show="mode == 'view'"
-    class="no-print hover:cursor-pointer fixed top-10 right-20 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full shadow-lg"
+    class="no-print hover:cursor-pointer fixed top-8 right-20 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full shadow-lg"
   >
     Print
   </button>
@@ -141,7 +138,7 @@
           target="_blank"
           href="https://www.linkedin.com/in/alexander-kondaurov/"
           rel="noopener noreferrer" 
-          class="fa-brands fa-lg fa-linkedin text-blue-300"
+          class="fa-brands fa-lg fa-linkedin text-blue-500"
         ></a>
         <a 
           target="_blank"

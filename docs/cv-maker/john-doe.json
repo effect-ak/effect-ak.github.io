@@ -111,24 +111,6 @@
       "url": "https://en.wikipedia.org/wiki/JavaScript"
     },
     {
-      "id": "scala",
-      "name": "Scala",
-      "category": "programming language",
-      "url": "https://www.scala-lang.org/"
-    },
-    {
-      "id": "play-framework",
-      "name": "Play Framework",
-      "category": "framework",
-      "url": "https://en.wikipedia.org/wiki/Play_Framework"
-    },
-    {
-      "id": "java",
-      "name": "Java",
-      "category": "programming language",
-      "url": "https://en.wikipedia.org/wiki/Java_(programming_language)"
-    },
-    {
       "id": "aws",
       "name": "AWS",
       "category": "cloud computing",
@@ -145,12 +127,6 @@
       "name": "MySQL",
       "category": "database",
       "url": "https://en.wikipedia.org/wiki/MySQL"
-    },
-    {
-      "id": "h2",
-      "name": "H2",
-      "category": "database",
-      "url": "https://en.wikipedia.org/wiki/H2_(database)"
     },
     {
       "id": "postgres",
@@ -175,13 +151,6 @@
       "name": "AngularJS",
       "category": "frontend",
       "url": "https://en.wikipedia.org/wiki/AngularJS"
-    },
-    
-    {
-      "id": "azure",
-      "name": "Azure",
-      "category": "cloud computing",
-      "url": "https://azure.microsoft.com/"
     },
     {
       "id": "jenkins",
@@ -226,13 +195,6 @@
       "url": "https://vitest.dev/"
     },
     {
-      "id": "scalatest",
-      "name": "ScalaTest",
-      "category": "testing",
-      "url": "https://www.scalatest.org/"
-    },
-    
-    {
       "id": "jest",
       "name": "Jest",
       "category": "testing",
@@ -273,12 +235,6 @@
       "name": "Electron",
       "category": "frontend",
       "url": "https://en.wikipedia.org/wiki/Electron_(software_framework)"
-    },
-    {
-      "id": "akka",
-      "name": "Akka",
-      "category": "framework",
-      "url": "https://en.wikipedia.org/wiki/Akka_(toolkit)"
     }
   ]
 }
