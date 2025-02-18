@@ -6,7 +6,7 @@
 }
 
 .btn {
-  @apply  text-sm rounded-full py-2 px-4 text-white font-bold hover:cursor-pointer;
+  @apply text-sm rounded py-1 px-2 text-white font-bold hover:cursor-pointer;
 }
 
 .btn-orange {
@@ -97,21 +97,4 @@ div#location {
   color: #ff6d1f;
   text-transform: uppercase;
   font-size: smaller;
-}
-
-.menu-item {
-  cursor: pointer;
-  padding: 8px 16px;
-  margin-right: 10px;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-.menu-item.active {
-  background-color: #007bff;
-  color: #fff;
-}
-
-.menu-item input {
-  display: none;
 }

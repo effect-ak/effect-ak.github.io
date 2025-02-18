@@ -17,23 +17,32 @@
 <body x-data="state" class="flex flex-col p-16 pt-8">
   <!-- navigation -->
   <div 
-    class="no-print pb-2 self-center"
+    class="no-print pb-2 self-center flex gap-2"
     x-init="$watch('mode', value => $dispatch('mode-was-changed', value))"
   >
 
-    <label class="menu-item" :class="{ 'active': mode === 'editor' }">
-      <input type="radio" value="editor" x-model="mode" /> Editor
+    <label 
+      class="hover:cursor-pointer"
+      :class="{ 'text-orange-400 underline': mode === 'editor' }"
+    >
+      <input
+        type="radio"
+        class="appearance-none"
+        value="editor" 
+        x-model="mode" 
+      /> Editor
     </label>
     
     <label 
-      class="menu-item" 
-      :class="{ 'active': mode === 'view' }"
+      class="hover:cursor-pointer" 
+      :class="{ 'text-orange-400 underline': mode === 'view' }"
       x-show="!editorHasError" x-transition
     >
       <input 
         type="radio" 
         value="view" 
         x-model="mode"
+        class="appearance-none"
       /> View
     </label>
 
@@ -52,7 +61,7 @@
   >
     <div class="self-start">
       <button
-        class="btn bg-sky-500 hover:bg-sky-700"
+        class="btn bg-sky-500 hover:bg-sky-700 text-sm"
         x-on:click="$dispatch('resize')"
       >Save as</button>
       <button
