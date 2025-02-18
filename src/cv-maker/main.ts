@@ -15,9 +15,20 @@ window.Alpine = Alpine;
 
 setup();
 
+Alpine.store("modes", () => [
+  {
+    id: "editor",
+    label: "Editor"
+  },
+  {
+    id: "view",
+    label: "View"
+  }
+])
+
 Alpine.store("sections", () => [{
   id: "all",
-  label: "Everything",
+  label: "All together",
 }, {
   id: "me",
   label: "Me",
@@ -169,6 +180,7 @@ async function setup() {
     const name = window.prompt("Enter name of your resume", "simple");
     if (!name) return;
     localStorage.setItem(name, JSON.stringify(state.resumeObject));
+    state.availableResumes.push({ id: name, name });
   });
 
   window.addEventListener('resize', () => {

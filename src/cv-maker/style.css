@@ -5,6 +5,10 @@
   --color-so: #f1f8ff;
 }
 
+.select {
+  @apply bg-white border border-gray-300 py-1 px-2 rounded focus:outline-none focus:ring-0
+}
+
 .btn {
   @apply text-sm rounded py-1 px-2 text-white font-bold hover:cursor-pointer;
 }
@@ -14,7 +18,7 @@
 }
 
 @media print {
-  html,
+  html
   body {
     margin: 0;
     padding: 0;

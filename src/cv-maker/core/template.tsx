@@ -100,7 +100,7 @@ function ProjectStack(project: ProjectDetails) {
 function ResumeHead(resume: ResumeObject) {
   return (
     <div id="head" className="pb-6">
-      <div className="text-5xl font-thin">{resume.me.name}</div>
+      <div className="text-4xl font-thin">{resume.me.name}</div>
       <div className="text-lg font-light">{Headline(resume)}</div>
       <div id="location">{resume.me?.location}</div>
       <div className="flex gap-1 text-sky-600 text-sm">
@@ -117,7 +117,7 @@ function ResumeHead(resume: ResumeObject) {
           > {resume.me.phone}</a>
         </div>
       </div>
-      <div id="profiles">
+      <div className="pt-5 flex gap-1">
         {resume.me.profiles.map(p => {
           const iconClass = `fa-${p.icon.split(' ').at(0)}`;
           return (
