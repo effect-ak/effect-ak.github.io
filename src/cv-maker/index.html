@@ -84,6 +84,7 @@
       <button
         class="btn bg-[#DC382D] hover:bg-[#B93224]"
         x-on:click="$dispatch('delete')"
+        x-show="availableResumes.length > 1"
       >Delete</button>
       </div>
 

@@ -1,5 +1,5 @@
 import Alpine from "alpinejs";
-import { debounce, getResumeObject, parseJSON, resumeObjectToHTML } from "./core/utils";
+import { debounce, getResumeObject, getUrlParam, parseJSON, resumeObjectToHTML, setUrlParam } from "./core/utils";
 import type resumeSchema from "./static/resume-schema.json"
 import { makeJsonEditor } from "#/common/editor/make";
 import { hasMajorError } from "#/common/editor/text-model";
@@ -56,7 +56,7 @@ const state: {
     mode: "view",
     editorHasError: false,
     availableResumes: [],
-    currentResume: "example"
+    currentResume: getUrlParam("resume") ?? "example"
   });
 
 Alpine.data("state", () => state);
@@ -80,6 +80,12 @@ async function loadStoredResume() {
       name: key
     });
   };
+
+  const lastResumeId = state.availableResumes.at(-1)?.id;
+
+  if (lastResumeId) {
+    state.currentResume = lastResumeId;
+  }
   
 }
 
@@ -96,6 +102,7 @@ function selectResume() {
   };
   state.resumeObject = resume;
   state.resumeHtml = resumeObjectToHTML(resume);
+  setUrlParam("resume", state.currentResume);
 }
 
 async function setup() {
@@ -181,6 +188,15 @@ async function setup() {
     if (!name) return;
     localStorage.setItem(name, JSON.stringify(state.resumeObject));
     state.availableResumes.push({ id: name, name });
+    state.currentResume = name;
+    selectResume();
+    prepareEditor();
+  });
+
+  window.addEventListener('delete', () => {
+    localStorage.removeItem(state.currentResume);
+    loadStoredResume();
+    selectResume();
   });
 
   window.addEventListener('resize', () => {

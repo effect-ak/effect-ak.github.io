@@ -41,3 +41,14 @@ export function debounce<T extends (...args: unknown[]) => void>(
     }, wait);
   };
 }
+
+export function getUrlParam(name: string) {
+  const params = new URLSearchParams(location.search);
+  return params.get(name);
+}
+
+export function setUrlParam(name: string, value: string) {
+  const url = new URL(location.href);
+  url.searchParams.set(name, value);
+  window.history.replaceState(null, '', url);
+}

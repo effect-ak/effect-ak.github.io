@@ -145,7 +145,6 @@ function ResumeHead(resume: ResumeObject) {
 function CompanyProject(project: ProjectDetails, isLast: boolean) {
   let clazz = "project no-break pb-3";
   if (!isLast) clazz += " border-b-1 border-gray-300 border-dashed mb-2";
-  console.log({ title: project.title, isLast })
   return (
     <div className={clazz}>
       <div className="flex">
