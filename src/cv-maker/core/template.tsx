@@ -75,14 +75,20 @@ function Headline(resume: ResumeObject) {
 }
 
 function CompanySubHeader(company: EmploymentRecord) {
-  return <span>{company.position} · {company.location.city}, {company.location.country} · {company.workType}</span>
+  return (
+    <div className="flex text-sm">
+      <span>{company.position}</span>
+      <span className="font-extralight">· {company.location.city}, {company.location.country} · {company.workType}</span>
+    </div>
+  )
 }
 
 function CompanyHeader(company: EmploymentRecord) {
   return (
     <span>
       <a
-        className="companyLink"
+        target="_blank"
+        className="text-sky-600 font-medium"
         href={company.website}
       >{company.companyName}</a> · {company.companyDescription}
     </span>
@@ -92,7 +98,9 @@ function CompanyHeader(company: EmploymentRecord) {
 function ProjectStack(project: ProjectDetails) {
   return (
     <span>
-      {project.stack.map(t => <span className="stack-item">{t}</span>)}
+      {project.stack.map(t => 
+        <span className="bg-so py-1 px-1 mr-1 text-sm">{t}</span>)
+      }
     </span>
   )
 }
@@ -102,8 +110,8 @@ function ResumeHead(resume: ResumeObject) {
     <div id="head" className="pb-6">
       <div className="text-4xl font-thin">{resume.me.name}</div>
       <div className="text-lg font-light">{Headline(resume)}</div>
-      <div id="location">{resume.me?.location}</div>
-      <div className="flex gap-1 text-sky-600 text-sm">
+      <div className="flex gap-1.5 text-sm font-extralight">
+        <span>{resume.me.location}</span>
         <div>
           <span className="fa-regular fa-envelope"></span>
           <a
@@ -117,7 +125,7 @@ function ResumeHead(resume: ResumeObject) {
           > {resume.me.phone}</a>
         </div>
       </div>
-      <div className="pt-5 flex gap-1">
+      <div className="pt-5 flex gap-2">
         {resume.me.profiles.map(p => {
           const iconClass = `fa-${p.icon.split(' ').at(0)}`;
           return (
@@ -134,23 +142,25 @@ function ResumeHead(resume: ResumeObject) {
   )
 }
 
-function CompanyProject(project: ProjectDetails) {
+function CompanyProject(project: ProjectDetails, isLast: boolean) {
+  let clazz = "project no-break pb-3";
+  if (!isLast) clazz += " border-b-1 border-gray-300 border-dashed mb-2";
+  console.log({ title: project.title, isLast })
   return (
-    <div className="project no-break">
-      <div style={{ display: "flex" }}>
-        <div style={{ marginBottom: "3px" }}>
-          <b>Project: </b>
+    <div className={clazz}>
+      <div className="flex">
+        <div className="mb-0.5">
+          <span className="font-medium">Project: </span>
           <span>{project.title}</span>
         </div>
-        <div style={{ marginLeft: "auto" }}>
-          <b>Roles: </b>
+        <div className="ml-auto">
+          <span className="font-medium">Roles: </span>
           <span>{project.roles.join('/')}</span>
         </div>
       </div>
-      <span
-        style={{ display: "block" }}
-      ><b>Stack: </b>{ProjectStack(project)}</span>
-      <ul className="list-disc pt-2 pl-10">
+      <span className="font-medium">Stack:</span>
+      <span>{ProjectStack(project)}</span>
+      <ul className="list-disc pt-2 pl-10 text-sm">
         {project.achivements.map(achivement =>
           <li>{achivement.human ?? achivement.technical}</li>
         )}
@@ -163,13 +173,16 @@ function EmploymentHistory(resume: ResumeObject) {
   return (
     <div id="employment">
       {resume.employmentHistory.map(company => {
-
-        const projects = [...company.projects].sort((a,b) => a.order - b.order).map(CompanyProject)
+        
+        const projects = 
+          [...company.projects]
+            .sort((a,b) => b.order - a.order)
+            .map((project, id) => CompanyProject(project, id == company.projects.length - 1))
 
         return (
-          <div className="company border-b-1 border-gray-300 mb-2 pb-1">
+          <div className="border-b-1 border-gray-300 mb-2 pb-1">
             <div style={{ "display": "flex" }}>
-              <span>{CompanyHeader(company)}</span>
+              <span className="font-extralight text-sm">{CompanyHeader(company)}</span>
               <span
                 style={{ "marginLeft": "auto" }}
               >{getPeriod(company)}</span>
@@ -177,7 +190,10 @@ function EmploymentHistory(resume: ResumeObject) {
             <span
               style={{ display: "block", marginBottom: "5px" }}
             >{CompanySubHeader(company)}</span>
+            <div className="flex flex-col">
             {projects}
+            </div>
+
           </div>
         )
       })}
@@ -188,7 +204,7 @@ function EmploymentHistory(resume: ResumeObject) {
 
 function getPeriod(company: EmploymentRecord) {
   const start = DateTime.unsafeMake(company.start);
-  const end = DateTime.unsafeMake(company.end);
+  const end = company.end ? DateTime.unsafeMake(company.end) : DateTime.unsafeNow();
   const period_ms = DateTime.distance(start, end);
 
   const msInYear = 365.25 * 24 * 60 * 60 * 1000;
@@ -206,9 +222,11 @@ function getPeriod(company: EmploymentRecord) {
   const t2 = DateTime.format(end, { month: "short", year: "numeric" });
 
   let duration = `${months} mos`;
-  if (years) duration = `${years} yr ${duration}`
+  if (years) duration = `${years} yr ${duration}`;
 
-  return <span>{t1} - {t2} · {duration}</span>;
+  const tail = company.end ? <span>{t2} · {duration}</span> : <span className="font-medium">now</span>
+
+  return <span className="font-light text-sm">{t1} - {tail}</span>;
 
 }
 

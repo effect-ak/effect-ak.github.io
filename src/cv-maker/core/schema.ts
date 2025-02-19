@@ -49,7 +49,7 @@ export class EmploymentRecord
     companyDescription: S.NonEmptyString,
     website: S.NonEmptyString.pipe(S.pattern(httpsRegex)),
     start: S.NonEmptyString,
-    end: S.NonEmptyString,
+    end: S.NonEmptyString.pipe(S.optional),
     location:
       S.Struct({
         city: S.NonEmptyString,

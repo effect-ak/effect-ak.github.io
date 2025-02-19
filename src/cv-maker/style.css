@@ -38,11 +38,6 @@ separator-dot {
   color: #ccc;
 }
 
-div.company a:first-child {
-  text-decoration: none;
-  color: steelblue;
-}
-
 div#profiles {
   display: flex;
   gap: 5px;
@@ -64,17 +59,6 @@ div#summary {
   margin-bottom: 15px;
 }
 
-span.stack-item {
-  background-color: #dfeaf1;
-  padding: 5px;
-  margin: 2px;
-  font-size: 0.7rem;
-}
-
-div#location {
-  font-size: smaller;
-  padding-bottom: 5px;
-}
 
 .section-header {
   display: flex;
