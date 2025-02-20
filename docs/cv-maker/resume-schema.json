@@ -147,6 +147,13 @@
             "other"
           ]
         },
+        "display": {
+          "type": "string",
+          "enum": [
+            "force",
+            "hide"
+          ]
+        },
         "version": {
           "$ref": "#/$defs/NonEmptyString"
         },

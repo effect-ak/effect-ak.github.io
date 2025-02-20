@@ -222,7 +222,8 @@
       "id": "docker",
       "name": "Docker",
       "category": "devops tool",
-      "url": "https://en.wikipedia.org/wiki/Docker_(software)"
+      "url": "https://en.wikipedia.org/wiki/Docker_(software)",
+      "display": "force"
     },
     {
       "id": "react",
