@@ -122,11 +122,13 @@ function ResumeHead(resume: ResumeObject) {
           > {resume.me.phone}</a>
         </div>
       </div>
-      <div className="pt-5 flex gap-2">
+      <div className="pt-1">
         {resume.me.profiles.map(p => {
           const iconClass = `fa-${p.icon.split(' ').at(0)}`;
           return (
-            <a href={p.url} target="_blank" rel="noopener noreferrer">
+            <a 
+              class="inline-block py-2 px-1"
+              href={p.url} target="_blank" rel="noopener noreferrer">
               <span
                 className={`fa-brands fa-lg ${iconClass}`}
                 style={{ "color": p.icon.split(' ').at(1) }}
@@ -232,7 +234,7 @@ function getPeriod(company: EmploymentRecord) {
 
 }
 
-function getSkills(resume: ResumeObject): [ string, { code: string, technology: ProjectTechnology }[] ][] {
+function getSkills(resume: ResumeObject): [string, { code: string, technology: ProjectTechnology }[]][] {
 
   const categories: { code: string, technology: ProjectTechnology }[] | undefined =
     resume.employmentHistory?.flatMap(e =>
