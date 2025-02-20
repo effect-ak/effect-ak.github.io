@@ -1,5 +1,5 @@
-import { EmploymentRecord, ProjectDetails, ProjectTechnology, ResumeObject } from "#/cv-maker/core/schema";
-import { DateTime, pipe, Array } from "effect";
+import { EmploymentRecord, ProjectDetails, ProjectTechnology, ResumeObject, STACK_CATEGORIES } from "#/cv-maker/core/schema";
+import { DateTime, pipe, Array, Order, HashMap } from "effect";
 
 export function Resume(resume: ResumeObject) {
   const coverLetter = resume.me.coverLetter;
@@ -16,9 +16,9 @@ export function Resume(resume: ResumeObject) {
           <div className="p-2 bg-so">
             {coverLetter.content.map(line => <p dangerouslySetInnerHTML={{ __html: line }}></p>)}
           </div>
-          
+
         </div>
-      ): null}
+      ) : null}
 
       <div className="section-header">
         <span id="label">Summary</span>
@@ -35,12 +35,12 @@ export function Resume(resume: ResumeObject) {
       </div>
 
       <div className="flex flex-wrap gap-1">
-        {Object.entries(getSkills(resume)).map(([category, group]) => (
+        {getSkills(resume).map(([category, group]) => (
           <div key={category} className="flex items-center gap-1">
             <span className="uppercase font-medium">{category}:</span>
             {group.map((t, idx) => (
-              <span 
-                key={idx} 
+              <span
+                key={idx}
                 className="bg-so p-1 text-xs"
               >
                 {t.technology.name}
@@ -95,7 +95,7 @@ function CompanyHeader(company: EmploymentRecord) {
 function ProjectStack(project: ProjectDetails) {
   return (
     <span>
-      {project.stack.map(t => 
+      {project.stack.map(t =>
         <span className="bg-so py-1 px-1 mr-1 text-sm">{t}</span>)
       }
     </span>
@@ -186,15 +186,15 @@ function EmploymentHistory(resume: ResumeObject) {
               <span className="ml-auto">{getPeriod(er)}</span>
             </div>
             <span className="block">{CompanySubHeader(er)}</span>
-            {isOld ? 
+            {isOld ?
               <div>
                 <span className="font-medium">Roles: </span>
                 <span>{allRoles}</span>
-              </div> : 
+              </div> :
               <div className="flex flex-col">
-                { er.sortedProjects.map((project, id) => CompanyProject(project, id == er.projects.length - 1)) }
+                {er.sortedProjects.map((project, id) => CompanyProject(project, id == er.projects.length - 1))}
               </div>
-            }            
+            }
 
           </div>
         )
@@ -232,14 +232,14 @@ function getPeriod(company: EmploymentRecord) {
 
 }
 
-function getSkills(resume: ResumeObject) {
+function getSkills(resume: ResumeObject): [ string, { code: string, technology: ProjectTechnology }[] ][] {
 
   const categories: { code: string, technology: ProjectTechnology }[] | undefined =
     resume.employmentHistory?.flatMap(e =>
       e.projects.flatMap(p =>
         [...p.stack, ...p.tools].flatMap(t => {
           const technology = resume.technologies?.find(_ => _.id == t);
-          if (!technology) return [];
+          if (!technology || technology.display == "hide") return [];
           return [{
             code: t,
             category: technology.category,
@@ -251,14 +251,25 @@ function getSkills(resume: ResumeObject) {
 
   if (!categories) {
     console.warn("Skill categories not found")
-    return {};
+    return [];
   };
 
   const grouped =
     pipe(
-      categories,
+      [
+        ...categories,
+        ...resume.technologies
+          .filter(_ => _.display === "force")
+          .map(_ => ({
+            code: _.id,
+            category: _.category,
+            technology: _
+          }))
+      ],
       Array.dedupeWith((a, b) => a.code == b.code),
-      Array.groupBy(_ => _.technology.category)
+      Array.groupBy(_ => _.technology.category),
+      _ => Object.entries(_),
+      Array.sortWith(t => STACK_CATEGORIES.findIndex(_ => _ == t[0]), Order.number)
     );
 
   return grouped;

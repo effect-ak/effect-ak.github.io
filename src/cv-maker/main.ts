@@ -1,5 +1,5 @@
 import Alpine from "alpinejs";
-import { debounce, getResumeObject, getUrlParam, parseJSON, resumeObjectToHTML, setUrlParam } from "./core/utils";
+import { debounce, getExampleResume, getUrlParam, parseJSON, resumeObjectToHTML, setUrlParam } from "./core/utils";
 import type resumeSchema from "./static/resume-schema.json"
 import { makeJsonEditor } from "#/common/editor/make";
 import { hasMajorError } from "#/common/editor/text-model";
@@ -68,8 +68,8 @@ async function loadStoredResume() {
   state.availableResumes = [];
 
   if (Object.keys(localStorage).length == 0) {
-    const resume = await getResumeObject();
-    localStorage.setItem("example", JSON.stringify(resume));
+    const resume = await getExampleResume();
+    localStorage.setItem("example", JSON.stringify(resume, undefined, 2));
   }
 
   for (const key of Object.keys(localStorage)) {
@@ -89,7 +89,7 @@ function selectResume() {
     console.warn("No resume to load");
     return;
   };
-  const resume = parseJSON(resumeJson);
+  const resume = parseJSON(resumeJson, true);
   if (!resume) {
     console.warn("Invalid json of resume");
     return;
@@ -116,6 +116,8 @@ async function setup() {
     (ref: string) =>
       editor.monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
         validate: true,
+        allowComments: true,
+        trailingCommas: "ignore",
         schemas: [
           {
             uri: "resume.json",
@@ -134,14 +136,17 @@ async function setup() {
       editor.textModel.model.setValue(JSON.stringify(state.resumeObject, undefined, 2));
       setupJsonSchema("#/$defs/ResumeObject");
     } else {
-      editor.textModel.model.setValue(JSON.stringify(state.resumeObject[state.editorSection], undefined, 2))
+      const section = state.resumeObject[state.editorSection] ?? {};
+      editor.textModel.model.setValue(JSON.stringify(section, undefined, 2))
       setupJsonSchema(`#/$defs/ResumeObject/properties/${state.editorSection}`);
     }
   }
 
   const saveResume = () => {
-    const parsed = parseJSON(editor.textModel.model.getValue());
-    if (!parsed) return;
+    const parsed = parseJSON(editor.textModel.model.getValue(), true);
+    if (!parsed) {
+      console.log("invalid json"); return;
+    };
     if (state.editorSection == "all") {
       state.resumeObject = parsed;
     } else {

@@ -6,27 +6,22 @@ const httpsRegex = /https:\/\//;
 // hide social profiles
 // hide phone
 
-export class ViewSettings
-  extends S.Class<ProjectTechnology>("ProjectTechnology")({
-    collapseOld: S.Boolean
-  }) { }
+// export class ViewSettings
+//   extends S.Class<ProjectTechnology>("ProjectTechnology")({
+//     collapseOld: S.Boolean
+//   }) { }
+
+export const STACK_CATEGORIES = [
+  "programming language", "cloud computing", "testing", "framework", "frontend", "database",
+  "devops tool", "collaboration tool", "other"
+] as const;
 
 export class ProjectTechnology
   extends S.Class<ProjectTechnology>("ProjectTechnology")({
     id: S.NonEmptyString,
     name: S.NonEmptyString,
-    category:
-      S.Literal(
-        "programming language",
-        "framework",
-        "cloud computing",
-        "database",
-        "devops tool",
-        "testing",
-        "collaboration tool",
-        "frontend",
-        "other"
-      ),
+    category: S.Literal(...STACK_CATEGORIES),
+    display: S.Literal("force", "hide").pipe(S.optional),
     version: S.NonEmptyString.pipe(S.optional),
     url: S.NonEmptyString.pipe(S.optional)
   }) { }

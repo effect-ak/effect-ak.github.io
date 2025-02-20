@@ -14,19 +14,24 @@ export const resumeObjectToHTML =
   }
     
 
-export const getResumeObject = async () => {
-  const resume = await fetch("./john-doe.json").then(_ => _.json());
+export const getExampleResume = async () => {
+  const resume = await fetch("./john-doe.jsonc").then(_ => _.text()).then(_ => parseJSON(_, true));
 
-  delete resume["$schema"]
+  delete resume["$schema"];
 
   const input = S.decodeUnknownSync(ResumeObject)(resume);
   return input;
 }
 
-export const parseJSON = (input: string | undefined) => {
+export const parseJSON = (input: string | undefined, sanity = false) => {
   if (!input) return;
   try {
-    return JSON.parse(input);
+    if (sanity) {
+      return JSON.parse(removeTrailingCommas(removeJsonComments(input)));
+    } else {
+      return JSON.parse(input);
+    }
+
   } catch (error) {}
 }
 
@@ -51,4 +56,23 @@ export function setUrlParam(name: string, value: string) {
   const url = new URL(location.href);
   url.searchParams.set(name, value);
   window.history.replaceState(null, '', url);
+}
+
+const commentsRegex = /("(?:\\.|[^"\\])*")|(?:\/\*(?:[\s\S]*?)\*\/)|(\/\/.*)/g
+
+export function removeJsonComments(input: string): string {
+  return input.replace(
+    commentsRegex,
+    (_match, quotedString) => {
+      if (quotedString !== undefined) {
+        return quotedString;
+      }
+      return "";
+    }
+  );
+}
+
+const trailingCommasRegex = /,\s*([\]}])/g;
+function removeTrailingCommas(input: string): string {
+  return input.replace(trailingCommasRegex, '$1');
 }
