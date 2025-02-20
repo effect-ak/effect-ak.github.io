@@ -80,12 +80,6 @@ async function loadStoredResume() {
       name: key
     });
   };
-
-  const lastResumeId = state.availableResumes.at(-1)?.id;
-
-  if (lastResumeId) {
-    state.currentResume = lastResumeId;
-  }
   
 }
 
@@ -196,6 +190,10 @@ async function setup() {
   window.addEventListener('delete', () => {
     localStorage.removeItem(state.currentResume);
     loadStoredResume();
+    const nextResume = state.availableResumes.at(-1);
+    if (nextResume) {
+      state.currentResume = nextResume.id;
+    }
     selectResume();
   });
 

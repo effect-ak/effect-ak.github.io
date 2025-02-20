@@ -13,7 +13,7 @@ export function Resume(resume: ResumeObject) {
           <div className="section-header">
             <span id="label">Why I'm the Right Choice for "{coverLetter.position}"</span>
           </div>
-          <div className="p-3 bg-so">
+          <div className="p-2 bg-so">
             {coverLetter.content.map(line => <p dangerouslySetInnerHTML={{ __html: line }}></p>)}
           </div>
           
@@ -24,7 +24,7 @@ export function Resume(resume: ResumeObject) {
         <span id="label">Summary</span>
       </div>
 
-      <div className="bg-so p-3">
+      <div className="bg-so p-2">
         {resume.me.expertSummary.map(s =>
           <p dangerouslySetInnerHTML={{ __html: s }}></p>
         )}
@@ -34,24 +34,21 @@ export function Resume(resume: ResumeObject) {
         <span id="label">Skills</span>
       </div>
 
-      <div className="flex gap-1 flex-wrap">
+      <div className="flex flex-wrap gap-1">
         {Object.entries(getSkills(resume)).map(([category, group]) => (
-          <div className="w-32" key={category}>
-            <span className="uppercase font-light text-sm">{category}</span>
-            <div className="flex flex-wrap">
-              {group.map((t, idx) => (
-                <span 
-                  key={idx} 
-                  className="bg-so p-1 text-sm ml-1 mt-1"
-                >
-                  {t.technology.name}
-                </span>
-              ))}
-            </div>
+          <div key={category} className="flex items-center gap-1">
+            <span className="uppercase font-medium">{category}:</span>
+            {group.map((t, idx) => (
+              <span 
+                key={idx} 
+                className="bg-so p-1 text-xs"
+              >
+                {t.technology.name}
+              </span>
+            ))}
           </div>
         ))}
       </div>
-
       <div className="section-header pt-1">
         <span id="label">Employment history</span>
       </div>
@@ -107,7 +104,7 @@ function ProjectStack(project: ProjectDetails) {
 
 function ResumeHead(resume: ResumeObject) {
   return (
-    <div id="head" className="pb-6">
+    <div id="head" className="pb-4">
       <div className="text-4xl font-thin">{resume.me.name}</div>
       <div className="text-lg font-light">{Headline(resume)}</div>
       <div className="flex gap-1.5 text-sm font-extralight">
@@ -171,27 +168,33 @@ function CompanyProject(project: ProjectDetails, isLast: boolean) {
 function EmploymentHistory(resume: ResumeObject) {
   return (
     <div id="employment">
-      {resume.employmentHistory.map(company => {
-        
-        const projects = 
-          [...company.projects]
-            .sort((a,b) => b.order - a.order)
-            .map((project, id) => CompanyProject(project, id == company.projects.length - 1))
+      {resume.employmentHistory.map(er => {
+
+        const isOld = er.isMonthPast(60);
+
+        let clazz = "border-b-1 border-gray-300 mb-2 p-2";
+
+        if (isOld) clazz += " bg-neutral-100";
+
+        const allRoles =
+          Array.dedupeWith(er.projects.flatMap(_ => _.roles), (a, b) => a.toLowerCase() == b.toLocaleLowerCase()).join('/')
 
         return (
-          <div className="border-b-1 border-gray-300 mb-2 pb-1">
-            <div style={{ "display": "flex" }}>
-              <span className="font-extralight text-sm">{CompanyHeader(company)}</span>
-              <span
-                style={{ "marginLeft": "auto" }}
-              >{getPeriod(company)}</span>
+          <div className={clazz}>
+            <div className="flex">
+              <span className="font-extralight text-sm">{CompanyHeader(er)}</span>
+              <span className="ml-auto">{getPeriod(er)}</span>
             </div>
-            <span
-              style={{ display: "block", marginBottom: "5px" }}
-            >{CompanySubHeader(company)}</span>
-            <div className="flex flex-col">
-            {projects}
-            </div>
+            <span className="block">{CompanySubHeader(er)}</span>
+            {isOld ? 
+              <div>
+                <span className="font-medium">Roles: </span>
+                <span>{allRoles}</span>
+              </div> : 
+              <div className="flex flex-col">
+                { er.sortedProjects.map((project, id) => CompanyProject(project, id == er.projects.length - 1)) }
+              </div>
+            }            
 
           </div>
         )

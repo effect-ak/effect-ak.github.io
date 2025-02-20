@@ -6,7 +6,7 @@ import { Resume } from "#/cv-maker/core/template"
 export const resumeObjectToHTML = 
   (resume: ResumeObject) => {
     try {
-      return render(Resume(resume))
+      return render(Resume(S.decodeSync(ResumeObject)(resume)))
     } catch (e) {
       console.log("render error", e);
       return ""

@@ -1,6 +1,15 @@
-import { Schema as S } from "effect"
+import { DateTime, Duration, Schema as S } from "effect"
 
 const httpsRegex = /https:\/\//;
+
+// collapse old jobs
+// hide social profiles
+// hide phone
+
+export class ViewSettings
+  extends S.Class<ProjectTechnology>("ProjectTechnology")({
+    collapseOld: S.Boolean
+  }) { }
 
 export class ProjectTechnology
   extends S.Class<ProjectTechnology>("ProjectTechnology")({
@@ -58,7 +67,24 @@ export class EmploymentRecord
       }).pipe(S.partial),
     projects:
       ProjectDetails.pipe(S.NonEmptyArray)
-  }) { }
+  }) {
+    
+    get sortedProjects() {
+      return [...this.projects]
+        .sort((a,b) => b.order - a.order)
+    };
+
+    isMonthPast(monthPast: number) {
+
+      const now = Duration.millis(DateTime.unsafeNow().epochMillis);
+      const end = Duration.millis(DateTime.unsafeMake(this.start).epochMillis);
+
+      const daysPast = Duration.subtract(end)(now).pipe(Duration.toDays);
+
+      return daysPast > monthPast * 30;
+    }
+
+  }
 
 export class Me
   extends S.Class<Me>("Me")({
