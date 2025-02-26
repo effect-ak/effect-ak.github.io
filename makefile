@@ -9,4 +9,9 @@ dev-cv:
 	PROJECT=cv-maker vite
 
 gen-openapi-ui:
-	redocly build-docs --output=docs/telegram-bot-api/index.html
+	redocly build-docs \
+		../tg-bot-client/openapi/openapi.yaml \
+		--output=docs/telegram-bot-api/index.html \
+		--theme.openapi.hideRequestPayloadSample \
+		--theme.openapi.sortTagsAlphabetically \
+		--template tg-bot-api.hbs
