@@ -1,10 +1,16 @@
 import { EmploymentRecord, ProjectDetails, ProjectTechnology, ResumeObject, STACK_CATEGORIES } from "#/cv-maker/core/schema";
-import { DateTime, pipe, Array, Order, HashMap } from "effect";
+import { DateTime, pipe, Array, Order, Match } from "effect";
 
 export function Resume(resume: ResumeObject) {
-  const coverLetter = resume.me.coverLetter;
+  const coverLetter =
+    Match.value(resume.me.coverLetter).pipe(
+      Match.when({ position: Match.defined }, _ => _),
+      Match.when(Match.defined, _ => _["default"]),
+      Match.orElse(() => undefined)
+    );
+
   return (
-    <div>
+    <div className="flex gap-2 flex-col">
 
       {ResumeHead(resume)}
 
@@ -20,41 +26,48 @@ export function Resume(resume: ResumeObject) {
         </div>
       ) : null}
 
-      <div className="section-header">
-        <span id="label">Summary</span>
+      <div>
+        <div className="section-header">
+          <span id="label">Summary</span>
+        </div>
+
+        <div className="bg-so p-2">
+          {resume.me.expertSummary.map(s =>
+            <p dangerouslySetInnerHTML={{ __html: s }}></p>
+          )}
+        </div>
       </div>
 
-      <div className="bg-so p-2">
-        {resume.me.expertSummary.map(s =>
-          <p dangerouslySetInnerHTML={{ __html: s }}></p>
-        )}
+      <div>
+        <div className="section-header">
+          <span id="label">Skills</span>
+        </div>
+
+        <div className="flex flex-wrap gap-1">
+          {getSkills(resume).map(([category, group]) => (
+            <div key={category} className="flex items-center gap-1">
+              <span className="uppercase font-medium">{category}:</span>
+              {group.map((t, idx) => (
+                <span
+                  key={idx}
+                  className="bg-so p-1 text-xs"
+                >
+                  {t.technology.name}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="section-header">
-        <span id="label">Skills</span>
-      </div>
+      <div>
+        <div className="section-header pt-1">
+          <span id="label">Employment history</span>
+        </div>
 
-      <div className="flex flex-wrap gap-1">
-        {getSkills(resume).map(([category, group]) => (
-          <div key={category} className="flex items-center gap-1">
-            <span className="uppercase font-medium">{category}:</span>
-            {group.map((t, idx) => (
-              <span
-                key={idx}
-                className="bg-so p-1 text-xs"
-              >
-                {t.technology.name}
-              </span>
-            ))}
-          </div>
-        ))}
-      </div>
-      <div className="section-header pt-1">
-        <span id="label">Employment history</span>
-      </div>
-
-      <div id="employment">
-        {EmploymentHistory(resume)}
+        <div id="employment">
+          {EmploymentHistory(resume)}
+        </div>
       </div>
 
     </div>
@@ -65,8 +78,8 @@ export function Resume(resume: ResumeObject) {
 function Headline(resume: ResumeObject) {
   return (
     <div className="flex gap-2 items-baseline">
-      <span className="text-2xl font-thin">Software Engineer</span>
-      <span className="text-base">Expertise: {resume.me?.expertise.join("/")}</span>
+      <span className="text-2xl font-thin">{resume.me.position}</span>
+      <span className="text-base">Expertise: {resume.me.expertise.join("/")}</span>
     </div>
   )
 }
@@ -104,9 +117,9 @@ function ProjectStack(project: ProjectDetails) {
 
 function ResumeHead(resume: ResumeObject) {
   return (
-    <div id="head" className="pb-4">
+    <div id="head">
       <div className="text-4xl font-thin">{resume.me.name}</div>
-      <div className="text-lg font-light">{Headline(resume)}</div>
+      {resume.displaySettings.headline == "show" ? <div className="text-lg font-light">{Headline(resume)}</div> : null }
       <div className="flex gap-1.5 text-sm font-extralight">
         <span>{resume.me.location}</span>
         <div>
@@ -122,12 +135,12 @@ function ResumeHead(resume: ResumeObject) {
           > {resume.me.phone}</a>
         </div>
       </div>
-      <div className="pt-1">
+      <div>
         {resume.me.profiles.map(p => {
           const iconClass = `fa-${p.icon.split(' ').at(0)}`;
           return (
-            <a 
-              class="inline-block py-2 px-1"
+            <a
+              class="inline-block py-1 px-1"
               href={p.url} target="_blank" rel="noopener noreferrer">
               <span
                 className={`fa-brands fa-lg ${iconClass}`}

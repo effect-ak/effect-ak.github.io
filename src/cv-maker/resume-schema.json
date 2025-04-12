@@ -28,6 +28,9 @@
           "items": {
             "$ref": "#/$defs/EmploymentRecord"
           }
+        },
+        "displaySettings": {
+          "$ref": "#/$defs/DisplaySettings"
         }
       },
       "additionalProperties": false
@@ -43,35 +46,76 @@
       "required": [
         "name",
         "expertise",
+        "expertSummary",
         "email",
-        "profiles",
-        "expertSummary"
+        "profiles"
       ],
       "properties": {
         "name": {
           "$ref": "#/$defs/NonEmptyString"
         },
         "coverLetter": {
-          "type": "object",
-          "required": [
-            "position",
-            "content"
-          ],
-          "properties": {
-            "position": {
-              "$ref": "#/$defs/NonEmptyString"
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "position",
+                "content"
+              ],
+              "properties": {
+                "position": {
+                  "$ref": "#/$defs/NonEmptyString"
+                },
+                "content": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "$ref": "#/$defs/NonEmptyString"
+                  }
+                }
+              },
+              "additionalProperties": false
             },
-            "content": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "$ref": "#/$defs/NonEmptyString"
+            {
+              "type": "object",
+              "required": [],
+              "properties": {},
+              "patternProperties": {
+                "": {
+                  "type": "object",
+                  "required": [
+                    "position",
+                    "content"
+                  ],
+                  "properties": {
+                    "position": {
+                      "$ref": "#/$defs/NonEmptyString"
+                    },
+                    "content": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "$ref": "#/$defs/NonEmptyString"
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
               }
             }
-          },
-          "additionalProperties": false
+          ]
+        },
+        "position": {
+          "$ref": "#/$defs/NonEmptyString"
         },
         "expertise": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/NonEmptyString"
+          }
+        },
+        "expertSummary": {
           "type": "array",
           "minItems": 1,
           "items": {
@@ -108,13 +152,6 @@
             },
             "additionalProperties": false
           }
-        },
-        "expertSummary": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/$defs/NonEmptyString"
-          }
         }
       },
       "additionalProperties": false
@@ -137,13 +174,13 @@
           "type": "string",
           "enum": [
             "programming language",
-            "framework",
             "cloud computing",
+            "testing",
+            "framework",
+            "frontend",
             "database",
             "devops tool",
-            "testing",
             "collaboration tool",
-            "frontend",
             "other"
           ]
         },
@@ -302,6 +339,22 @@
             },
             "additionalProperties": false
           }
+        }
+      },
+      "additionalProperties": false
+    },
+    "DisplaySettings": {
+      "type": "object",
+      "required": [
+        "headline"
+      ],
+      "properties": {
+        "headline": {
+          "type": "string",
+          "enum": [
+            "hide",
+            "show"
+          ]
         }
       },
       "additionalProperties": false

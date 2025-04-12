@@ -1,9 +1,11 @@
 import Alpine from "alpinejs";
 import { debounce, getExampleResume, getUrlParam, parseJSON, resumeObjectToHTML, setUrlParam } from "./core/utils";
-import type resumeSchema from "./static/resume-schema.json"
 import { makeJsonEditor } from "#/common/editor/make";
 import { hasMajorError } from "#/common/editor/text-model";
-import * as resumeSchemaObject from "./static/resume-schema.json";
+import * as resumeSchemaObject from "./resume-schema.json";
+
+type EditorSection = 
+  Exclude<keyof typeof resumeSchemaObject.$defs.ResumeObject.properties | "all", "$schema">
 
 declare global {
   interface Window {
@@ -43,7 +45,7 @@ Alpine.store("sections", () => [{
 const state: {
   resumeObject: any
   resumeHtml: string
-  editorSection: Exclude<keyof typeof resumeSchema.$defs.ResumeObject.properties | "all", "$schema">
+  editorSection: EditorSection
   mode: string
   editorHasError: boolean
   availableResumes: { id: string, name: string }[]
@@ -73,6 +75,7 @@ async function loadStoredResume() {
   }
 
   for (const key of Object.keys(localStorage)) {
+    if (key.startsWith("_")) continue;
     const value = localStorage.getItem(key);
     if (!value) continue;
     state.availableResumes.push({

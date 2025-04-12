@@ -2,15 +2,6 @@ import { DateTime, Duration, Schema as S } from "effect"
 
 const httpsRegex = /https:\/\//;
 
-// collapse old jobs
-// hide social profiles
-// hide phone
-
-// export class ViewSettings
-//   extends S.Class<ProjectTechnology>("ProjectTechnology")({
-//     collapseOld: S.Boolean
-//   }) { }
-
 export const STACK_CATEGORIES = [
   "programming language", "cloud computing", "testing", "framework", "frontend", "database",
   "devops tool", "collaboration tool", "other"
@@ -81,15 +72,27 @@ export class EmploymentRecord
 
   }
 
+export type CoverLetterSchema = typeof CoverLetterSchema.Type;
+const CoverLetterSchema = 
+  S.Struct({
+    position: S.NonEmptyString,
+    content: S.NonEmptyString.pipe(S.NonEmptyArray)
+  });
+
 export class Me
   extends S.Class<Me>("Me")({
     name: S.NonEmptyString,
-    coverLetter: 
-      S.Struct({
-        position: S.NonEmptyString,
-        content: S.NonEmptyString.pipe(S.NonEmptyArray)
-      }).pipe(S.optional),
+    coverLetter:
+      S.Union(
+        CoverLetterSchema,
+        S.Record({ key: S.String, value: CoverLetterSchema })
+      ).pipe(S.optional),
+    position: S.NonEmptyString.pipe(S.optionalWith({ default: () => "Software Engineer"})),
     expertise: S.NonEmptyString.pipe(S.NonEmptyArray),
+    expertSummary:
+    S.NonEmptyString.pipe(
+      S.NonEmptyArray
+    ),
     location: S.NonEmptyString.pipe(S.optional),
     phone: S.NonEmptyString.pipe(S.optional),
     email: S.NonEmptyString,
@@ -99,11 +102,12 @@ export class Me
         icon: S.NonEmptyString
       }).pipe(
         S.NonEmptyArray
-      ),
-    expertSummary:
-      S.NonEmptyString.pipe(
-        S.NonEmptyArray
       )
+  }) { }
+
+export class DisplaySettings
+  extends S.Class<DisplaySettings>("DisplaySettings")({
+    headline: S.Literal("hide", "show"),
   }) { }
 
 // Backend/Frontend/DevOps
@@ -113,4 +117,5 @@ export class ResumeObject
     me: Me,
     technologies: ProjectTechnology.pipe(S.NonEmptyArray),
     employmentHistory: EmploymentRecord.pipe(S.NonEmptyArray),
+    displaySettings: DisplaySettings.pipe(S.optionalWith({ default: () => new DisplaySettings({ headline: "show" })}))
   }) { };
