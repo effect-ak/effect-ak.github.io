@@ -1,4 +1,4 @@
-import { BotResponse, defineBot } from "@effect-ak/tg-bot-client"
+import { BotResponse, defineBot } from "@effect-ak/tg-bot-client/bot"
 
 export default defineBot({
   on_message: (msg) => {

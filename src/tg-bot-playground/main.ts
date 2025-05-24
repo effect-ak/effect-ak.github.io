@@ -3,6 +3,7 @@ import { makeBotLauncher } from "#/tg-bot-playground/bot-launcher/_main";
 import { makeTsEditor } from "#/common/editor/make";
 import { fetchText } from "#/common/utils";
 import type { BotState } from "./types";
+import { CDN_PACKAGE_EXPORTS } from "./const";
 
 export type GlobalState = ReturnType<typeof makeGlobalState>;
 
@@ -44,7 +45,7 @@ async function setup() {
 
   Alpine.store("state", state);
 
-  const editor = await makeTsEditor();
+  const editor = await makeTsEditor(CDN_PACKAGE_EXPORTS);
 
   if (!editor) return;
 
@@ -54,6 +55,7 @@ async function setup() {
 
   editor.onCodeChange(async () => {
     if (!state.bot.isReachable || !state.bot.isAutoReload) return;
+    console.log("reloading code..")
     botLauncher.runBot(state);
   });
 
@@ -69,6 +71,20 @@ async function setup() {
     if (!state.selectedExample) return;
     fetchText(`./example/${state.selectedExample}`)
       .then(_ => editor.tsTextModel.tsModel.setValue(_))
+  });
+
+  document.addEventListener("save-code", async () => {
+    const code = await editor.tsTextModel.getJsCode();
+    var blob = new Blob([code], { type: "application/javascript" });
+    const blobURL = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = blobURL;
+    link.download = "generated.js";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(blobURL);
   });
   
   botLauncher.worker.onmessage = (event: MessageEvent) => {

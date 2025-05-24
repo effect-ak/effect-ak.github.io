@@ -1,19 +1,24 @@
 import type { Monaco } from "@monaco-editor/loader";
 import { fetchText } from "#/common/utils";
-import { CDN_PACKAGE_DTS } from "#/tg-bot-playground/const";
+
+export type PackageExports = {
+  entryName?: string
+  dts_url: string
+  js_url?: string
+  packageName?: string
+}[]
 
 export const setupDts = async (
-  monaco: Monaco
+  monaco: Monaco,
+  packageExports: PackageExports
 ) => {
 
-  const dts = await fetchText(`https://cdn.jsdelivr.net/npm/${CDN_PACKAGE_DTS}`);
+  monaco.languages.typescript.typescriptDefaults.setExtraLibs([]);
 
-  monaco.languages.typescript.typescriptDefaults.setExtraLibs([
-    {
-      content: dts,
-      filePath: "node_modules/@effect-ak/tg-bot-client/index.d.ts",
-    }
-  ]);
+  packageExports.forEach(async ({ dts_url, packageName, entryName }) => {
+    const content = await fetchText(dts_url);
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(content, (packageName && entryName) ? `node_modules/${packageName}/${entryName}.d.ts` : undefined);
+  });
 
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     ...monaco.languages.typescript.typescriptDefaults.getCompilerOptions(),

@@ -1,8 +1,8 @@
-import { setupDts } from "./setup";
+import { type PackageExports, setupDts } from "./setup";
 import { createAndBindEditor, initMonaco } from "./init";
 import { hasMajorError, makeJsonTextModel, makeTsTextModel } from "./text-model";
 
-export const makeTsEditor = async () => {
+export const makeTsEditor = async (packageExports: PackageExports) => {
 
   const monaco = await initMonaco();
 
@@ -15,7 +15,7 @@ export const makeTsEditor = async () => {
 
   if (!editor) return;
 
-  await setupDts(monaco);
+  await setupDts(monaco, packageExports);
 
   return {
     tsTextModel,

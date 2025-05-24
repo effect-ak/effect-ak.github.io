@@ -1,6 +1,6 @@
-import { runTgChatBot, BotInstance } from "@effect-ak/tg-bot-client";
+import { runTgChatBot, BotInstance } from "@effect-ak/tg-bot-client/bot";
 import { isRunBot, type BotState } from "../types";
-import { loadJsModule } from "./utils";
+import { loadBotHandlers } from "./utils";
 
 export const makeWorkerHandler = (
   notifyParent: (_: Record<string, unknown> & { messageId: number }) => void
@@ -30,15 +30,23 @@ export const makeWorkerHandler = (
 
     if (command.command == "run-bot") {
 
-      const handlers = await loadJsModule(command.code);
+      const handlers = await loadBotHandlers(command.code);
 
-      console.log("worker got run-bot command", handlers);
+      if (!handlers) {
+        sendEvent({
+          error: "handlers doesn't return default",
+          command
+        });
+        return;
+      }
+
+      console.log("worker got run-bot command");
 
       if (botInstance) {
         console.log("reloading...")
         await botInstance.reload({
           type: "single",
-          ...handlers.default
+          ...handlers
         });
         sendEvent({
           botState: {
@@ -50,11 +58,10 @@ export const makeWorkerHandler = (
 
       botInstance =
         await runTgChatBot({
-          type: "config",
           bot_token: command.token,
           mode: {
             type: "single",
-            ...handlers.default
+            ...handlers
           }
         });
 

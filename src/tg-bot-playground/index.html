@@ -58,10 +58,13 @@
 
   </div>
 
-  <div style="display: flex; align-items: start;">
+  <div style="display: flex; align-items: start; gap: 10px">
+    <button
+      @click="$dispatch('save-code')"
+    >Save code</button>
     <label>
       Select example
-      <select 
+      <select
         x-model="$store.state.selectedExample"
         @change="$dispatch('change-example')"
       >
