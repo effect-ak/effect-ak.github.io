@@ -8,7 +8,7 @@ export const makeWorkerHandler = (
 
   let messageId = 0;
 
-  let botInstance = undefined as BotInstance | undefined;
+  let botInstance: BotInstance | undefined;
 
   const sendEvent = (
     input: Record<string, unknown>
@@ -59,6 +59,9 @@ export const makeWorkerHandler = (
       botInstance =
         await runTgChatBot({
           bot_token: command.token,
+          poll: {
+            on_error: "continue"
+          },
           mode: {
             type: "single",
             ...handlers

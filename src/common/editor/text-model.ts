@@ -1,29 +1,34 @@
 import { Monaco } from "#/common/types";
 import { fetchText } from "#/common/utils";
-import { editor, languages } from "monaco-editor";
+import { editor, languages, Uri } from "monaco-editor";
 
 export type TsTextModel = Awaited<ReturnType<typeof makeTsTextModel>>
 
 export const makeTsTextModel =
   async (monaco: Monaco) => {
 
+    console.log('make model')
     const emptyExample = await fetchText("./example/empty.ts");
 
     const tsModel =
-      monaco.editor.createModel(emptyExample, 'typescript');
+      monaco.editor.createModel(emptyExample, "typescript");
 
-    let tsWorker: languages.typescript.TypeScriptWorker | null = null;
+    console.log("created model", tsModel.uri)
+
+    let tsWorkerFactory: (uri: Uri) => Promise<languages.typescript.TypeScriptWorker>;
 
     const getTsCode = async () => {
-      if (!tsWorker) {
-        tsWorker = await monaco.languages.typescript.getTypeScriptWorker().then(_ => _(tsModel.uri));
+      if (!tsWorkerFactory) {
+        tsWorkerFactory = await monaco.languages.typescript.getTypeScriptWorker();
       }
-      return tsWorker!.getEmitOutput(tsModel.uri.toString());
+      const worker = await tsWorkerFactory(tsModel.uri);
+      return worker.getEmitOutput(tsModel.uri.toString());
     }
 
     return {
       tsModel,
       getJsCode: async () => {
+        console.log('get js code')
         const output = await getTsCode();
         const code = output.outputFiles[0].text;
         return code;
@@ -37,7 +42,9 @@ export const makeJsonTextModel = async (
 ) => {
 
     const model =
-      monaco.editor.createModel('', 'json');
+      monaco.editor.createModel('{}', 'json');
+
+    console.log('created json model', model.uri)
 
     return {
       model

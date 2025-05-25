@@ -15,7 +15,7 @@ export const replaceImports =
 
 export async function loadBotHandlers(code: string) {
   const preparedCode = replaceImports(code);
-  console.log("prepared code", preparedCode)
+  console.log("prepared code", preparedCode);
   const blob = new Blob([ preparedCode ], { type: 'application/javascript' });
   const url = URL.createObjectURL(blob);
   try {

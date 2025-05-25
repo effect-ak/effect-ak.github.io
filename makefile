@@ -1,5 +1,7 @@
-build:
+build-tg:
 	PROJECT=tg-bot-playground vite build
+
+build-cv:
 	PROJECT=cv-maker vite build
 
 dev-tg:

@@ -22,7 +22,7 @@ export const createAndBindEditor = async (
   textModel: editor.ITextModel
 ) => {
 
-  const container = document.getElementById('code-editor');
+  const container = document.getElementById("code-editor");
 
   if (!container) {
     console.warn("code-editor node not found");

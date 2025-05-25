@@ -8,6 +8,7 @@ const configs: Record<string, UserConfig> = {
     publicDir: "static",
     base: "./",
     plugins: [
+      tailwindcss(),
       tsconfigPaths()
     ],
     build: {

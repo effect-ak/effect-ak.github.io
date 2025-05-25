@@ -8,14 +8,15 @@ export const makeTsEditor = async (packageExports: PackageExports) => {
 
   if (!monaco) return;
 
+  console.log("setting up dts")
+  await setupDts(monaco, packageExports);
+
   const tsTextModel = await makeTsTextModel(monaco);
 
   const editor =
     await createAndBindEditor(monaco, tsTextModel.tsModel);
 
   if (!editor) return;
-
-  await setupDts(monaco, packageExports);
 
   return {
     tsTextModel,
