@@ -17,7 +17,7 @@ export const initMonaco = () => {
 
 }
 
-export const createAndBindEditor = async (
+export const createAndBindEditor = (
   monaco: Monaco,
   textModel: editor.ITextModel
 ) => {
@@ -35,7 +35,8 @@ export const createAndBindEditor = async (
       contextmenu: false,
       minimap: {
         enabled: false,
-      }
+      },
+      automaticLayout: true
     });
 
   return editor;

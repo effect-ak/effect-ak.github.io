@@ -1,18 +1,29 @@
 import { Schema as S } from "effect"
-import { render } from 'preact-render-to-string';
+import { createRoot } from 'react-dom/client';
+import { flushSync } from 'react-dom';
 import { ResumeObject } from "#/cv-maker/core/schema";
 import { Resume } from "#/cv-maker/core/template"
+import React from "react";
 
-export const resumeObjectToHTML = 
+function renderToString(cmpn: React.JSX.Element) {
+  const div = document.createElement('div');
+  const root = createRoot(div);
+  flushSync(() => {
+    root.render(cmpn);
+  });
+  return div.innerHTML
+}
+
+export const resumeObjectToHTML =
   (resume: ResumeObject) => {
     try {
-      return render(Resume(S.decodeSync(ResumeObject)(resume)))
+      return renderToString(Resume(S.decodeSync(ResumeObject)(resume)))
     } catch (e) {
       console.log("render error", e);
       return ""
     }
   }
-    
+
 
 export const getExampleResume = async () => {
   const resume = await fetch("./john-doe.jsonc").then(_ => _.text()).then(_ => parseJSON(_, true));
@@ -32,7 +43,7 @@ export const parseJSON = (input: string | undefined, sanity = false) => {
       return JSON.parse(input);
     }
 
-  } catch (error) {}
+  } catch (error) { }
 }
 
 export function debounce<T extends (...args: unknown[]) => void>(

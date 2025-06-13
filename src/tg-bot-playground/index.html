@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Telegram Bot Playground</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Write and run your Telegram bot code in TypeScript directly in your Web browser.">
+  <title>Telegram Bot Playground</title>
   <script defer src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/umd/monaco-loader.min.js"></script>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="icon" type="image/png" sizes="32x32" href="./favicon.ico">
   <link rel="stylesheet" href="./styles.css">
 
-  <script defer src="./main.ts" type="module"></script>
+  <script defer src="./main-entry.ts" type="module"></script>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKWW5S34LH"></script>
   <script>
@@ -21,116 +19,10 @@
     gtag('js', new Date());
     gtag('config', 'G-FKWW5S34LH');
   </script>
-
 </head>
+<body class="bg-slate-50 p-6 font-sans">
 
-<body x-data class="bg-gray-50 p-6 font-sans">
-
-  <div x-html="$refs.head.innerHTML"></div>
-  <div x-html="$refs.selectExample.innerHTML"></div>
-
-  <div class="flex items-start gap-2.5">
-    <div
-      id="code-editor"
-      x-cloak
-      class="flex flex-[0_1_70%] h-[600px] border border-gray-400"
-    ></div>
-    <div x-html="$refs.logs.innerHTML"></div>
-  </div>
-
-  <div x-html="$refs.footer.innerHTML"></div>
-
-  <template x-ref="logs">
-    <div
-      class="flex flex-1 flex-col items-start justify-start h-[600px] overflow-y-auto hide-scrollbar bg-gray-400"
-      x-ref="updates"
-    >
-      <template x-for="update in $store.state.botUpdates" :key="update.messageId">
-        <div 
-          class="bg-gray-200 m-2.5 rounded p-2 text-sm whitespace-pre-wrap text-black"
-          x-text="JSON.stringify(update, undefined, 2)"
-        ></div>
-      </template>
-    </div>
-  </template>
-
-  <template x-ref="selectExample">
-    <div class="flex items-start gap-2.5 mb-4">
-      <!-- <button
-        @click="$dispatch('save-code')"
-      >Save code</button> -->
-      <label class="flex items-center gap-2">
-        Select example
-        <select
-          x-model="$store.state.selectedExample"
-          @change="$dispatch('change-example')"
-          class="px-2 py-1 border border-gray-300 rounded"
-        >
-          <option value="empty.ts">Simple Bot</option>
-          <option value="command.ts">Command Bot</option>
-          <option value="file.ts">File Bot</option>
-        </select>
-      </label>
-    </div>
-  </template>
-
-  <template x-ref="head">
-    <h2 class="text-xl font-bold text-start text-gray-800 mb-6">Telegram Bot Playground 🤖 </h2>
-
-    <div class="flex gap-5 justify-center items-center mb-6 flex-wrap">
-
-      <label x-show="$store.state.bot.isReachable">
-        Auto-Reload
-        <input 
-          type="checkbox" 
-          x-model="$store.state.bot.isAutoReload"
-          class="ml-1"
-        >
-      </label>
-
-    <button
-      type="button"
-      x-show="$store.state.bot.isReachable"
-      @click="$dispatch('reload-bot')"
-      class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-    >
-      <i class="fas fa-refresh"></i>
-    </button>
-
-      <label class="flex items-center gap-2">
-        Bot token
-        <input type="text" x-model="$store.state.bot.token" placeholder="your token"
-          @input.debounce.500ms="$dispatch('check-token')">
-      </label>
-
-      <label>Bot name: <span x-text="$store.state.bot.name"></span></label>
-      <label>Status: <span x-text="$store.state.bot.status"></span></label>
-
-    </div>
-  </template>
-
-  <template x-ref="footer">
-    <footer class="bg-gray-100 text-gray-700 py-4 no-print mt-20">
-      <div class="container mx-auto text-center">
-        <p>© 2025 Created by Aleksandr Kondaurov</p>
-        <p>
-          <a 
-            target="_blank"
-            href="https://www.linkedin.com/in/alexander-kondaurov/"
-            rel="noopener noreferrer" 
-            class="fa-brands fa-lg fa-linkedin text-blue-500"
-          ></a>
-          <a 
-            target="_blank"
-            href="https://github.com/effect-ak/effect-ak.github.io"
-            rel="noopener noreferrer" 
-            class="fa-brands fa-lg fa-github"
-          ></a> 
-        </p>
-      </div>
-    </footer>
-  </template>
-
+  <div id="playground"></div>
+  
 </body>
-
 </html>

@@ -1,5 +1,6 @@
+import React from 'react'
 import { EmploymentRecord, ProjectDetails, ProjectTechnology, ResumeObject, STACK_CATEGORIES } from "#/cv-maker/core/schema";
-import { DateTime, pipe, Array, Order, HashMap } from "effect";
+import { DateTime, pipe, Array, Order } from "effect";
 
 export function Resume(resume: ResumeObject) {
   const coverLetter = resume.me.coverLetter;
@@ -127,7 +128,7 @@ function ResumeHead(resume: ResumeObject) {
           const iconClass = `fa-${p.icon.split(' ').at(0)}`;
           return (
             <a 
-              class="inline-block py-2 px-1"
+              className="inline-block py-2 px-1"
               href={p.url} target="_blank" rel="noopener noreferrer">
               <span
                 className={`fa-brands fa-lg ${iconClass}`}

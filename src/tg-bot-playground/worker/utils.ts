@@ -24,9 +24,8 @@ export async function loadBotHandlers(code: string) {
     return handlers.default as BotUpdatesHandlers
   } catch (error) {
     console.log("Can't load handlers", error);
-    return;
+    return
   } finally {
     URL.revokeObjectURL(url)
   }
-
 }

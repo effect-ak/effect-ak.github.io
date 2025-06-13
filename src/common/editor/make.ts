@@ -5,28 +5,24 @@ import { hasMajorError, makeJsonTextModel, makeTsTextModel } from "./text-model"
 export const makeTsEditor = async (packageExports: PackageExports) => {
 
   const monaco = await initMonaco();
-
   if (!monaco) return;
 
-  console.log("setting up dts")
   await setupDts(monaco, packageExports);
 
   const tsTextModel = await makeTsTextModel(monaco);
 
-  const editor =
-    await createAndBindEditor(monaco, tsTextModel.tsModel);
-
-  if (!editor) return;
-
   return {
     tsTextModel,
-    onCodeChange: (
+    bindEditor() {
+      return createAndBindEditor(monaco, tsTextModel.tsModel)
+    },
+    onCodeChange(
       f: () => void
-    ) => {
+    ) {
       let timeoutId: number | undefined;
       const debounceDelay = 1000;
 
-      tsTextModel.tsModel.onDidChangeContent(() => {
+      return tsTextModel.tsModel.onDidChangeContent(() => {
         if (timeoutId !== undefined) {
           clearTimeout(timeoutId);
         }

@@ -1,17 +1,14 @@
-import { Monaco } from "#/common/types";
+import type { Monaco } from "#/common/types";
 import { fetchText } from "#/common/utils";
 import { editor, languages, Uri } from "monaco-editor";
 
 export type TsTextModel = Awaited<ReturnType<typeof makeTsTextModel>>
 
 export const makeTsTextModel =
-  async (monaco: Monaco) => {
-
-    console.log('make model')
-    const emptyExample = await fetchText("./example/empty.ts");
+  (monaco: Monaco) => {
 
     const tsModel =
-      monaco.editor.createModel(emptyExample, "typescript");
+      monaco.editor.createModel('', "typescript");
 
     console.log("created model", tsModel.uri)
 
