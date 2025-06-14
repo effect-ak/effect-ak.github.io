@@ -4,17 +4,23 @@ import { hasMajorError, makeJsonTextModel, makeTsTextModel } from "./text-model"
 
 export const makeTsEditor = async (packageExports: PackageExports) => {
 
-  const monaco = await initMonaco();
-  if (!monaco) return;
+  const monaco = await initMonaco()
+  if (!monaco) return
 
-  await setupDts(monaco, packageExports);
+  await setupDts(monaco, packageExports)
 
-  const tsTextModel = await makeTsTextModel(monaco);
+  const tsTextModel = await makeTsTextModel(monaco)
+
+  let editorInstance: ReturnType<typeof createAndBindEditor>
 
   return {
     tsTextModel,
     bindEditor() {
-      return createAndBindEditor(monaco, tsTextModel.tsModel)
+      if (editorInstance) {
+        console.log('already mounted')
+      }
+      editorInstance = createAndBindEditor(monaco, tsTextModel.tsModel)
+      return editorInstance
     },
     onCodeChange(
       f: () => void

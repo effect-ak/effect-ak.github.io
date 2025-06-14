@@ -3,7 +3,6 @@ import { makeTsEditor } from "#/common/editor/make";
 import { CDN_PACKAGE_EXPORTS } from "../const";
 import { fetchText } from "#/common/utils";
 import { BotStateProvider } from "./bot/state";
-import { PlaygroundBusProvider } from "./bus";
 
 export class EditorProvider
   extends Effect.Service<EditorProvider>()("EditorProvider", {
@@ -16,7 +15,6 @@ export class EditorProvider
         )
 
         const emptyExample = yield* Effect.tryPromise(() => fetchText("./example/empty.ts"))
-        const eventBus = yield* PlaygroundBusProvider
         const botState = yield* BotStateProvider
 
         editor.tsTextModel.tsModel.setValue(emptyExample)
@@ -43,11 +41,8 @@ export class EditorProvider
         return {
           getJsCode: editor.tsTextModel.getJsCode,
           bindEditor: editor.bindEditor,
-          changeExample
+          changeExample,
         } as const
 
-      }),
-      dependencies: [
-        PlaygroundBusProvider.Default,
-      ]
+      })
   }) { }

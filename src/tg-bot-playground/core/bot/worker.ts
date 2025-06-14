@@ -36,7 +36,6 @@ export class BotWorkerProvider
             } satisfies RunBot)
           }
         } as const
-
       }),
       dependencies: [
         PlaygroundBusProvider.Default

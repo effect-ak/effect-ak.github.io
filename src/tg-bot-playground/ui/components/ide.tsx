@@ -1,12 +1,12 @@
 import React from 'react'
-import { UseLogs, UsePlaygroundContext } from '../hooks';
-import { ConnectBot } from './bot';
+import { UsePlaygroundContext } from '../hooks';
+import { RunTab } from './run-tab';
+import { CodeTab } from './code-tab';
 
 export function IDE() {
 
   const { eventBus } = UsePlaygroundContext()
-  const [activeTab, setActiveTab] = React.useState("run")
-  const { logs } = UseLogs()
+  const [activeTab, setActiveTab] = React.useState("code")
   const modes = ["code", "run"] as const
 
   function changeTab(mode: "code" | "run") {
@@ -30,42 +30,10 @@ export function IDE() {
           </button>
         )}
       </div>
-      <div className="flex flex-1 flex-col min-h-0">
-        <div className={activeTab === 'code' ? '' : 'hidden'}>
-          <CodeEditor />
-        </div>
-        <div className={`h-full w-full ${activeTab === 'run' ? '' : 'hidden'}`}>
-          <div id="run" className="flex flex-col h-full">
-            <div className="flex mb-2 text-sm gap-2">
-              <ConnectBot />
-            </div>
-            <div
-              className="flex flex-1 flex-col items-start justify-start overflow-y-auto hide-scrollbar border border-gray-400 bg-indigo-50"
-            >
-              {logs.map((update, idx) => (
-                <div
-                  key={idx}
-                  className="bg-gray-200 m-2.5 rounded p-2 text-sm whitespace-pre-wrap text-black"
-                >
-                  {JSON.stringify(update, null, 2)}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-1 flex-col w-full h-[600px]">
+        {activeTab === 'code' && <CodeTab />}
+        {activeTab === 'run' && <RunTab />}
       </div>
     </div>
   )
-}
-
-function CodeEditor() {
-
-  const context = UsePlaygroundContext()
-
-  React.useEffect(() => {
-    const editor = context.editor.bindEditor()
-    return () => editor?.dispose()
-  }, [context]);
-
-  return <div id="code-editor" className="w-full h-[600px] border border-gray-400"></div>;
 }

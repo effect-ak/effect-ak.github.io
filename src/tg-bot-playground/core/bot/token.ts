@@ -8,6 +8,8 @@ export const setupBotToken =
     token: string
   ) {
 
+    console.log('setup bot token')
+
     const botState = yield* BotStateProvider
     const eventBus = yield* PlaygroundBusProvider
 
@@ -40,6 +42,10 @@ export const setupBotToken =
     botState.name = responses.me.username ?? responses.me.first_name
     botState.isReachable = true
     botState.token = token
+
+    eventBus.unsafeOffer({
+      type: 'bot-is-connected'
+    })
 
     return true
 

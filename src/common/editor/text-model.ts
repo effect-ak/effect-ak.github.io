@@ -1,5 +1,4 @@
 import type { Monaco } from "#/common/types";
-import { fetchText } from "#/common/utils";
 import { editor, languages, Uri } from "monaco-editor";
 
 export type TsTextModel = Awaited<ReturnType<typeof makeTsTextModel>>
@@ -8,25 +7,29 @@ export const makeTsTextModel =
   (monaco: Monaco) => {
 
     const tsModel =
-      monaco.editor.createModel('', "typescript");
+      monaco.editor.createModel('', "typescript")
 
     console.log("created model", tsModel.uri)
-
-    let tsWorkerFactory: (uri: Uri) => Promise<languages.typescript.TypeScriptWorker>;
+    let tsWorker: languages.typescript.TypeScriptWorker 
 
     const getTsCode = async () => {
-      if (!tsWorkerFactory) {
-        tsWorkerFactory = await monaco.languages.typescript.getTypeScriptWorker();
+      if (!tsWorker) {
+        const getWorker = await monaco.languages.typescript.getTypeScriptWorker();
+        tsWorker = await getWorker(tsModel.uri)
       }
-      const worker = await tsWorkerFactory(tsModel.uri);
-      return worker.getEmitOutput(tsModel.uri.toString());
+      const code = await tsWorker.getEmitOutput(tsModel.uri.toString());
+      return code
     }
 
     return {
       tsModel,
       getJsCode: async () => {
         console.log('get js code')
-        const output = await getTsCode();
+        const output = await getTsCode()
+        if (hasMajorError(monaco, tsModel, new Set([ 8 ]))) {
+          console.warn('code error')
+          return
+        }
         const code = output.outputFiles[0].text;
         return code;
       }

@@ -1,4 +1,5 @@
 import { Context, Brand } from "effect";
+import type { PlaygroundEvent } from "../events";
 
 export type BotState = Brand.Branded<{
   status: string
@@ -7,6 +8,7 @@ export type BotState = Brand.Branded<{
   isReachable: boolean
   isAutoReload: boolean
   currentCode: string
+  events: PlaygroundEvent[]
 }, "BotState">
 
 export const BotState = Brand.nominal<BotState>()
@@ -20,6 +22,7 @@ export class BotStateProvider
         token: '',
         isAutoReload: false,
         isReachable: false,
-        currentCode: ''
+        currentCode: '',
+        events: []
       })
   }) { }
