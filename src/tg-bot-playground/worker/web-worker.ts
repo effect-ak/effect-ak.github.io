@@ -1,6 +1,7 @@
 import { runTgChatBot, type BotInstance } from "@effect-ak/tg-bot-client/bot";
 import { isRunBot, type RunBot } from "./types";
 import { loadBotHandlers } from "./utils";
+import type { FromWorkerEvent } from "~/tg/core/events";
 
 const handler = makeHandler()
 
@@ -12,7 +13,7 @@ function makeHandler() {
   let messageId = 0
   let botInstance: BotInstance
 
-  console.log("creating worker")
+  console.log("creating web worker")
 
   const sendEvent = (
     input: Record<string, unknown>
@@ -20,8 +21,8 @@ function makeHandler() {
     self.postMessage({
       type: "from-worker",
       data: input,
-      messageId: messageId++
-    })
+      message_id: messageId++
+    } satisfies FromWorkerEvent)
 
   const runBot = async (command: RunBot) => {
     const handlers = await loadBotHandlers(command.code);
@@ -37,7 +38,6 @@ function makeHandler() {
     console.log("worker got run-bot command");
 
     if (botInstance) {
-      console.log("reloading...")
       await botInstance.reload({
         type: "single",
         ...handlers

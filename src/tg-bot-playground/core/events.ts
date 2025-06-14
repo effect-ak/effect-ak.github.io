@@ -1,5 +1,11 @@
 import { Schema as S } from "effect"
 
+export function isLogEvent(event: PlaygroundEvent) {
+  if (event.type == 'new-active-tab') return false
+  if (event.type == 'from-worker' && event.data['newBotState']) return false
+  return true
+}
+
 const ErrorEncounter =
   S.Struct({
     type: S.Literal("error-encounter"),

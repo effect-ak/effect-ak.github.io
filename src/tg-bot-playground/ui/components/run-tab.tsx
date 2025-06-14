@@ -1,6 +1,7 @@
 import React from 'react'
 import { ConnectBot } from "./bot";
 import { UsePlaygroundContext } from '../hooks';
+import { isLogEvent } from '#/tg-bot-playground/core/events';
 
 export function RunTab() {
 
@@ -20,7 +21,7 @@ export function RunTab() {
     }
     const unsubscribe =
       context.subscribe(event => {
-        if (event.type == 'new-active-tab') return
+        if (!isLogEvent(event)) return 
         setLogs(prevLogs => [...prevLogs, event])
         context.botState.events.push(event)
       })
@@ -41,9 +42,9 @@ export function RunTab() {
         {logs.map((update, idx) => (
           <div
             key={idx}
-            className="bg-gray-200 m-2.5 rounded p-2 text-sm whitespace-pre-wrap text-black"
+            className="w-full px-4 py-2 text-sm whitespace-pre-wrap text-black border-b-black border-b border-dotted"
           >
-            {update.type}
+            {JSON.stringify(update)}
           </div>
         ))}
       </div>

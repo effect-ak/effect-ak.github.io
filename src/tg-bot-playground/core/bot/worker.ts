@@ -1,5 +1,5 @@
 import { Effect, Schema } from "effect"
-import { FromWorkerEvent } from "~/tg/core/events";
+import { FromWorkerEvent, isLogEvent } from "~/tg/core/events";
 import type { RunBot } from "~/tg/worker/types";
 import { PlaygroundBusProvider } from "~/tg/core/bus";
 import { BotStateProvider } from "./state";
@@ -12,7 +12,6 @@ export class BotWorkerProvider
         console.log('worker up')
         const worker = new Worker(new URL('../../worker/web-worker.ts', import.meta.url), { type: "module" })
 
-        const eventBus = yield* PlaygroundBusProvider
         const botState = yield* BotStateProvider
 
         yield* Effect.addFinalizer((exit) => {
@@ -24,7 +23,11 @@ export class BotWorkerProvider
         worker.addEventListener("message", (event) => {
           console.log('message from worker', event.data)
           const update = Schema.validateEither(FromWorkerEvent)(event.data)
-          if (update._tag == "Right") eventBus.unsafeOffer(update.right)
+          if (update._tag != "Right" || !isLogEvent(update.right)) {
+            console.log('ignoring web worker event', event)
+            return
+          }
+          botState.events.push(update.right)
         })
 
         return {
