@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import React from "react";
 import { Context, Effect, Exit, Layer, ManagedRuntime, pipe, Scope } from "effect";
 
 import type { PlaygroundEvent } from "~/tg/core/events";
@@ -15,7 +15,7 @@ export type PlaygroundContext = {
   subscribe: (listener: (event: PlaygroundEvent) => void) => () => void;
 }
 
-export const PlaygroundContext = createContext<PlaygroundContext | null>(null);
+export const PlaygroundContext = React.createContext<PlaygroundContext | null>(null);
 
 const live = Layer.mergeAll(
   EditorProvider.Default,

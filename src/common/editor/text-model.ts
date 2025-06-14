@@ -1,5 +1,5 @@
 import type { Monaco } from "#/common/types";
-import { editor, languages, Uri } from "monaco-editor";
+import type { editor, languages } from "monaco-editor";
 
 export type TsTextModel = Awaited<ReturnType<typeof makeTsTextModel>>
 
