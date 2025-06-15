@@ -1,9 +1,9 @@
+import React from "react";
 import { Schema as S } from "effect"
 import { createRoot } from 'react-dom/client';
 import { flushSync } from 'react-dom';
 import { ResumeObject } from "#/cv-maker/core/schema";
 import { Resume } from "#/cv-maker/core/template"
-import React from "react";
 
 function renderToString(cmpn: React.JSX.Element) {
   const div = document.createElement('div');

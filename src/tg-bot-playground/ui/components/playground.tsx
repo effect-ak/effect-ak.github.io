@@ -1,15 +1,30 @@
 
 import React from 'react'
+import GitHubButton from 'react-github-btn'
 import { createRoot } from 'react-dom/client';
 import { Footer } from "./footer"
 import { PlaygroundContext } from '../context';
 import { IDE } from './ide';
 import { SelectExample } from './select-example';
 
+function StarBtn() {
+  return <GitHubButton
+    href="https://github.com/effect-ak/tg-bot-client"
+    data-color-scheme="no-preference: light; light: light; dark: dark;"
+    data-icon="octicon-star" data-size="large" data-show-count="true"
+    aria-label="Star effect-ak/tg-bot-client on GitHub"
+  >Star</GitHubButton>
+}
+
 function Playground() {
 
   return <>
-    <h2 className="text-xl font-bold text-start text-gray-800 mb-6">Build and test Telegram bots in your browser 🤖</h2>
+    <div className="flex mb-6 gap-2">
+      <span className="text-xl font-bold text-start text-gray-800">
+        Build and test Telegram bots in your browser
+      </span>
+      <StarBtn />
+    </div>
     <SelectExample />
     <IDE />
     <Footer />

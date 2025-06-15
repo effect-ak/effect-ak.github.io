@@ -32,6 +32,9 @@ importers:
       react-dom:
         specifier: ^19.1.0
         version: 19.1.0(react@19.1.0)
+      react-github-btn:
+        specifier: ^1.4.0
+        version: 1.4.0(react@19.1.0)
       tailwindcss:
         specifier: ^4.0.6
         version: 4.1.7
@@ -819,6 +822,9 @@ packages:
     resolution: {integrity: sha512-E1b1lFFLvLgak2whF2xDBcOy6NLVGZBqqjJjsIhvopKfWWEi64pLVTWWehV8KlLerZkfNTA95sTe2OdJKm1OzQ==, tarball: https://registry.npmjs.org/get-uri/-/get-uri-6.0.4.tgz}
     engines: {node: '>= 14'}
 
+  github-buttons@2.29.1:
+    resolution: {integrity: sha512-TV3YgAKda5hPz75n7QXmGCsSzgVya1vvmBieebg3EB5ScmashTZ0FldViG1aU2d4V5rcAGrtQ7k5uAaCo0A4PA==, tarball: https://registry.npmjs.org/github-buttons/-/github-buttons-2.29.1.tgz}
+
   globrex@0.1.2:
     resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==, tarball: https://registry.npmjs.org/globrex/-/globrex-0.1.2.tgz}
 
@@ -1051,6 +1057,11 @@ packages:
     resolution: {integrity: sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==, tarball: https://registry.npmjs.org/react-dom/-/react-dom-19.1.0.tgz}
     peerDependencies:
       react: ^19.1.0
+
+  react-github-btn@1.4.0:
+    resolution: {integrity: sha512-lV4FYClAfjWnBfv0iNlJUGhamDgIq6TayD0kPZED6VzHWdpcHmPfsYOZ/CFwLfPv4Zp+F4m8QKTj0oy2HjiGXg==, tarball: https://registry.npmjs.org/react-github-btn/-/react-github-btn-1.4.0.tgz}
+    peerDependencies:
+      react: '>=16.3.0'
 
   react@19.1.0:
     resolution: {integrity: sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==, tarball: https://registry.npmjs.org/react/-/react-19.1.0.tgz}
@@ -1975,6 +1986,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  github-buttons@2.29.1: {}
+
   globrex@0.1.2: {}
 
   graceful-fs@4.2.11: {}
@@ -2202,6 +2215,11 @@ snapshots:
     dependencies:
       react: 19.1.0
       scheduler: 0.26.0
+
+  react-github-btn@1.4.0(react@19.1.0):
+    dependencies:
+      github-buttons: 2.29.1
+      react: 19.1.0
 
   react@19.1.0: {}
 

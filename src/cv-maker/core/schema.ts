@@ -2,15 +2,6 @@ import { DateTime, Duration, Schema as S } from "effect"
 
 const httpsRegex = /https:\/\//;
 
-// collapse old jobs
-// hide social profiles
-// hide phone
-
-// export class ViewSettings
-//   extends S.Class<ProjectTechnology>("ProjectTechnology")({
-//     collapseOld: S.Boolean
-//   }) { }
-
 export const STACK_CATEGORIES = [
   "programming language", "cloud computing", "testing", "framework", "frontend", "database",
   "devops tool", "collaboration tool", "other"
@@ -106,7 +97,6 @@ export class Me
       )
   }) { }
 
-// Backend/Frontend/DevOps
 export class ResumeObject
   extends S.Class<ResumeObject>("ResumeObject")({
     $schema: S.NonEmptyString.pipe(S.optional),
