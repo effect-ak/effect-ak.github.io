@@ -9,11 +9,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <script defer src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/umd/monaco-loader.min.js"></script>
   
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✍️</text></svg>">
   <link rel="stylesheet" href="./style.css">
-  <script defer src="./main.ts" type="module"></script>
+  <script defer src="./ui/main.ts" type="module"></script>
   <title>CV Maker</title>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-FKWW5S34LH"></script>
@@ -26,133 +25,9 @@
   </script>
 </head>
 
-<body x-data="state" class="flex flex-col p-16 pt-8 justify-center text-sm">
-  <!-- navigation -->
-  <div 
-    class="no-print pb-2 flex gap-2 justify-center items-baseline md:w-3/4"
-    x-init="$watch('mode', value => $dispatch('mode-was-changed', value))"
-  >
-    <label 
-      class="font-light text-sm" id="resumeSelect"
-    >Current resume:</label>
-    <select
-      id="resumeSelect"
-      class="self-start select"
-      x-model="currentResume"
-      @change="$dispatch('init-resume')"
-    >
-      <template x-for="resume in availableResumes" :key="resume.id">
-        <option 
-          :value="resume.id"
-          x-text="resume.name"
-          :selected="currentResume === resume.id"
-        ></option>
-      </template>
-    </select>
+<body class="flex flex-col p-16 pt-8 justify-center text-sm">
 
-    <div
-      class="mx-auto flex gap-3"
-    >
-    <template x-for="m in $store.modes" :key="m.id">
-      <label 
-      class="hover:cursor-pointer text-lg hover"
-      :class="{
-        'text-orange-400 border-1 px-3': mode == m.id,
-        'hover:text-orange-300': mode != m.id,
-      }"
-    >
-      <input
-        type="radio"
-        class="appearance-none"
-        :value="m.id" 
-        x-model="mode" 
-      /> <span x-text="m.label"></span>
-    </label>
-    </template>
-
-    </div>
-
-  </div>
-
-  <!-- code editor and code section -->
-  <div
-    class="flex gap-2 pb-2 items-end"
-    x-show="mode == 'editor'"
-  >
-    <div>
-      <button
-        class="btn bg-sky-500 hover:bg-sky-700 text-sm"
-        x-on:click="$dispatch('save')"
-      >Duplicate</button>
-      <button
-        class="btn bg-[#DC382D] hover:bg-[#B93224]"
-        x-on:click="$dispatch('delete')"
-        x-show="availableResumes.length > 1"
-      >Delete</button>
-      </div>
-
-      <label 
-        class="font-light text-sm ml-auto" id="resumeSection"
-      >Current section:</label>
-      <select
-        id="resumeSection"
-        class="self-end select"
-        @change="$dispatch('section-changed')"
-        x-model="editorSection"
-      >
-      <template x-for="section in $store.sections" :key="section.id">
-        <option 
-          :value="section.id" 
-          :selected="editorSection === section.id"
-          x-text="section.label"
-        ></option>
-      </template>
-    </select>
-
-  </div>
-
-  <div
-    class="w-full h-screen"
-    x-show="mode == 'editor'"
-    id="code-editor"
-  ></div>
-
-  <div
-    class="self-center sm:w-3/4" 
-    x-show="mode == 'view'"
-  >
-    <div
-      x-html="resumeHtml"
-    ></div>
-  </div>
-
-  <button
-    @click="window.print()"
-    x-show="mode == 'view'"
-    class="no-print hover:cursor-pointer fixed top-8 right-20 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full shadow-lg"
-  >
-    Print
-  </button>
-
-  <footer class="bg-gray-100 text-gray-700 py-4 no-print mt-20">
-    <div class="container mx-auto text-center">
-      <p>© 2025 Created by Aleksandr Kondaurov</p>
-      <p>
-        <a 
-          target="_blank"
-          href="https://www.linkedin.com/in/alexander-kondaurov/"
-          rel="noopener noreferrer" 
-          class="fa-brands fa-lg fa-linkedin text-blue-500"
-        ></a>
-        <a
-          target="_blank"
-          href="https://github.com/effect-ak/effect-ak.github.io"
-          rel="noopener noreferrer" 
-          class="fa-brands fa-lg fa-github"
-        ></a> 
-      </p>
-    </div>
-  </footer>
+  <div id="root"/>
 
 </body>
 

@@ -1,4 +1,4 @@
-import type { PackageExports } from "#/common/editor/setup";
+import type { PackageExports } from "~/common/monaco/instance";
 
 export const CLIENT_VERSION = "0.6.2";
 export const CLIENT_PACKAGE_NAME = "@effect-ak/tg-bot-client";

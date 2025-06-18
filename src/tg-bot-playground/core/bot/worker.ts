@@ -1,7 +1,7 @@
 import { Effect, Schema } from "effect"
 import { FromWorkerEvent, isLogEvent } from "~/tg/core/events";
-import type { RunBot } from "~/tg/worker/types";
 import { PlaygroundBusProvider } from "~/tg/core/bus";
+import type { RunBot } from "./types";
 import { BotStateProvider } from "./state";
 
 export class BotWorkerProvider
@@ -9,8 +9,8 @@ export class BotWorkerProvider
     scoped:
       Effect.gen(function* (_) {
 
-        console.log('worker up')
-        const worker = new Worker(new URL('../../worker/web-worker.ts', import.meta.url), { type: "module" })
+        yield* Effect.logInfo('worker up')
+        const worker = new Worker(new URL('./web-worker.ts', import.meta.url), { type: "module" })
 
         const botState = yield* BotStateProvider
 

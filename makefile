@@ -1,14 +1,8 @@
 build-tg:
-	PROJECT=tg-bot-playground vite build
+	vite build
 
-build-cv:
-	PROJECT=cv-maker vite build
-
-dev-tg:
-	PROJECT=tg-bot-playground vite
-
-dev-cv:
-	PROJECT=cv-maker vite
+dev:
+	vite
 
 gen-openapi-ui:
 	redocly build-docs \

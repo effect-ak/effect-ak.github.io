@@ -16,9 +16,10 @@
     "baseUrl": ".",
     "jsx": "preserve",
     "paths": {
-      "#/*": ["./src/*"],
-      "#/cv-maker/*": ["./src/cv-maker/*"],
-      "~/tg/*": ["./src/tg-bot-playground/*"]
+      "~/common/*": ["./src/common/*"],
+      "~/static/*": ["./src/static/*"],
+      "~/tg/*": ["./src/tg-bot-playground/*"],
+      "~/cv/*": ["./src/cv-maker/*"]
     }
   }
 }

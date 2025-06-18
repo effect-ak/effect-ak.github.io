@@ -1,48 +1,48 @@
-import { Effect } from "effect"
-import { makeTsEditor } from "#/common/editor/make";
-import { CDN_PACKAGE_EXPORTS } from "../const";
-import { fetchText } from "#/common/utils";
-import { BotStateProvider } from "./bot/state";
+import { Effect, Layer } from "effect"
+import { fetchText } from "~/common/utils"
+import { BotStateProvider } from "./bot/state"
+import { EditorProvider } from "~/common/monaco/editor"
+import { EditorModel } from "~/common/monaco/model"
+import { TypescriptSettings } from "~/common/monaco/instance"
+import { CDN_PACKAGE_EXPORTS } from "~/tg/const"
 
-export class EditorProvider
-  extends Effect.Service<EditorProvider>()("EditorProvider", {
+export class TgBotEditorProvider
+  extends Effect.Service<TgBotEditorProvider>()("TgBotEditorProvider", {
     scoped:
       Effect.gen(function* (_) {
 
-        const editor = yield* _(
-          Effect.tryPromise(() => makeTsEditor(CDN_PACKAGE_EXPORTS)),
-          Effect.filterOrFail(_ => _ != null)
-        )
+        const editor = yield* EditorProvider
+        const model = yield* EditorModel
 
-        const emptyExample = yield* Effect.tryPromise(() => fetchText("./example/empty.ts"))
+        const emptyExample = yield* Effect.tryPromise(() => fetchText("/bots/empty.ts"))
         const botState = yield* BotStateProvider
 
-        editor.tsTextModel.tsModel.setValue(emptyExample)
+        model.model.setValue(emptyExample)
         botState.currentCode = emptyExample
-
-        const onCodeChange =
-          editor.onCodeChange(async () => {
-            botState.currentCode = emptyExample
-          })
 
         const changeExample = async (exampleName: string) => {
           console.log('setting code')
-          const code = await fetchText(`./example/${exampleName}`)
-          editor.tsTextModel.tsModel.setValue(code)
+          const code = await fetchText(`/bots/${exampleName}`)
+          model.model.setValue(code)
           botState.currentCode = emptyExample
         }
 
         yield* Effect.addFinalizer((exit) => {
           console.log('editor finalizer', exit)
-          onCodeChange.dispose()
           return Effect.void
         })
 
         return {
-          getJsCode: editor.tsTextModel.getJsCode,
+          getJsCode: model.getCode,
           bindEditor: editor.bindEditor,
           changeExample,
         } as const
 
-      })
+      }),
+      dependencies: [
+        EditorProvider.Default.pipe(
+          Layer.provideMerge(EditorModel.typescript),
+          Layer.provide(Layer.succeed(TypescriptSettings, { packages: CDN_PACKAGE_EXPORTS })),
+        )
+      ]
   }) { }

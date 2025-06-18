@@ -2,8 +2,8 @@
 import React from 'react'
 import GitHubButton from 'react-github-btn'
 import { createRoot } from 'react-dom/client';
-import { Footer } from "./footer"
-import { PlaygroundContext } from '../context';
+import { Footer } from "~/common/ui/footer"
+import { PlaygroundContext } from '~/tg/ui/context';
 import { IDE } from './ide';
 import { SelectExample } from './select-example';
 

@@ -1,7 +1,7 @@
 import React from 'react'
+import { isLogEvent } from '~/tg/core/events';
 import { ConnectBot } from "./bot";
 import { UsePlaygroundContext } from '../hooks';
-import { isLogEvent } from '#/tg-bot-playground/core/events';
 
 export function RunTab() {
 
@@ -9,26 +9,24 @@ export function RunTab() {
   const [logs, setLogs] = React.useState(context.botState.events);
 
   React.useEffect(() => {
-    if (context.botState.isReachable) {
-      context.editor.getJsCode().then(
-        code => {
-          if (code) {
-            context.botState.currentCode = code
-            context.botWorker.runBot()
-          }
+    context.editor.getJsCode().then(
+      code => {
+        context.botState.currentCode = code
+        if (context.botState.isReachable) {
+          context.botWorker.runBot()
         }
-      )
-    }
+      }
+    )
     const unsubscribe =
       context.subscribe(event => {
-        if (!isLogEvent(event)) return 
+        if (!isLogEvent(event)) return
         setLogs(prevLogs => [...prevLogs, event])
         context.botState.events.push(event)
       })
-      return () => {
-        console.log('leaving run tab')
-        unsubscribe()
-      }
+    return () => {
+      console.log('leaving run tab')
+      unsubscribe()
+    }
   }, [context])
 
   return (

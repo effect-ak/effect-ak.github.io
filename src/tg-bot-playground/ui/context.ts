@@ -1,35 +1,37 @@
 import React from "react";
-import { Context, Effect, Exit, Layer, ManagedRuntime, pipe, Scope } from "effect";
+import { Context, Effect, Exit, Layer, Logger, ManagedRuntime, pipe, Scope } from "effect";
 
 import type { PlaygroundEvent } from "~/tg/core/events";
 import { BotState, BotStateProvider } from "~/tg/core/bot/state";
-import { EditorProvider } from "~/tg/core/editor";
+import { TgBotEditorProvider } from "~/tg/core/editor";
 import { PlaygroundBusProvider } from "~/tg/core/bus";
 import { BotWorkerProvider } from "~/tg/core/bot/worker";
 
 export type PlaygroundContext = {
+  editor: TgBotEditorProvider
   eventBus: PlaygroundBusProvider
-  editor: EditorProvider
   botWorker: BotWorkerProvider
   botState: BotState
-  subscribe: (listener: (event: PlaygroundEvent) => void) => () => void;
+  subscribe: (listener: (event: PlaygroundEvent) => void) => () => void
 }
 
-export const PlaygroundContext = React.createContext<PlaygroundContext | null>(null);
+export const PlaygroundContext = React.createContext<PlaygroundContext | null>(null)
 
 const live = Layer.mergeAll(
-  EditorProvider.Default,
+  TgBotEditorProvider.Default,
   PlaygroundBusProvider.Default,
   BotWorkerProvider.Default,
-);
+).pipe(
+  Layer.provide(Logger.pretty)
+)
 
 const PlaygroundRuntime = ManagedRuntime.make(live)
 
 export const makeContext = async () => {
   const runtime = await PlaygroundRuntime.runtimeEffect.pipe(Effect.runPromise);
 
+  const editor = Context.get(runtime.context, TgBotEditorProvider);
   const eventBus = Context.get(runtime.context, PlaygroundBusProvider);
-  const editor = Context.get(runtime.context, EditorProvider);
   const botState = Context.get(runtime.context, BotStateProvider);
   const botWorker = Context.get(runtime.context, BotWorkerProvider);
 
