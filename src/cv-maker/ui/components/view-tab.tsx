@@ -1,14 +1,14 @@
 import React from "react"
-import { UseAppContext } from "../hooks";
 import { Effect, Schema as S } from "effect";
-import { ResumeStackoverflow } from "./theme/stackoverflow";
 import { ResumeObject } from "~/cv/core/schema";
+import { UseAppContext } from "../hooks";
+import { ResumeStackoverflow } from "./theme/stackoverflow";
 
 export function ViewTab() {
 
   const { editor } = UseAppContext()
 
-  const [currentResumeObject, setResumeObject] = React.useState<ResumeObject>()
+  const [ currentResumeObject, setResumeObject ] = React.useState<ResumeObject>()
 
   React.useEffect(() => {
     editor.model.getCode().pipe(

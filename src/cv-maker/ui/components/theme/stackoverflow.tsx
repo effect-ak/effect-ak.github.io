@@ -18,7 +18,7 @@ export function ResumeStackoverflow({ resume }: Props) {
             <span id="label">Why I'm the Right Choice for "{coverLetter.position}"</span>
           </div>
           <div className="p-2 bg-so">
-            {coverLetter.content.map(line => <p dangerouslySetInnerHTML={{ __html: line }}></p>)}
+            {coverLetter.content.map((line, index) => <p key={index} dangerouslySetInnerHTML={{ __html: line }}></p>)}
           </div>
 
         </div>
@@ -29,8 +29,8 @@ export function ResumeStackoverflow({ resume }: Props) {
       </div>
 
       <div className="bg-so p-2">
-        {resume.me.expertSummary.map(s =>
-          <p dangerouslySetInnerHTML={{ __html: s }}></p>
+        {resume.me.expertSummary.map((s, index) =>
+          <p key={index} dangerouslySetInnerHTML={{ __html: s }}></p>
         )}
       </div>
 
@@ -99,8 +99,8 @@ function CompanyHeader(company: EmploymentRecord) {
 function ProjectStack(project: ProjectDetails) {
   return (
     <span>
-      {project.stack.map(t =>
-        <span className="bg-so py-1 px-1 mr-1 text-sm">{t}</span>)
+      {project.stack.map((t, index) =>
+        <span key={index} className="bg-so py-1 px-1 mr-1 text-sm">{t}</span>)
       }
     </span>
   )
@@ -131,6 +131,7 @@ function ResumeHead(resume: ResumeObject) {
           const iconClass = `fa-${p.icon.split(' ').at(0)}`;
           return (
             <a 
+              key={p.url}
               className="inline-block py-2 px-1"
               href={p.url} target="_blank" rel="noopener noreferrer">
               <span
@@ -149,7 +150,7 @@ function CompanyProject(project: ProjectDetails, isLast: boolean) {
   let clazz = "project no-break pb-3";
   if (!isLast) clazz += " border-b-1 border-gray-300 border-dashed mb-2";
   return (
-    <div className={clazz}>
+    <div className={clazz} key={project.title}>
       <div className="flex">
         <div className="mb-0.5">
           <span className="font-medium">Project: </span>
@@ -163,8 +164,8 @@ function CompanyProject(project: ProjectDetails, isLast: boolean) {
       <span className="font-medium">Stack:</span>
       <span>{ProjectStack(project)}</span>
       <ul className="list-disc pt-2 pl-10 text-sm">
-        {project.achivements.map(achivement =>
-          <li>{achivement.human ?? achivement.technical}</li>
+        {project.achivements.map((achivement, index) =>
+          <li key={index}>{achivement.human ?? achivement.technical}</li>
         )}
       </ul>
     </div>
@@ -174,7 +175,7 @@ function CompanyProject(project: ProjectDetails, isLast: boolean) {
 function EmploymentHistory(resume: ResumeObject) {
   return (
     <div id="employment">
-      {resume.employmentHistory.map(er => {
+      {resume.employmentHistory.map((er, index) => {
 
         const isOld = er.isMonthPast(60);
 
@@ -186,7 +187,7 @@ function EmploymentHistory(resume: ResumeObject) {
           Array.dedupeWith(er.projects.flatMap(_ => _.roles), (a, b) => a.toLowerCase() == b.toLocaleLowerCase()).join('/')
 
         return (
-          <div className={clazz}>
+          <div className={clazz} key={index}>
             <div className="flex">
               <span className="font-extralight text-sm">{CompanyHeader(er)}</span>
               <span className="ml-auto">{getPeriod(er)}</span>

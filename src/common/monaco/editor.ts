@@ -36,11 +36,13 @@ export class EditorProvider extends Effect.Service<EditorProvider>()(
       let editorInstance: editor.IStandaloneCodeEditor | undefined
 
       yield* Effect.addFinalizer(() => {
+        console.log("effect editor dispose")
         editorInstance?.dispose()
         return Effect.void
       })
 
       const bindEditor = () => {
+        console.log('about to bind editor...')
         if (editorInstance) {
           console.log('editor is already bound')
           return editorInstance;
@@ -52,12 +54,16 @@ export class EditorProvider extends Effect.Service<EditorProvider>()(
           throw Error(`HTML container for monaco editor not found, expected '${defaults.container}'`)
         }
 
+        console.log('binding editor...')
         editorInstance = monaco.editor.create(container, {
           model,
           ...defaults.options,
         })
 
+        console.log('BOUND!')
+
         editorInstance.onDidDispose(() => {
+          console.log('unmounting cleanup')
           editorInstance = undefined
         })
 

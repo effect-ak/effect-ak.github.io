@@ -9,10 +9,11 @@ export function EditorTab() {
   const context = UseAppContext()
 
   React.useEffect(() => {
-    const editor = context.editor.bindEditor()
-    editor.layout({ height: 100, width: 10 })
+    const editorInstance = context.editor.bindEditor()
+    editorInstance.layout({ height: 100, width: 10 })
     return () => {
-      editor.dispose()
+      console.log('editor umnounting')
+      editorInstance.dispose()
     }
   }, [ context ])
 
@@ -30,8 +31,6 @@ export function EditorTab() {
         id="code-editor"
       ></div>
     </>
-
-
   )
 
 }

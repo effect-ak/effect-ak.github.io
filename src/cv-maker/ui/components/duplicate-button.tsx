@@ -13,7 +13,11 @@ export function DuplicateButton() {
     // state.currentResume = name;
     // selectResume();
     // prepareEditor();
-    const code = context.editor.model.model.getValue()
+    // const editor = context.editor.bindEditor()
+    // console.log(editor.getSupportedActions())
+    const code = context.editor.model.model.setValue(
+      JSON.stringify(context.store.exampleResume, null, 2)
+    )
     console.log('code', code)
   }
 

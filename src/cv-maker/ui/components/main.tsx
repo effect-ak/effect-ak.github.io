@@ -11,7 +11,7 @@ export function Page(props: {
   appContext: AppContext
 }) {
 
-  const [currentMode, changeMode] = React.useState('view' as 'view' | 'editor')
+  const [currentMode, changeMode] = React.useState('editor' as 'view' | 'editor')
 
   const [availableResumes, setAvailableResumes] = React.useState<{ id: string, name: string }[]>([])
 
@@ -20,13 +20,7 @@ export function Page(props: {
       .loadStoredResume()
       .pipe(Effect.runPromise)
       .then(setAvailableResumes)
-  }, [props.appContext.store])
-
-  React.useEffect(() => {
-    props.appContext.editor.model.model.setValue(
-      JSON.stringify(props.appContext.store.exampleResume, null, 2)
-    )
-  }, [props.appContext])
+  }, [])
 
   const state: AppState = {
     currentMode,

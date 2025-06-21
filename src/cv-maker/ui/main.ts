@@ -12,6 +12,8 @@ async function main() {
     return
   }
 
+  console.log('initialized')
+
   bindPage(context, container)
 
 }
