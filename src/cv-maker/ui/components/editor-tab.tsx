@@ -10,9 +10,9 @@ export function EditorTab() {
 
   React.useEffect(() => {
     const editor = context.editor.bindEditor()
-    editor?.layout({ height: 100, width: 10 })
+    editor.layout({ height: 100, width: 10 })
     return () => {
-      editor?.dispose()
+      editor.dispose()
     }
   }, [ context ])
 

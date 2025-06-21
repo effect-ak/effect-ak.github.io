@@ -14,7 +14,7 @@ export class TgBotEditorProvider
         const editor = yield* EditorProvider
         const model = yield* EditorModel
 
-        const emptyExample = yield* Effect.tryPromise(() => fetchText("/bots/empty.ts"))
+        const emptyExample = yield* fetchText("/bots/empty.ts")
         const botState = yield* BotStateProvider
 
         model.model.setValue(emptyExample)
@@ -22,7 +22,7 @@ export class TgBotEditorProvider
 
         const changeExample = async (exampleName: string) => {
           console.log('setting code')
-          const code = await fetchText(`/bots/${exampleName}`)
+          const code = await fetchText(`/bots/${exampleName}`).pipe(Effect.runPromise)
           model.model.setValue(code)
           botState.currentCode = emptyExample
         }
@@ -33,7 +33,7 @@ export class TgBotEditorProvider
         })
 
         return {
-          getJsCode: model.getCode,
+          getCode: model.getCode,
           bindEditor: editor.bindEditor,
           changeExample,
         } as const

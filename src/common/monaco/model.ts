@@ -1,14 +1,15 @@
-import { Context, Effect, Layer } from "effect"
+import { Cause, Context, Effect, Layer } from "effect"
 import type { editor, languages } from "monaco-editor"
-import * as JsoncParser from "jsonc-parser"
+
 import { MonacoInstanceProvider } from "./instance"
+import { parseJson } from "../utils"
 
 export class EditorModel
   extends Context.Tag("EditorModel")<EditorModel, {
     language: "typescript" | "json"
     model: editor.ITextModel
     majorCodes: Set<number>
-    getCode: () => Promise<string>
+    getCode: () => Effect.Effect<string, Cause.UnknownException | Cause.NoSuchElementException>
   }>() {
 
   static typescript =
@@ -37,9 +38,10 @@ export class EditorModel
           language: "typescript",
           model,
           majorCodes: new Set([ 8 ]),
-          async getCode() {
-            const output = await getEmittedCode()
-            return output.outputFiles[0].text
+          getCode() {
+            return Effect.tryPromise(() => getEmittedCode()).pipe(
+              Effect.andThen(output => Effect.fromNullable(output.outputFiles[0].text))
+            )
           }
         } as const
       })
@@ -62,13 +64,14 @@ export class EditorModel
           language: "json",
           model,
           majorCodes: new Set([ 4, 8 ]),
-          async getCode() {
-            return JsoncParser.parse(model.getValue())
+          getCode() {
+            return parseJson(model.getValue()).pipe(
+              Effect.andThen(JSON.stringify),
+            )
           }
         } as const
       })
     ).pipe(
       Layer.provide(MonacoInstanceProvider.Default)
     )
-
 }

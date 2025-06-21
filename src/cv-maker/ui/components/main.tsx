@@ -1,38 +1,60 @@
 import React from "react"
-import { createRoot } from "react-dom/client"
 import { Navigation } from "./navigation"
 import { EditorTab } from "./editor-tab"
 import { ViewTab } from "./view-tab"
-import { AppContext } from "../context"
-import type { AppState } from "~/cv/core/state"
 import { Footer } from "~/common/ui/footer"
+import { createRoot } from "react-dom/client"
+import { AppContext, AppState } from "../context"
+import { Effect } from "effect"
 
-export function Page() {
+export function Page(props: {
+  appContext: AppContext
+}) {
+
+  const [currentMode, changeMode] = React.useState('view' as 'view' | 'editor')
+
+  const [availableResumes, setAvailableResumes] = React.useState<{ id: string, name: string }[]>([])
+
+  React.useEffect(() => {
+    props.appContext.store
+      .loadStoredResume()
+      .pipe(Effect.runPromise)
+      .then(setAvailableResumes)
+  }, [props.appContext.store])
+
+  React.useEffect(() => {
+    props.appContext.editor.model.model.setValue(
+      JSON.stringify(props.appContext.store.exampleResume, null, 2)
+    )
+  }, [props.appContext])
+
+  const state: AppState = {
+    currentMode,
+    changeMode: (mode) => {
+      changeMode(mode as any)
+    },
+    availableResumes,
+    currentResume: ''
+  }
+
   return (
-    <>
-      <Navigation/>
-      {true && <EditorTab/>}
-      {false && <ViewTab/>}
-      <Footer/>
-    </>
+    <AppContext value={props.appContext}>
+      <AppState value={state}>
+        <Navigation />
+        {currentMode == "editor" && <EditorTab />}
+        {currentMode == "view" && <ViewTab />}
+        <Footer />
+      </AppState>
+    </AppContext>
+
   )
 }
 
-export function bindRoot(appContext: AppState) {
-
-  const container = document.getElementById("root")
-
-  if (!container) {
-    console.warn("root div container")
-    return
-  }
-
+export function bindPage(appContext: AppContext, container: HTMLElement) {
   const root = createRoot(container);
   root.render(
     <React.StrictMode>
-      <AppContext value={appContext}>
-        <Page/>
-      </AppContext>
+      <Page appContext={appContext}></Page>
     </React.StrictMode>
   )
 }

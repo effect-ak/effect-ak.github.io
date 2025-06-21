@@ -1,6 +1,7 @@
 import React from "react"
 import { SelectResume } from "./select-resume"
 import { SwitchMode } from "./switch-mode"
+import { UseAppState } from "../hooks"
 
 export function Navigation() {
 
@@ -18,10 +19,12 @@ export function Navigation() {
 
 function PrintPdfButton() {
 
+  const { currentMode } = UseAppState()
+
   return (
     <button
       onClick={() => window.print()}
-      x-show="mode == 'view'"
+      hidden={currentMode != "view"}
       className="no-print hover:cursor-pointer fixed top-8 right-20 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full shadow-lg"
     >
       Print

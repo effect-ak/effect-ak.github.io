@@ -1,8 +1,17 @@
-import { createRoot } from 'react-dom/client';
-import { flushSync } from 'react-dom';
+import { createRoot } from 'react-dom/client'
+import { flushSync } from 'react-dom'
+import { Effect } from 'effect'
+import { parse as _parseJson } from "jsonc-parser"
 
-export const fetchText = (path: string) =>
-  fetch(path).then(_ => _.text());
+export const fetchText =
+  Effect.fn("fetch text")((path: string) =>
+    Effect.tryPromise(() => fetch(path).then(_ => _.text()))
+  )
+
+export const parseJson =
+  Effect.fn("parse jsonc")((input: string) =>
+    Effect.try(() => _parseJson(input) as unknown)
+  )
 
 export function renderToString(cmpn: React.JSX.Element) {
   const div = document.createElement('div');
@@ -11,22 +20,6 @@ export function renderToString(cmpn: React.JSX.Element) {
     root.render(cmpn);
   });
   return div.innerHTML
-}
-
-export const parseJSON = <A>(
-  input: string | undefined, sanity = false
-) => {
-  if (!input) return;
-  try {
-    if (sanity) {
-      return JSON.parse(removeTrailingCommas(removeJsonComments(input))) as A;
-    } else {
-      return JSON.parse(input) as A;
-    }
-
-  } catch (error) {
-    return
-  }
 }
 
 export function getUrlParam(name: string) {
@@ -40,21 +33,4 @@ export function setUrlParam(name: string, value: string) {
   window.history.replaceState(null, '', url);
 }
 
-const trailingCommasRegex = /,\s*([\]}])/g;
-function removeTrailingCommas(input: string): string {
-  return input.replace(trailingCommasRegex, '$1');
-}
 
-const commentsRegex = /("(?:\\.|[^"\\])*")|(?:\/\*(?:[\s\S]*?)\*\/)|(\/\/.*)/g
-
-export function removeJsonComments(input: string): string {
-  return input.replace(
-    commentsRegex,
-    (_match, quotedString) => {
-      if (quotedString !== undefined) {
-        return quotedString;
-      }
-      return "";
-    }
-  );
-}

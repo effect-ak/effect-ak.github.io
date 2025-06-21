@@ -1,9 +1,10 @@
 import React from "react"
 import { APP_MODES } from "~/cv/const"
+import { UseAppContext, UseAppState } from "../hooks"
 
 export function SwitchMode() {
 
-  const [ currentMode, changeMode ] = React.useState("view")
+  const { currentMode, changeMode } = UseAppState()
 
   return (
     <div className="mx-auto flex gap-3">

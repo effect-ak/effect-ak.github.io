@@ -7,11 +7,11 @@ export function CodeTab() {
 
   React.useEffect(() => {
     const editor = context.editor.bindEditor()
-    editor?.layout({ height: 500, width: 10})
+    editor.layout({ height: 500, width: 10})
     return () => {
-      editor?.dispose()
+      editor.dispose()
     }
-  }, [ context ]);
+  }, [ context ])
 
   return (
     <div id="code-editor" className="border border-gray-400"/>

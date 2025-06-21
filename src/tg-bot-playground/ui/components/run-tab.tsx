@@ -2,6 +2,7 @@ import React from 'react'
 import { isLogEvent } from '~/tg/core/events';
 import { ConnectBot } from "./bot";
 import { UsePlaygroundContext } from '../hooks';
+import { Effect } from 'effect';
 
 export function RunTab() {
 
@@ -9,13 +10,14 @@ export function RunTab() {
   const [logs, setLogs] = React.useState(context.botState.events);
 
   React.useEffect(() => {
-    context.editor.getJsCode().then(
-      code => {
+    context.editor.getCode().pipe(
+      Effect.tap((code) => {
         context.botState.currentCode = code
         if (context.botState.isReachable) {
           context.botWorker.runBot()
         }
-      }
+      }),
+      Effect.runPromise
     )
     const unsubscribe =
       context.subscribe(event => {

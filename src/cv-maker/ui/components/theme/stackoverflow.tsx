@@ -2,7 +2,10 @@ import React from 'react'
 import { DateTime, pipe, Array, Order } from "effect";
 import { EmploymentRecord, ProjectDetails, ProjectTechnology, ResumeObject, STACK_CATEGORIES } from "~/cv/core/schema";
 
-export function ResumeStackoverflow(resume: ResumeObject) {
+type Props = {
+  resume: ResumeObject
+}
+export function ResumeStackoverflow({ resume }: Props) {
   const coverLetter = resume.me.coverLetter;
   return (
     <div>

@@ -1,14 +1,9 @@
 import React from "react"
-
-const availableResumes = [
-  { id: 1, name: 'Резюме 1' },
-  { id: 2, name: 'Резюме 2' }
-];
+import { UseAppState } from "../hooks";
 
 export function SelectResume() {
-  const [currentResume, setCurrentResume] = React.useState(
-    availableResumes[0]?.id
-  );
+
+  const { currentResume, availableResumes } = UseAppState()
 
   return (
     <>
@@ -19,7 +14,7 @@ export function SelectResume() {
         id="resumeSelect"
         className="self-start select"
         value={currentResume}
-        onChange={(e) => setCurrentResume(1)}
+        onChange={(e) => {}}
       >
         {availableResumes.map(resume => (
           <option value={resume.id} key={resume.id}>

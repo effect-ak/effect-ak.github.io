@@ -59,7 +59,7 @@ const setupTypescriptOptions =
     });
 
     for (const { dts_url, entryName, packageName } of ts.value.packages) {
-      const content = yield* Effect.tryPromise(() => fetchText(dts_url));
+      const content = yield* fetchText(dts_url);
       const filePath = `node_modules/${packageName}/${entryName}.d.ts`;
 
       monaco.languages.typescript.typescriptDefaults.addExtraLib(content, filePath);

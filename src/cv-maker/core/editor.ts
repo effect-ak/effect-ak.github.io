@@ -12,6 +12,8 @@ export class ResumeEditorProvider
         const editor = yield* EditorProvider
         const model = yield* EditorModel
 
+        yield* Effect.logInfo("ResumeEditorProvider")
+
         const monaco = yield* MonacoInstanceProvider
         monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
           validate: true,
@@ -24,7 +26,7 @@ export class ResumeEditorProvider
         }
 
         return {
-          getCode: model.getCode,
+          model,
           bindEditor: editor.bindEditor,
           changeResumeSection
         } as const
