@@ -44,7 +44,7 @@ export function Page(props: {
   )
 }
 
-export function bindPage(appContext: AppContext, container: HTMLElement) {
+export function bindMainPage(appContext: AppContext, container: HTMLElement) {
   const root = createRoot(container);
   root.render(
     <React.StrictMode>

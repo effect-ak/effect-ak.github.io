@@ -10,8 +10,8 @@ export function Navigation() {
       className="no-print pb-2 flex gap-2 justify-center items-baseline"
     >
       <SelectResume/>
-      <SwitchMode/>
       <PrintPdfButton/>
+      <SwitchMode/>
     </div>
   )
 
@@ -25,8 +25,9 @@ function PrintPdfButton() {
     <button
       onClick={() => window.print()}
       hidden={currentMode != "view"}
-      className="no-print hover:cursor-pointer bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full"
+      className="no-print hover:cursor-pointer bg-blue-400 hover:bg-blue-500 text-white py-1.5 px-2.5 rounded-full"
     >
+      <i className="fa fa-file-pdf text-lg" aria-hidden="true"> </i>
       Print
     </button>
   )

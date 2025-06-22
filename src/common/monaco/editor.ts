@@ -1,5 +1,5 @@
 import { Context, Effect } from "effect";
-import type { editor } from "monaco-editor";
+import { editor } from "monaco-editor";
 import { MonacoInstanceProvider } from "./instance";
 import { EditorModel } from "./model";
 
@@ -42,7 +42,6 @@ export class EditorProvider extends Effect.Service<EditorProvider>()(
       })
 
       const bindEditor = () => {
-        console.log('about to bind editor...')
         if (editorInstance) {
           console.log('editor is already bound')
           return editorInstance;
@@ -54,13 +53,10 @@ export class EditorProvider extends Effect.Service<EditorProvider>()(
           throw Error(`HTML container for monaco editor not found, expected '${defaults.container}'`)
         }
 
-        console.log('binding editor...')
         editorInstance = monaco.editor.create(container, {
           model,
           ...defaults.options,
         })
-
-        console.log('BOUND!')
 
         editorInstance.onDidDispose(() => {
           console.log('unmounting cleanup')

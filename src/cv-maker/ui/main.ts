@@ -1,4 +1,4 @@
-import { bindPage } from './components/main';
+import { bindMainPage } from './components/main-page';
 import { makeAppContext } from './context';
 
 async function main() {
@@ -14,7 +14,11 @@ async function main() {
 
   console.log('initialized')
 
-  bindPage(context, container)
+  bindMainPage(context, container)
+
+  const code = context.editor.model.model.setValue(
+    JSON.stringify(context.store.exampleResume, null, 2)
+  )
 
 }
 
