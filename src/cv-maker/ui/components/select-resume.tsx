@@ -1,9 +1,10 @@
 import React from "react"
-import { UseAppState } from "../hooks";
+import { UseAppContext, UseAppState } from "../hooks";
 
 export function SelectResume() {
 
   const { currentResume, availableResumes } = UseAppState()
+  const { store } = UseAppContext()
 
   return (
     <>
@@ -14,7 +15,9 @@ export function SelectResume() {
         id="resumeSelect"
         className="self-start select"
         value={currentResume}
-        onChange={(e) => {}}
+        onChange={(e) => {
+          store.selectResume(e.target.value)
+        }}
       >
         {availableResumes.map(resume => (
           <option value={resume.id} key={resume.id}>
@@ -25,19 +28,3 @@ export function SelectResume() {
     </>
   );
 }
-
-// function selectResume() {
-//   const resumeJson = localStorage.getItem(state.currentResume);
-//   if (!resumeJson) {
-//     console.warn("No resume to load");
-//     return
-//   }
-//   const resume = parseJSON(resumeJson, true);
-//   if (!resume) {
-//     console.warn("Invalid json of resume");
-//     return;
-//   };
-//   state.resumeObject = resume;
-//   state.resumeHtml = resumeObjectToHTML(resume);
-//   setUrlParam("resume", state.currentResume);
-// }

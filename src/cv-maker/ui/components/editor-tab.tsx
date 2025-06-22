@@ -38,22 +38,16 @@ function DeleteButton() {
   const context = UseAppContext()
 
   const deleteResume = () => {
-    // localStorage.removeItem(state.currentResume);
-    // loadStoredResume();
-    // const nextResume = state.availableResumes.at(-1);
-    // if (nextResume) {
-    //   state.currentResume = nextResume.id;
-    // }
-    // selectResume();
-
+    const result = window.confirm("Delete this resume?")
+    if (!result) return
+    localStorage.removeItem(context.store.currentResumeName)
   }
 
   return (
     <button
+      hidden={context.store.availableResumes.length == 1}
       className="btn bg-[#DC382D] hover:bg-[#B93224]"
       onClick={() => deleteResume()}
-      // hidden={true}
-      // x-show="availableResumes.length > 1"
     >Delete</button>
   )
 }
@@ -63,15 +57,9 @@ function DuplicateButton() {
   const context = UseAppContext()
 
   const save = () => {
-    // const name = window.prompt("Enter name of your resume", "simple");
-    // if (!name) return;
-    // localStorage.setItem(name, JSON.stringify(state.resumeObject));
-    // state.availableResumes.push({ id: name, name });
-    // state.currentResume = name;
-    // selectResume();
-    // prepareEditor();
-    // const editor = context.editor.bindEditor()
-    // console.log(editor.getSupportedActions())
+    const name = window.prompt("Enter name of your resume", "");
+    if (!name) return;
+    context.store.duplicateResume(name)
   }
 
   return (

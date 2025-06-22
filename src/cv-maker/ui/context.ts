@@ -2,6 +2,8 @@ import React from "react"
 import { Context, Effect, Layer, Logger, ManagedRuntime, Runtime } from "effect"
 import { ResumeEditorProvider } from "~/cv/core/editor"
 import { StoreProvider } from "~/cv/core/store"
+import { EditorProvider } from "~/common/monaco/editor"
+import { EditorModel } from "~/common/monaco/model"
 
 export type AppContext = {
   editor: ResumeEditorProvider
@@ -24,8 +26,13 @@ export const AppState =
 const live =
   Layer.mergeAll(
     ResumeEditorProvider.Default,
-    StoreProvider.Default,
+    StoreProvider.Default
   ).pipe(
+    Layer.provide(
+      EditorProvider.Default.pipe(
+        Layer.provideMerge(EditorModel.json)
+      )
+    ),
     Layer.provide(Logger.pretty)
   )
 

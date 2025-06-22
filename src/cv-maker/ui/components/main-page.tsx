@@ -5,22 +5,16 @@ import { ViewTab } from "./view-tab"
 import { Footer } from "~/common/ui/footer"
 import { createRoot } from "react-dom/client"
 import { AppContext, AppState } from "../context"
-import { Effect } from "effect"
 
 export function Page(props: {
   appContext: AppContext
 }) {
 
-  const [currentMode, changeMode] = React.useState('editor' as 'view' | 'editor')
+  const [ currentMode, changeMode ] = React.useState('editor' as 'view' | 'editor')
 
-  const [availableResumes, setAvailableResumes] = React.useState<{ id: string, name: string }[]>([])
-
-  React.useEffect(() => {
-    props.appContext.store
-      .loadStoredResume()
-      .pipe(Effect.runPromise)
-      .then(setAvailableResumes)
-  }, [])
+  const [ availableResumes ] = React.useState(
+    props.appContext.store.availableResumes
+  )
 
   const state: AppState = {
     currentMode,

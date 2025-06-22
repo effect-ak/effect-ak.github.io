@@ -1,6 +1,6 @@
 import React from "react"
 import { APP_MODES } from "~/cv/const"
-import { UseAppContext, UseAppState } from "../hooks"
+import { UseAppState } from "../hooks"
 
 export function SwitchMode() {
 

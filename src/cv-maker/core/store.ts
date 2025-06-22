@@ -1,26 +1,53 @@
 import { ResumeObject } from "~/cv/core/schema"
 import { Effect, Schema as S } from "effect"
-import { fetchText, parseJson } from "~/common/utils"
-import { EditorModel } from "~/common/monaco/model";
+import { fetchText, getUrlParam, parseJson } from "~/common/utils"
+import { EditorModel } from "~/common/monaco/model"
 
 export class StoreProvider
   extends Effect.Service<StoreProvider>()("StoreProvider", {
     effect:
       Effect.gen(function* () {
+
+        const exampleResume = yield* loadExampleResume()
+        const availableResumes = yield* getAvailableResume()
+        const currentResumeName = getUrlParam('resume') ?? 'example'
+        const editorModel = yield* EditorModel
+
+        const selectResume = (name: string) => {
+          const resume = window.localStorage.getItem(name)
+          if (!resume) return
+          editorModel.model.setValue(resume)
+        }
+
+        const duplicateResume = (name: string) => {
+          const result = editorModel.model.getValue()
+          localStorage.setItem(name, result)
+          availableResumes.push({ id: name, name });
+        }
+
+        const saveCurrentResume = () => {
+          const result = editorModel.model.getValue()
+          localStorage.setItem(currentResumeName, result)
+        }
+
         return {
-          loadStoredResume,
-          exampleResume: yield* getExampleResume()
+          availableResumes,
+          exampleResume,
+          currentResumeName,
+          selectResume,
+          saveCurrentResume,
+          duplicateResume
         } as const
       }),
     dependencies: []
   }) { }
 
-const loadStoredResume =
-  Effect.fn("load stored resume")(function* () {
+const getAvailableResume =
+  Effect.fn("get available resume")(function* () {
     const all: { id: string, name: string }[] = [];
 
     if (Object.keys(window.localStorage).length == 0) {
-      const resume = yield* getExampleResume()
+      const resume = yield* loadExampleResume()
       if (resume) {
         localStorage.setItem("example", JSON.stringify(resume, undefined, 2))
       }
@@ -38,7 +65,7 @@ const loadStoredResume =
     return all
   })
 
-const getExampleResume =
+const loadExampleResume =
   Effect.fn("get example resume")(function* () {
     const resume =
       yield* fetchText("/resume/john-doe.jsonc").pipe(
@@ -53,11 +80,4 @@ const getExampleResume =
 
     const input = yield* S.decodeUnknown(ResumeObject)(resume)
     return input
-  })
-
-const saveCurrentResume =
-  Effect.fn('save resume')(function* () {
-    const { getCode, model } = yield* EditorModel
-    const parsed = yield* getCode()
-    localStorage.setItem("", model.getValue());
   })

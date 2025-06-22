@@ -1,4 +1,4 @@
-import { Effect, Layer } from "effect"
+import { Effect } from "effect"
 import { EditorProvider } from "~/common/monaco/editor"
 import { MonacoInstanceProvider } from "~/common/monaco/instance"
 import { EditorModel } from "~/common/monaco/model"
@@ -27,9 +27,6 @@ export class ResumeEditorProvider
 
       }),
     dependencies: [
-      EditorProvider.Default.pipe(
-        Layer.provideMerge(EditorModel.json)
-      ),
       MonacoInstanceProvider.Default
     ]
   }) { }
