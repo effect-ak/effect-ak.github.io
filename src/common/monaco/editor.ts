@@ -1,5 +1,5 @@
 import { Context, Effect } from "effect";
-import { editor } from "monaco-editor";
+import type { editor } from "monaco-editor";
 import { MonacoInstanceProvider } from "./instance";
 import { EditorModel } from "./model";
 
