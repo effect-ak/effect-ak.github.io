@@ -1,4 +1,7 @@
 {
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
   "compilerOptions": {
     "strict": true,
     "isolatedModules": true,
@@ -14,10 +17,11 @@
     "resolveJsonModule": true,
     "noEmit": true,
     "baseUrl": ".",
-    "jsx": "preserve",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "paths": {
       "~/common/*": ["./src/common/*"],
-      "~/static/*": ["./src/static/*"],
+      "~/static/*": ["./public/*"],
       "~/tg/*": ["./src/tg-bot-playground/*"],
       "~/cv/*": ["./src/cv-maker/*"]
     }

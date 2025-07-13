@@ -2,7 +2,7 @@ import React from 'react'
 import { UsePlaygroundContext } from '../hooks';
 
 export function SelectExample() {
-  const [selectedExample, setExample] = React.useState("empty.ts")
+  const [ selectedExample, setExample ] = React.useState("empty.ts")
   const context = UsePlaygroundContext()
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {

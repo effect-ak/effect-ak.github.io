@@ -1,0 +1,27 @@
+---
+import StarBtn from "~/common/components/start-btn.astro";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="Telegram Bot Playground"
+  iconName="robot-48"
+  googleTagId="G-FKWW5S34LH"
+  description="Write and run your Telegram bot code in TypeScript directly in your Web browser."
+>
+  <div class="flex mb-6 gap-5">
+    <span class="text-xl font-bold text-start text-gray-800">
+      Build and test Telegram bots in your browser
+    </span>
+    <StarBtn />
+  </div>
+  <div id="playground"></div>
+</Layout>
+
+<script>
+  import { makeContext } from "~/tg/ui/context";
+  import { bindPlayground } from "~/tg/ui/components/playground";
+  const context = await makeContext();
+
+  bindPlayground(context);
+</script>

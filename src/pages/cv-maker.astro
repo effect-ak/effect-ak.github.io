@@ -1,0 +1,29 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../cv-maker/style.css";
+---
+
+<Layout
+  title="CV Maker"
+  iconName="writing-50"
+  googleTagId="G-FKWW5S34LH"
+  description="Build your professional resume for free. Complete a JSON form & save as PDF."
+>
+  <div
+    class="flex flex-col p-2 md:p-16 md:pt-8 justify-center text-sm mx-auto w-full sm:w-3/4"
+    id="root"
+  >
+  </div>
+</Layout>
+
+<script>
+  import { bindMainPage } from "~/cv/ui/components/main-page";
+  import { makeAppContext } from "~/cv/ui/context";
+  const context = await makeAppContext();
+
+  bindMainPage(context);
+
+  context.editor.model.model.setValue(
+    JSON.stringify(context.store.exampleResume, null, 2)
+  );
+</script>

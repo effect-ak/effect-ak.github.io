@@ -2,7 +2,6 @@ import React from "react"
 import { Navigation } from "./navigation"
 import { EditorTab } from "./editor-tab"
 import { ViewTab } from "./view-tab"
-import { Footer } from "~/common/ui/footer"
 import { createRoot } from "react-dom/client"
 import { AppContext, AppState } from "../context"
 
@@ -31,15 +30,22 @@ export function Page(props: {
         <Navigation />
         {currentMode == "editor" && <EditorTab />}
         {currentMode == "view" && <ViewTab />}
-        <Footer />
       </AppState>
     </AppContext>
 
   )
 }
 
-export function bindMainPage(appContext: AppContext, container: HTMLElement) {
-  const root = createRoot(container);
+export function bindMainPage(appContext: AppContext) {
+
+  const container = document.getElementById("root")
+
+  if (!container) {
+    console.warn("root div container")
+    return
+  }
+
+  const root = createRoot(container)
   root.render(
     <React.StrictMode>
       <Page appContext={appContext}></Page>
