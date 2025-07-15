@@ -15,17 +15,18 @@ export async function getStaticPaths() {
 
 const { method: methodName } = Astro.params;
 
-const method = await getOneMethod(methodName).pipe(Effect.runPromise);
-const allMethodNames = await getAllMethodNames().pipe(Effect.runPromise);
+const method = await getOneMethod(methodName).pipe(Effect.runPromise)
+const allMethodNames = await getAllMethodNames().pipe(Effect.runPromise)
 
-const requiredFields = new Set(method.input?.required ?? []);
-const properties = Object.entries(method.input?.properties ?? {});
+const requiredFields = new Set(method.input?.required ?? [])
+const properties = Object.entries(method.input?.properties ?? {})
+const makeCamel = (kebab: string) => String.snakeToCamel(String.kebabToSnake(kebab))
 ---
 
 <Layout
   title={methodName}
   iconName="robot-96"
-  description=`telegram bot api method: ${methodName}`
+  description=`telegram bot api method: ${makeCamel(methodName)}`
   footerEnabled={false}
 >
   <div class="flex h-screen overflow-hidden font-serif">
@@ -33,14 +34,14 @@ const properties = Object.entries(method.input?.properties ?? {});
       <ul>
         {
           allMethodNames.map((name) => {
-            const prettyName = String.snakeToCamel(String.kebabToSnake(name))
+            const prettyName = makeCamel(name)
             const isCurrent = name == methodName
             const className =
               isCurrent ? "text-lg text-blue-500" : "text-base";
             return (
               <li class={className}>
                 <a
-                  href={name}
+                  href={`/tg-bot-api/${name}`}
                   aria-current={isCurrent ? "page" : undefined}
                   class={isCurrent
                     ? "text-blue-500 font-semibold"
