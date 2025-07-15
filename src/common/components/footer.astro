@@ -1,5 +1,5 @@
 ---
-console.log('footer!')
+import { Icon } from 'astro-icon/components';
 ---
 
 <footer class="bg-gray-100 text-gray-700 py-4 no-print mt-20">
@@ -12,14 +12,16 @@ console.log('footer!')
         target="_blank"
         href="https://www.linkedin.com/in/alexander-kondaurov/"
         rel="noopener noreferrer"
-        class="fa-brands fa-lg fa-linkedin text-blue-500"
-      ></a>
+      >
+      <Icon name="linkedin-brands" class="text-blue-500" size=20></Icon>
+      </a>
       <a
         target="_blank"
         href="https://github.com/effect-ak/effect-ak.github.io"
         rel="noopener noreferrer"
-        class="fa-brands fa-lg fa-github"
-      ></a>
+      >
+        <Icon name="github-brands" size=20></Icon>
+      </a>
     </div>
   </div>
 </footer>

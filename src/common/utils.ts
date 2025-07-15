@@ -3,8 +3,6 @@ import { flushSync } from 'react-dom'
 import { Effect } from 'effect'
 import { parse as _parseJson } from "jsonc-parser"
 
-export const HELLO_MESSAGE = "Hey from common!"
-
 export const fetchText =
   Effect.fn("fetch text")((path: string) =>
     Effect.tryPromise(() => fetch(path).then(_ => _.text()))

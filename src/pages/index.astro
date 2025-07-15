@@ -1,8 +1,7 @@
 ---
-import "../styles/global.css";
+import "../styles/global.css"
+import Button from "~/common/components/button.astro"
 ---
-
-<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -12,19 +11,9 @@ import "../styles/global.css";
   </head>
   <body class="min-h-screen flex items-center justify-center bg-gray-100">
     <div class="flex flex-col gap-4">
-      <a
-        href="/tg-bot-playground"
-        class="px-8 py-3 rounded-md bg-blue-600 text-white text-center font-medium shadow hover:bg-blue-700 transition"
-      >
-        Telegram bot playground
-      </a>
-
-      <a
-        href="/cv-maker"
-        class="px-8 py-3 rounded-md bg-emerald-600 text-white text-center font-medium shadow hover:bg-emerald-700 transition"
-      >
-        CV Maker
-      </a>
+      <Button title="Telegram bot API" href="/tg-bot-api/add-sticker-to-set"></Button>
+      <Button title="Telegram bot playground" href="/tg-bot-playground"></Button>
+      <Button title="CV Maker" href="/cv-maker"></Button>
     </div>
     
   </body>

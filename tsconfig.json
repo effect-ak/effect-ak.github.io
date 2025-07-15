@@ -20,8 +20,10 @@
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "paths": {
+      "~/*": [ "./*"],
+      "~/layouts": [ "./src/layouts/*"],
       "~/common/*": ["./src/common/*"],
-      "~/static/*": ["./public/*"],
+      "~/public/*": ["./public/*"],
       "~/tg/*": ["./src/tg-bot-playground/*"],
       "~/cv/*": ["./src/cv-maker/*"]
     }

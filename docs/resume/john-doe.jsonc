@@ -1,5 +1,5 @@
 {
-  "$schema": "../../cv-maker/resume-schema.json",
+  "$schema": "../resume-schema.json",
   "me": {
     "name": "John Doe",
     "email": "john@gmail.com",
