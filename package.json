@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && touch docs/.nojekyll ",
     "preview": "astro preview",
     "check": "astro check"
   },
