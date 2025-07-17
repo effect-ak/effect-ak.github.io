@@ -1,0 +1,71 @@
+---
+import { Effect, String } from "effect";
+import { getAllMethodNames } from "~/src/tg-bot-playground/core/misc";
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  makeCamel: (name: string) => string;
+  methodName: string;
+}
+
+const { makeCamel, methodName } = Astro.props;
+const allMethodNames = await getAllMethodNames().pipe(Effect.runPromise);
+---
+
+<button
+  id="menuBtn"
+  class="fixed z-60 top-3 right-3 md:hidden p-2 bg-white/90 rounded shadow"
+>
+  <Icon name="bars" size="20" />
+</button>
+<aside
+  id="sidebar"
+  class="
+    fixed inset-y-0 right-0 w-64
+    shadow-lg translate-x-full
+    ease-in-out z-50
+    bg-green-100
+    md:static md:translate-x-0 md:shadow-none
+    border-l border-gray-200 pl-2
+    overflow-y-auto shrink-0
+    [scrollbar-width:none]
+    [&::-webkit-scrollbar]:hidden
+  "
+>
+  <ul class="space-y-2">
+    {
+      allMethodNames.map((name) => {
+        const prettyName = makeCamel(name);
+        const isCurrent = name == methodName;
+        const className = isCurrent ? "text-lg text-blue-500" : "text-base";
+        return (
+          <li class={`${className}`}>
+            <a
+              href={`/tg-bot-api/${name}`}
+              aria-current={isCurrent ? "page" : undefined}
+              class={`
+                block
+                ${isCurrent
+                  ? "text-blue-500 font-semibold"
+                  : "text-gray-800 hover:text-blue-500"}
+                `
+                
+              }
+            >
+              {prettyName}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</aside>
+
+<script>
+  const btn = document.getElementById("menuBtn")
+  const sb = document.getElementById("sidebar")
+  btn?.addEventListener("click", () => {
+    console.log('button clicked')
+    sb?.classList.toggle("translate-x-full")
+  })
+</script>

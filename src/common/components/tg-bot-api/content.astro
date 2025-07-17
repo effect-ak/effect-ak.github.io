@@ -1,0 +1,59 @@
+---
+import { Effect } from "effect"
+import { getOneMethod } from "~/src/tg-bot-playground/core/misc"
+
+interface Props {
+  makeCamel: (name: string) => string
+  methodName: string
+}
+
+const { methodName, makeCamel } = Astro.props
+const method = await getOneMethod(methodName).pipe(Effect.runPromise)
+const requiredFields = new Set(method.input?.required ?? [])
+const properties = Object.entries(method.input?.properties ?? {})
+---
+
+<div class="flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+  <h3 class="font-bold text-2xl mb-2">
+    {makeCamel(method.name)}
+  </h3>
+  <p class="text-base mb-2" set:html={method.description} />
+  <table class="min-w-full text-sm leading-6 divide-y divide-gray-200">
+    <caption class="sr-only">
+      Parameters for {methodName}
+    </caption>
+
+    <thead class="bg-gray-50 sticky top-0 z-10">
+      <tr>
+        <th scope="col" class="py-3 px-4 text-left font-semibold text-gray-900">
+          Field
+        </th>
+        <th scope="col" class="py-3 px-4 text-left font-semibold text-gray-900">
+          Description
+        </th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-gray-200">
+      {
+        properties.map(([name, meta]) => (
+          <tr class={requiredFields.has(name) ? "bg-blue-50/30" : undefined}>
+            <td class="py-3 px-4 font-mono">
+              <code>{name}</code>
+              {requiredFields.has(name) && (
+                <span
+                  class="ml-1 text-red-600 font-semibold"
+                  title="required"
+                  aria-label="required"
+                >
+                  *
+                </span>
+              )}
+            </td>
+            <td class="py-3 px-4" set:html={meta.description} />
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>

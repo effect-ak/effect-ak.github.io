@@ -15,5 +15,6 @@ export default defineConfig({
   integrations: [
     react(), icon()
   ],
-  outDir: "docs"
+  outDir: "docs",
+  output: "static"
 })
